@@ -1,6 +1,7 @@
 import create from "../utils/create";
+import { api } from "../ts/api";
 
-class Login {
+export class Login {
 
   public emailInput!: HTMLInputElement;
   public passwordInput!: HTMLInputElement;
@@ -19,6 +20,11 @@ class Login {
     this.passwordInput = create('input', 'log__password', logForm, undefined, ['type', 'password'], ['id', 'password']) as HTMLInputElement;
     this.logButton = create('button', 'log__log-button', logForm);
     this.logButton.textContent = 'Войти';
+
+    this.logButton.addEventListener('click', async (event) => {
+      event.preventDefault();
+      const data = await api.loginUser({ email: this.emailInput.value, password: this.passwordInput.value });
+    });
 
     return logContainer;
   }

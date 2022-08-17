@@ -1,6 +1,7 @@
 import create from "../utils/create";
+import { api } from "../ts/api";
 
-class Registration {
+export class Registration {
 
   public emailInput!: HTMLInputElement;
   public passwordInput!: HTMLInputElement;
@@ -19,6 +20,11 @@ class Registration {
     this.passwordInput = create('input', 'reg__password', regForm, undefined, ['type', 'password'], ['id', 'password']) as HTMLInputElement;
     this.regButton = create('button', 'reg__reg-button', regForm);
     this.regButton.textContent = 'Зарегистрироваться';
+
+    this.regButton.addEventListener('click', async (event) => {
+      event.preventDefault();
+      const data = await api.createUser({ email: this.emailInput.value, password: this.passwordInput.value });
+    });
 
     return regContainer;
   }
