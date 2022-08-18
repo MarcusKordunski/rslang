@@ -13,3 +13,8 @@ export interface IHeader {
 export interface INavigation {
   getHtml: () => string;
 }
+
+export interface IUserReg {
+  email: string;
+  password: string;
+}
