@@ -3,23 +3,25 @@ import {
   IMain,
   IFooter,
   INavigation,
-} from "../types/types"
-;
+} from "../types/types";
 import { Footer } from '../components/footer';
 import { Navigation } from '../components/navigation';
 import { Header } from '../components/header';
 import { Main } from '../pages/main';
+import { Auth } from "../pages/auth";
 
 export class View {
   private header: IHeader;
   private navigation: INavigation;
   private main: IMain;
   private footer: IFooter;
+  private auth: Auth;
   constructor() {
     this.header = new Header();
     this.navigation = new Navigation();
     this.main = new Main();
     this.footer = new Footer();
+    this.auth = new Auth();
   }
 
 
@@ -34,7 +36,7 @@ export class View {
         </main>
       <footer id='footer'></footer>
     </div>`
-    
+
   }
 
   public renderStartPage(): void {
@@ -42,6 +44,7 @@ export class View {
     this.renderHeader();
     this.renderNav();
     this.renderMain();
+    this.addHeaderListeners();
   }
 
   public renderHeader(): void {
@@ -62,5 +65,14 @@ export class View {
   public renderFooter(): void {
     const footer: HTMLElement | null = document.querySelector('#footer');
     footer!.innerHTML = this.footer.getHtml();
+  }
+
+  public addHeaderListeners(): void {
+    const authButton = document.querySelector('#auth-icon') as HTMLElement;
+    const main = document.querySelector('#main') as HTMLElement;
+    authButton.addEventListener('click', () => {
+      main.innerHTML = '';
+      main.append(this.auth.viewLoginForm());
+    });
   }
 }
