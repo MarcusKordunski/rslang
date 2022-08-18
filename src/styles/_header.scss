@@ -1,0 +1,29 @@
+#root {
+  height: 100%;
+}
+
+#header {
+  height: 10%;
+  background-color: rgb(115, 119, 114);
+  display: flex;
+}
+
+#header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+#auth-icon {
+  width: 40px;
+  height: 40px;
+  background-color: aqua;
+  border-radius: 50%;
+}
+
+#nav-btn {
+  width: 40px;
+  height: 40px;
+  background-color: aqua;
+}
