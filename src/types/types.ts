@@ -1,3 +1,8 @@
+export interface IUserReg {
+  email: string;
+  password: string;
+}
+
 export interface IMain {
   getHtml: () => string;
 }
@@ -12,9 +17,4 @@ export interface IHeader {
 
 export interface INavigation {
   getHtml: () => string;
-}
-
-export interface IUserReg {
-  email: string;
-  password: string;
 }
