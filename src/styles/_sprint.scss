@@ -1,0 +1,40 @@
+.sprint-menu {
+  width: 40rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8em;
+}
+
+.sprint-menu__title {
+  text-align: center;
+  font-size: 3em;
+}
+
+.sprint-menu__about {
+  font-size: 1.5em;
+}
+
+
+ul li {
+  list-style-type: circle;
+  font-size: 1.5em;
+  list-style-position: inside;
+}
+
+.sprint-menu__buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.sprint-menu__difficulty {
+  width: 5em;
+  height: 2em;
+  font-size: 1.8em;
+}
+
+.sprint-menu__start {
+  width: 5em;
+  height: 2em;
+  margin-left: 0.5em;
+  font-size: 1.8em;
+}
