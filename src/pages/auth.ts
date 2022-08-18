@@ -17,12 +17,13 @@ export class Auth {
     const loginButton = create('button', 'login__login-button', loginForm);
     loginButton.textContent = 'Войти';
     const regLink = create('a', 'login__link', loginForm, undefined, ['href', '#']);
-    regLink.textContent = 'Страница авторизации';
+    regLink.textContent = 'Страница регистрации';
 
 
     loginButton.addEventListener('click', async (event) => {
       event.preventDefault();
       const data = await api.loginUser({ email: emailInput.value, password: passwordInput.value });
+      console.log(data);
     });
 
     regLink.addEventListener('click', (event) => {
