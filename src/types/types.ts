@@ -18,3 +18,7 @@ export interface IHeader {
 export interface INavigation {
   getHtml: () => string;
 }
+
+export interface IAudiocallPage {
+  getHtml: () => string;
+}

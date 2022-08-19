@@ -3,12 +3,14 @@ import {
   IMain,
   IFooter,
   INavigation,
+  IAudiocallPage
 } from "../types/types";
 import { Footer } from '../components/footer';
 import { Navigation } from '../components/navigation';
 import { Header } from '../components/header';
 import { Main } from '../pages/main';
 import { Auth } from "../pages/auth";
+import { AudiocallPage } from "../games/audiocall/page";
 
 export class View {
   private header: IHeader;
@@ -16,12 +18,14 @@ export class View {
   private main: IMain;
   private footer: IFooter;
   private auth: Auth;
+  private audiocall: IAudiocallPage;
   constructor() {
     this.header = new Header();
     this.navigation = new Navigation();
     this.main = new Main();
     this.footer = new Footer();
     this.auth = new Auth();
+    this.audiocall = new AudiocallPage();
   }
 
 
@@ -45,6 +49,7 @@ export class View {
     this.renderNav();
     this.renderMain();
     this.addHeaderListeners();
+    this.renderAudiocall();
   }
 
   public renderHeader(): void {
@@ -74,5 +79,22 @@ export class View {
       main.innerHTML = '';
       main.append(this.auth.viewLoginForm());
     });
+  }
+
+  public renderAudiocall(): void {
+    const audiocallBtn: HTMLElement | null = document.querySelector('.audiocall');
+    const main = document.querySelector('#main') as HTMLElement;
+    
+    audiocallBtn?.addEventListener('click', () => {
+      main.innerHTML = this.audiocall.getHtml();
+      const lvlList = document.querySelector('.levels-list') as HTMLElement;
+      lvlList?.addEventListener('click', (e: Event) => {
+        if (((e.target) as HTMLElement).closest('.levels-list-item')) {
+          console.log(1)
+        }
+      });
+    });
+    
+   
   }
 }
