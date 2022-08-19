@@ -90,7 +90,7 @@ export class View {
       const lvlList = document.querySelector('.levels-list') as HTMLElement;
       lvlList?.addEventListener('click', (e: Event) => {
         if (((e.target) as HTMLElement).closest('.levels-list-item')) {
-          console.log(1)
+          console.log(2)
         }
       });
     });
