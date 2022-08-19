@@ -38,7 +38,7 @@ export class Word {
     this.wordContainer = create('div', 'textbook__word word-card');
 
     const wordImgBox: HTMLElement = create('div', 'word-card__img-box', this.wordContainer);
-    const wordImg: HTMLElement = create('img', 'word-card__img', wordImgBox, undefined, ['src', ``], ['alt', `${this.word}`]);
+    const wordImg: HTMLElement = create('img', 'word-card__img', wordImgBox, undefined, ['src', `http://localhost:3000/${this.image}`], ['alt', `${this.word}`]);
 
     const wordBody: HTMLElement = create('div', 'word-card__body', this.wordContainer);
 
@@ -57,13 +57,13 @@ export class Word {
 
     const wordMid: HTMLElement = create('div', 'word-card__mid', wordBody);
     const wordMeaning: HTMLElement = create('div', 'word-card__meaning', wordMid);
-    wordMeaning.textContent = `${this.textMeaning}`;
+    wordMeaning.innerHTML = `${this.textMeaning}`;
     const wordMeaningTranslate: HTMLElement = create('div', 'word-card__meaning-translate', wordMid);
     wordMeaningTranslate.textContent = `${this.textMeaningTranslate}`;
 
     const wordBottom: HTMLElement = create('div', 'word-card__bottom', wordBody);
     const wordExample: HTMLElement = create('div', 'word-card__example', wordMid);
-    wordExample.textContent = `${this.textExample}`;
+    wordExample.innerHTML = `${this.textExample}`;
     const wordExampleTranslate: HTMLElement = create('div', 'word-card__example-translate', wordMid);
     wordExampleTranslate.textContent = `${this.textExampleTranslate}`;
 
