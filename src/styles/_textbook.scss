@@ -1,0 +1,36 @@
+@import './_variables.scss';
+
+.textbook-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.textbook-games {
+  width: 80%;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  margin-top: 20px;
+  background: $bg-auth-form;
+  border-radius: 10px;
+  gap: 10px;
+
+  &__sprint,
+  &__audio {
+    width: 150px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: $bg-auth-form;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px black;
+  }
+}
+
+.textbook-paggination {
+  width: 80%;
+  height: 80px;
+  border: 1px solid blue;
+}

@@ -9,6 +9,7 @@ import { Navigation } from '../components/navigation';
 import { Header } from '../components/header';
 import { Main } from '../pages/main';
 import { Auth } from "../pages/auth";
+import { Textbook } from "../pages/textbook/textbook";
 
 export class View {
   private header: IHeader;
@@ -16,12 +17,14 @@ export class View {
   private main: IMain;
   private footer: IFooter;
   private auth: Auth;
+  private textbook: Textbook;
   constructor() {
     this.header = new Header();
     this.navigation = new Navigation();
     this.main = new Main();
     this.footer = new Footer();
     this.auth = new Auth();
+    this.textbook = new Textbook();
   }
 
 
@@ -68,11 +71,19 @@ export class View {
   }
 
   public addHeaderListeners(): void {
-    const authButton = document.querySelector('#auth-icon') as HTMLElement;
     const main = document.querySelector('#main') as HTMLElement;
-    authButton.addEventListener('click', () => {
+    const authPageBtn = document.querySelector('#auth-icon') as HTMLElement;
+    const textbookPageBtn = document.querySelector('#textbook-page') as HTMLElement;
+
+    authPageBtn.addEventListener('click', () => {
       main.innerHTML = '';
       main.append(this.auth.viewLoginForm());
     });
+
+    textbookPageBtn.addEventListener('click', () => {
+      main.innerHTML = '';
+      main.appendChild(this.textbook.init());
+      this.textbook.initWords();
+    })
   }
 }
