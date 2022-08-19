@@ -1,0 +1,66 @@
+@import './_variables.scss';
+
+.textbook-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.textbook-games {
+  width: 80%;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  margin-top: 20px;
+  background: $bg-auth-form;
+  border-radius: 10px;
+  gap: 10px;
+
+  &__sprint,
+  &__audio {
+    width: 150px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: $bg-auth-form;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px black;
+    color: white;
+  }
+}
+
+.textbook-paggination {
+  width: 80%;
+  height: 80px;
+  // border: 1px solid blue;
+}
+
+.textbook {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.word-card {
+  display: flex;
+  width: 85%;
+  margin: 10px 0px;
+  background: $bg-main;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0px 0px 5px rgb(67, 67, 67);
+
+  &__img-box {
+    max-width: 30%;
+  }
+
+  &__img {
+    height: 100%;
+    max-width: 100%;
+  }
+
+  &__body {
+    padding: 0px 20px;
+  }
+}

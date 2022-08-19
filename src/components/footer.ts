@@ -1,7 +1,7 @@
 export class Footer {
   getHtml(): string {
     return `
-      <div id='footer-container'>
+      <div class='footer-container container'>
         <div class='logo-rss'></div>
         <div class='creators'>
           <div class='creators-item'></div>
