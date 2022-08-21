@@ -30,7 +30,7 @@
   }
 }
 
-.textbook-paggination {
+.textbook-pagination {
   width: 80%;
   height: 80px;
   // border: 1px solid blue;
@@ -62,5 +62,43 @@
 
   &__body {
     padding: 0px 20px;
+    width: 70%;
+  }
+
+  &__top {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0px 20px 0px;
+    padding: 0px 0px 0px 10px;
+    border-left: 4px solid rgb(175, 0, 0);
+  }
+
+  &__word {
+    font-family: RobotoBold, serif;
+    text-transform: capitalize;
+    font-size: 22px;
+  }
+
+  &__audio {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+  }
+
+  &__audio-btn {
+    width: 100%;
+  }
+
+  &__title-row {
+    display: flex;
+    gap: 10px;
+  }
+
+  &__mid {
+    margin: 10px 0px 20px 0px;
+  }
+
+  &__meaning-translate {
+    margin: 0px 0px 15px 0px;
   }
 }
