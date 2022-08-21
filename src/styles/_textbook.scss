@@ -1,6 +1,7 @@
 @import './_variables.scss';
 
 .textbook-container {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -33,7 +34,52 @@
 .textbook-pagination {
   width: 80%;
   height: 80px;
-  // border: 1px solid blue;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &__btn,
+  &__page {
+    width: 60px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.textbook-groups {
+  position: absolute;
+  top: 20px;
+  right: 0.5%;
+  width: 60px;
+  padding: 20px 0px;
+  border: 2px solid blue;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+
+  .words-group {
+    width: 40px;
+    height: 40px;
+    border: 1px solid black;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  @media(max-width: 1023.95px) {
+    right: -1%;
+  }
+
+  #group-6 {
+    display: none;
+  }
 }
 
 .textbook {
