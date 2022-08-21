@@ -22,6 +22,8 @@ export class Word {
   public wordAudio!: HTMLElement;
   public isPlayed: boolean;
   public audioBtnImg: HTMLImageElement;
+  public learnedButton: HTMLButtonElement;
+  public difficultyButton: HTMLButtonElement;
 
   constructor(word: IWord) {
     this.id = word.id;
@@ -51,9 +53,7 @@ export class Word {
     const wordTitle: HTMLElement = create('div', 'word-card__title-box', wordTop);
     this.wordAudio = create('div', 'word-card__audio', wordTop);
     this.audioBtnImg = create('img', 'word-card__audio-btn', this.wordAudio, undefined, ['src', './assets/icons/play.png'], ['alt', 'play']) as HTMLImageElement;
-    //const audioTag = create('audio', undefined, wordAudio) as HTMLAudioElement;
     this.audioTracks = [this.audio, this.audioMeaning, this.audioExample];
-
 
     const wordTitleRowTop: HTMLElement = create('div', 'word-card__title-row', wordTitle);
     const wordTitleRowBottom: HTMLElement = create('div', 'word-card__title-row', wordTitle);
@@ -79,5 +79,10 @@ export class Word {
 
     const wordTracker: HTMLElement = create('div', 'word-card__tracker', wordBody);
     const wordButtons: HTMLElement = create('div', 'word-card__buttons', wordBody);
+    this.learnedButton = create('button', 'word-card__learned-btn', wordButtons) as HTMLButtonElement;
+    this.learnedButton.textContent = 'Изучено';
+    this.difficultyButton = create('button', 'word-card__hard-btn', wordButtons) as HTMLButtonElement;
+    this.difficultyButton.textContent = 'Сложное';
+
   }
 }

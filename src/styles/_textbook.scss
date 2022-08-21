@@ -273,4 +273,15 @@
   &__meaning-translate {
     margin: 0px 0px 15px 0px;
   }
+
+  &__learned-btn,
+  &__hard-btn {
+    margin: 10px;
+    width: 80px;
+    height: 30px;
+    background: $bg-main;
+    border-radius: 3px;
+    box-shadow: 0 0 5px black;
+    font-family: RobotoMed, serif;
+  }
 }
