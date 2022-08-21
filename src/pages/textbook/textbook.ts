@@ -9,6 +9,7 @@ export class Textbook {
   public activePageDiv!: HTMLElement;
   public prevPageBtn!: HTMLButtonElement;
   public nextPageBtn!: HTMLButtonElement;
+  public pageEnterInput!: HTMLInputElement;
 
   public activeGroup: number;
   public textbookContainer: HTMLElement;
@@ -35,9 +36,10 @@ export class Textbook {
     const audioImg = create('img', 'textbook-games__img', audioGame);
     const audioTitle = create('p', 'textbook-games__title', audioGame);
     audioTitle.textContent = 'Аудио вызов';
-    this.groupsDiv = create('div', 'textbook-groups', this.textbookContainer);
     this.paginationDiv = create('div', 'textbook-pagination', this.textbookContainer);
-    this.textbook = create('div', 'textbook', this.textbookContainer);
+    const textbookBody = create('div', 'textbook-body', this.textbookContainer);
+    this.textbook = create('div', 'textbook', textbookBody);
+    this.groupsDiv = create('div', 'textbook-groups', textbookBody);
   }
 
   init() {
@@ -75,24 +77,36 @@ export class Textbook {
     this.activePageDiv.textContent = `${this.activePage + 1}`;
     this.nextPageBtn = create('button', 'textbook-pagination__btn next-btn', this.paginationDiv) as HTMLButtonElement;
     this.nextPageBtn.innerHTML = `>`;
+    this.pageEnterInput = create('input', 'textbook-pagination__enter', this.paginationDiv, undefined, ['type', 'number']) as HTMLInputElement;
+    this.pageEnterInput.max = '30';
+    this.pageEnterInput.min = '1';
+    const pageEnterButton = create('button', 'textbook-pagination__btn enter-btn', this.paginationDiv) as HTMLButtonElement;
+    pageEnterButton.textContent = 'Перейти';
 
-    this.nextPageBtn.addEventListener('click', async () => {
+
+    this.nextPageBtn.addEventListener('click', () => {
       if (this.activePage + 1 < 30) {
         this.activePage += 1;
         localStorage.setItem('rs-lang-active-page', `${this.activePage}`);
-        this.activePageDiv.textContent = `${this.activePage + 1}`;
-        await this.initWords();
+        this.initWords();
       }
     });
 
-    this.prevPageBtn.addEventListener('click', async () => {
+    this.prevPageBtn.addEventListener('click', () => {
       if (this.activePage - 1 >= 0) {
         this.activePage -= 1;
         localStorage.setItem('rs-lang-active-page', `${this.activePage}`);
-        this.activePageDiv.textContent = `${this.activePage + 1}`;
-        await this.initWords();
+        this.initWords();
       }
     });
+
+    pageEnterButton.addEventListener('click', () => {
+      if (this.pageEnterInput.value) {
+        this.activePage = +this.pageEnterInput.value - 1;
+        this.pageEnterInput.value = '';
+        this.initWords();
+      }
+    })
   }
 
   initAudio() {
@@ -137,6 +151,7 @@ export class Textbook {
     this.initAudio();
     this.prevPageBtn.disabled = this.activePage === 0;
     this.nextPageBtn.disabled = this.activePage === 29;
+    this.activePageDiv.textContent = `${this.activePage + 1}`;
   }
 
 
