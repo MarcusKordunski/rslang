@@ -50,6 +50,21 @@
     color: $text-color;
     border-radius: 5px;
     box-shadow: 0 0 5px black;
+
+    &.disabled {
+      background: rgb(181, 181, 181);
+      color: whitesmoke;
+      box-shadow: none;
+      cursor: default;
+
+      &:hover {
+        border: none;
+      }
+
+      &:active {
+        transform: none;
+      }
+    }
   }
 
   &__btn {
@@ -81,33 +96,115 @@
   position: absolute;
   top: 20px;
   right: 0.5%;
-  width: 60px;
-  padding: 20px 0px;
-  border: 2px solid blue;
+  // position: relative;
+  // right: 0;
+  width: 70px;
+  padding: 20px 5px;
+  background: $bg-main;
+  border-radius: 5px;
+  box-shadow: 0 0 5px black;
 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 15px;
+
+  .group-title {
+    font-family: RobotoMed, serif;
+    color: rgb(159, 135, 0);
+  }
 
   .words-group {
-    width: 40px;
-    height: 40px;
-    border: 1px solid black;
+    width: 50px;
+    height: 50px;
+    // border: 1px solid black;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    transition: .2s;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    &__num {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      color: $text-color;
+    }
   }
 
   @media(max-width: 1023.95px) {
     right: -1%;
   }
 
+  #group-0.active {
+    border: 3px solid rgb(77, 187, 82);
+  }
+
+  #group-1.active {
+    border: 3px solid rgb(187, 185, 77);
+  }
+
+  #group-2.active {
+    border: 3px solid rgb(187, 137, 77);
+  }
+
+  #group-3.active {
+    border: 3px solid rgb(167, 77, 187);
+  }
+
+  #group-4.active {
+    border: 3px solid rgb(187, 77, 108);
+  }
+
+  #group-5.active {
+    border: 3px solid rgb(46, 137, 137);
+  }
+
+  #group-6.active {
+    border: 3px solid rgb(214, 3, 3);
+  }
+
+
+
   #group-6 {
     display: none;
+  }
+
+  #group-10 {
+    background-color: rgb(77, 187, 82);
+  }
+
+  #group-11 {
+    background-color: rgb(187, 185, 77);
+  }
+
+  #group-12 {
+    background-color: rgb(187, 137, 77);
+  }
+
+  #group-13 {
+    background-color: rgb(167, 77, 187);
+  }
+
+  #group-14 {
+    background-color: rgb(187, 77, 108);
+  }
+
+  #group-15 {
+    background-color: rgb(46, 137, 137);
+  }
+
+  #group-16 {
+    background-color: rgb(214, 3, 3);
   }
 }
 

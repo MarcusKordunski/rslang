@@ -51,17 +51,23 @@ export class Textbook {
   }
 
   initGroups() {
+    const groupTitle = create('h2', 'group-title', this.groupsDiv);
+    groupTitle.textContent = 'Группы'
     const groupsArray: HTMLElement[] = [];
     for (let i = 0; i < 7; i++) {
       const group = create('div', 'words-group', this.groupsDiv, undefined, ['id', `group-${i}`]);
-      group.innerHTML = `${i + 1}`;
+      const groupNum = create('div', 'words-group__num', group, undefined, ['id', `group-1${i}`]);
+      groupNum.innerHTML = `${i + 1}`;
       groupsArray.push(group);
     }
+    groupsArray[this.activeGroup].classList.add('active');
 
     groupsArray.forEach((group, index) => {
       group.addEventListener('click', async () => {
         this.activeGroup = index;
         this.activePage = 0;
+        groupsArray.forEach(item => item.classList.remove('active'));
+        group.classList.add('active');
         localStorage.setItem('rs-lang-active-page', `${this.activePage}`);
         this.activePageDiv.textContent = `${this.activePage + 1}`;
         localStorage.setItem('rs-lang-active-group', `${this.activeGroup}`);
@@ -103,6 +109,7 @@ export class Textbook {
     pageEnterButton.addEventListener('click', () => {
       if (this.pageEnterInput.value) {
         this.activePage = +this.pageEnterInput.value - 1;
+        localStorage.setItem('rs-lang-active-page', `${this.activePage}`);
         this.pageEnterInput.value = '';
         this.initWords();
       }
@@ -149,8 +156,22 @@ export class Textbook {
       this.textbook.appendChild(word.wordContainer);
     });
     this.initAudio();
-    this.prevPageBtn.disabled = this.activePage === 0;
-    this.nextPageBtn.disabled = this.activePage === 29;
+    if (this.activePage === 0) {
+      this.prevPageBtn.disabled = true;
+      this.nextPageBtn.disabled = false;
+      this.prevPageBtn.classList.add('disabled');
+      this.nextPageBtn.classList.remove('disabled');
+    } else if (this.activePage === 29) {
+      this.nextPageBtn.disabled = true;
+      this.prevPageBtn.disabled = false;
+      this.nextPageBtn.classList.add('disabled');
+      this.prevPageBtn.classList.remove('disabled');
+    } else {
+      this.nextPageBtn.disabled = false;
+      this.prevPageBtn.disabled = false;
+      this.nextPageBtn.classList.remove('disabled');
+      this.prevPageBtn.classList.remove('disabled');
+    }
     this.activePageDiv.textContent = `${this.activePage + 1}`;
   }
 
