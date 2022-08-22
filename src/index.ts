@@ -1,5 +1,9 @@
 import './style.scss';
 import { Sprint } from './pages/sprint';
+import { View } from './ts/view';
 
-const a = new Sprint();
-document.body.appendChild(a.renderSprintMenu());
+const view = new View();
+view.renderStartPage();
+
+const sprintMenu = new Sprint();
+sprintMenu.mainContent.appendChild(sprintMenu.renderSprintMenu());

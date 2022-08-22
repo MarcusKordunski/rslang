@@ -2,7 +2,8 @@
   width: 40rem;
   display: flex;
   flex-direction: column;
-  gap: 0.8em;
+  gap: 1.2em;
+  margin-top: 5em;
 }
 
 .sprint-menu__title {
@@ -14,6 +15,22 @@
   font-size: 1.5em;
 }
 
+.sprint-game__score {
+  font-size: 3em;
+}
+
+.sprint-game__timer {
+  font-size: 3em;
+}
+
+.sprint-game {
+  width: 40rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2em;
+  text-align: center;
+}
+
 
 ul li {
   list-style-type: circle;
@@ -21,18 +38,21 @@ ul li {
   list-style-position: inside;
 }
 
-.sprint-menu__buttons {
+.sprint-menu__buttons,
+.sprint-game__buttons {
   display: flex;
   justify-content: center;
 }
 
-.sprint-menu__difficulty {
+.sprint-menu__difficulty,
+.sprint-game__correct-btn {
   width: 5em;
   height: 2em;
   font-size: 1.8em;
 }
 
-.sprint-menu__start {
+.sprint-menu__start,
+.sprint-game__uncorrect-btn {
   width: 5em;
   height: 2em;
   margin-left: 0.5em;

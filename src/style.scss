@@ -1,2 +1,15 @@
 @import './styles/_normalize.scss';
 @import './styles/sprint.scss';
+@import './styles/_container.scss';
+@import './styles/_header.scss';
+@import './styles/_navigations.scss';
+@import './styles/_main-page.scss';
+@import './styles/_footer.scss';
+@import './styles/_auth.scss';
+@import './styles/_fonts.scss';
+@import './styles/_variables.scss';
+
+body {
+  font-family: Roboto, sans-serif;
+  font-size: 16px;
+}

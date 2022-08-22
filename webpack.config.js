@@ -43,7 +43,7 @@ const baseConfig = {
   output: {
     filename: 'index.js',
     path: path.resolve(__dirname, 'dist'),
-    // assetModuleFilename: 'assets/[hash][ext]',
+    assetModuleFilename: 'assets/[hash][ext]',
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -55,9 +55,9 @@ const baseConfig = {
     }),
     new CleanWebpackPlugin(),
     // new CopyWebpackPlugin({
-    //   patterns: [
-    //     { from: './src/assets/images', to: './assets/images' }
-    //   ]
+    //     patterns: [
+    //         { from: './src/assets/images', to: './assets/images' }
+    //     ]
     // })
   ],
 };
