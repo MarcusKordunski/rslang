@@ -6,39 +6,41 @@ import {
   IAudiocallPage
 } from "../types/types";
 import { Footer } from '../components/footer';
-import { Navigation } from '../components/navigation';
 import { Header } from '../components/header';
 import { Main } from '../pages/main';
 import { Auth } from "../pages/auth";
-import { AudiocallPage } from "../games/audiocall/page";
+import { Textbook } from "../pages/textbook/textbook";
+import { AudiocallPage } from "../games/audiocall/create-page";
+
 
 export class View {
   private header: IHeader;
-  private navigation: INavigation;
   private main: IMain;
   private footer: IFooter;
   private auth: Auth;
+  private textbook: Textbook;
   private audiocall: IAudiocallPage;
+
   constructor() {
     this.header = new Header();
-    this.navigation = new Navigation();
     this.main = new Main();
     this.footer = new Footer();
     this.auth = new Auth();
+    this.textbook = new Textbook();
     this.audiocall = new AudiocallPage();
+
   }
 
 
   public renderContainers(): void {
     let body = document.body;
     body.innerHTML = `
-    <div id='root'>
-      <header id='header'></header>
-        <main id='container'>
-          <nav id='nav'></nav>
-          <section id='main'></section>
+    <div class='root'>
+      <header class='header'></header>
+        <main class='main'>
+          <div class='main-container container'></div>
         </main>
-      <footer id='footer'></footer>
+      <footer class='footer'></footer>
     </div>`
 
   }
@@ -46,55 +48,46 @@ export class View {
   public renderStartPage(): void {
     this.renderContainers();
     this.renderHeader();
-    this.renderNav();
     this.renderMain();
+    this.renderFooter();
     this.addHeaderListeners();
     this.renderAudiocall();
   }
 
   public renderHeader(): void {
-    const header: HTMLElement | null = document.querySelector('#header');
+    const header = document.querySelector('.header') as HTMLElement;
     header!.innerHTML = this.header.getHtml();
   }
 
-  public renderNav(): void {
-    const nav: HTMLElement | null = document.querySelector('#nav');
-    nav!.innerHTML = this.navigation.getHtml();
-  }
-
   public renderMain(): void {
-    const main: HTMLElement | null = document.querySelector('#main');
+    const main = document.querySelector('.main') as HTMLElement;
     main!.innerHTML = this.main.getHtml();
   }
 
   public renderFooter(): void {
-    const footer: HTMLElement | null = document.querySelector('#footer');
+    const footer = document.querySelector('.footer') as HTMLElement;
     footer!.innerHTML = this.footer.getHtml();
   }
 
   public addHeaderListeners(): void {
-    const authButton = document.querySelector('#auth-icon') as HTMLElement;
-    const main = document.querySelector('#main') as HTMLElement;
-    authButton.addEventListener('click', () => {
+    const main = document.querySelector('.main-content') as HTMLElement;
+    const authPageBtn = document.querySelector('.header__auth-btn') as HTMLElement;
+    const textbookPageBtn = document.querySelector('.textbook-page') as HTMLElement;
+
+    authPageBtn.addEventListener('click', () => {
       main.innerHTML = '';
       main.append(this.auth.viewLoginForm());
     });
+
+    textbookPageBtn.addEventListener('click', () => {
+      main.innerHTML = '';
+      main.appendChild(this.textbook.init());
+      this.textbook.initWords();
+    })
   }
 
   public renderAudiocall(): void {
-    const audiocallBtn: HTMLElement | null = document.querySelector('.audiocall');
-    const main = document.querySelector('#main') as HTMLElement;
+    this.audiocall.createPage();
     
-    audiocallBtn?.addEventListener('click', () => {
-      main.innerHTML = this.audiocall.getHtml();
-      const lvlList = document.querySelector('.levels-list') as HTMLElement;
-      lvlList?.addEventListener('click', (e: Event) => {
-        if (((e.target) as HTMLElement).closest('.levels-list-item')) {
-          console.log(2)
-        }
-      });
-    });
-    
-   
   }
 }

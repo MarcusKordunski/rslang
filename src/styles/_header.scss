@@ -1,29 +1,49 @@
-#root {
-  height: 100%;
+@import './_variables.scss';
+
+.header {
+  height: 70px;
+  background: $bg-header;
+
+  &__container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  &__auth-btn {
+    margin-left: auto;
+    width: 75px;
+    height: 35px;
+    background-color: transparent;
+    color: rgb(239, 239, 239);
+    border-radius: 3px;
+    border: 3px solid #066dab;
+    font-family: RobotoMed, serif;
+
+  }
+
+  &__menu {
+    margin: 0px 20px;
+  }
+
+  &__title {
+    font-family: Lobster, serif;
+    font-size: 28px;
+    color: bisque;
+    text-shadow: 2px 2px 2px black;
+  }
 }
 
-#header {
-  height: 10%;
-  background-color: rgb(115, 119, 114);
-  display: flex;
-}
+.menu {
+  &__list {
+    display: flex;
+    gap: 20px;
+  }
 
-#header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
+  &__item {
+    font-family: RobotoMed, serif;
+    color: rgb(239, 239, 239);
+    cursor: pointer;
+  }
 
-#auth-icon {
-  width: 40px;
-  height: 40px;
-  background-color: aqua;
-  border-radius: 50%;
-}
-
-#nav-btn {
-  width: 40px;
-  height: 40px;
-  background-color: aqua;
 }

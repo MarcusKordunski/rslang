@@ -1,6 +1,8 @@
+@import './_variables.scss';
+
 .audiocall-content {
+  height: 580px;
   width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -10,7 +12,7 @@
 .levels-list {
   display: flex;
   justify-content: space-between;
-  width: 20%;
+  width: 30%;
 }
 
 .levels-list-item {
@@ -21,4 +23,46 @@
   height: 40px;
   border-radius: 50%;
   background-color: blue;
+}
+
+.audiocall-gamepage {
+  background-color: linear-gradient(to bottom, #c5deea 0%, #8abbd7 0%, #066dab 100%);
+  background-image: linear-gradient(rgb(197, 222, 234) 0%, rgb(138, 187, 215) 0%, rgb(6, 109, 171) 100%);
+  height: 580px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.sound-btn {
+  width: 10%;
+  height: 20%;
+  border-radius: 50%;
+  background-color: #c5deea;
+}
+
+.options-list {
+  display: flex;
+  justify-content: space-between;
+  width: 60%;
+}
+
+.scroll-btn {
+  width: 15%;
+  height: 8%;
+  background-color: rgb(7, 7, 237);
+}
+
+.gamepage-item {
+  margin-top: 5%;
+}
+
+.options-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20%;
+  padding: 2%;
+  border: 2px solid black;
 }

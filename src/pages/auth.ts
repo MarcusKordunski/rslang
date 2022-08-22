@@ -28,7 +28,7 @@ export class Auth {
 
     regLink.addEventListener('click', (event) => {
       event.preventDefault();
-      const main = document.querySelector('#main') as HTMLElement;
+      const main = document.querySelector('.main-content') as HTMLElement;
       main.innerHTML = '';
       main.append(this.viewRegForm());
     })
@@ -63,7 +63,7 @@ export class Auth {
 
     loginLink.addEventListener('click', (event) => {
       event.preventDefault();
-      const main = document.querySelector('#main') as HTMLElement;
+      const main = document.querySelector('.main-content') as HTMLElement;
       main.innerHTML = '';
       main.append(this.viewLoginForm());
     })
