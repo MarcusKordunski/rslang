@@ -10,7 +10,7 @@ export class Auth {
   constructor() {
     const user: string | null = localStorage.getItem('rs-lang-userInfo') || null;
     this.user = JSON.parse(user!);
-    this.token = this.user!.token || '';
+    if (this.user) this.token = this.user.token;
   }
 
   viewLoginForm(): HTMLElement {
