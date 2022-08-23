@@ -35,3 +35,11 @@ export interface IWord {
   textMeaningTranslate: string;
   textExampleTranslate: string;
 }
+
+export interface IUserObject {
+  message: string;
+  token: string;
+  refreshToken: string;
+  userId: string;
+  name: string;
+}

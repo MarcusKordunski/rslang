@@ -10,8 +10,19 @@
     align-items: center;
   }
 
-  &__auth-btn {
+  &__user-name {
     margin-left: auto;
+    font-family: RobotoMed, serif;
+    color: $text-color;
+
+    &.show {
+      opacity: 0;
+      cursor: default;
+    }
+  }
+
+  &__auth-btn {
+    margin-left: 20px;
     width: 75px;
     height: 35px;
     background-color: transparent;

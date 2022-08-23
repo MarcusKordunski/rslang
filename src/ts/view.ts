@@ -2,7 +2,6 @@ import {
   IHeader,
   IMain,
   IFooter,
-  INavigation,
 } from "../types/types";
 import { Footer } from '../components/footer';
 import { Header } from '../components/header';
@@ -49,6 +48,12 @@ export class View {
   public renderHeader(): void {
     const header = document.querySelector('.header') as HTMLElement;
     header!.innerHTML = this.header.getHtml();
+    const authPageBtn = document.querySelector('.header__auth-btn') as HTMLElement;
+    if (this.auth.user) {
+      authPageBtn.textContent = 'Выйти';
+    } else {
+      authPageBtn.textContent = 'Войти';
+    }
   }
 
   public renderMain(): void {
@@ -67,8 +72,12 @@ export class View {
     const textbookPageBtn = document.querySelector('.textbook-page') as HTMLElement;
 
     authPageBtn.addEventListener('click', () => {
-      main.innerHTML = '';
-      main.append(this.auth.viewLoginForm());
+      if (!this.auth.user) {
+        main.innerHTML = '';
+        main.append(this.auth.viewLoginForm());
+      } else {
+        this.auth.logoutUser();
+      }
     });
 
     textbookPageBtn.addEventListener('click', () => {
@@ -78,3 +87,5 @@ export class View {
     })
   }
 }
+
+// export const view = new View();

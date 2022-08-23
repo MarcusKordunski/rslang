@@ -33,6 +33,17 @@ class Api {
     return data;
   }
 
+  async getUser(userId: string, token: string) {
+    const response = await fetch(`${this.usersUrl}/${userId}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    const data = await response.json();
+    return data;
+  }
+
   async getWords(group: number, page: number) {
     const response = await fetch(`${this.wordsUrl}?group=${group}&page=${page}`);
     const data = await response.json();

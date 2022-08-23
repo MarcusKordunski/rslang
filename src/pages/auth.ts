@@ -1,7 +1,17 @@
 import create from "../utils/create";
 import { api } from "../ts/api";
+import { IUserObject, IUserReg } from "../types/types";
+import { view } from "../";
 
 export class Auth {
+  public user!: IUserObject | null;
+  public token!: string;
+
+  constructor() {
+    const user: string | null = localStorage.getItem('rs-lang-userInfo') || null;
+    this.user = JSON.parse(user!);
+    this.token = this.user!.token || '';
+  }
 
   viewLoginForm(): HTMLElement {
     const loginContainer = create('div', 'login');
@@ -22,8 +32,8 @@ export class Auth {
 
     loginButton.addEventListener('click', async (event) => {
       event.preventDefault();
-      const data = await api.loginUser({ email: emailInput.value, password: passwordInput.value });
-      console.log(data);
+      const user: IUserReg = { email: emailInput.value, password: passwordInput.value };
+      await this.loginUser(user);
     });
 
     regLink.addEventListener('click', (event) => {
@@ -57,8 +67,7 @@ export class Auth {
 
     regButton.addEventListener('click', async (event) => {
       event.preventDefault();
-      const data = await api.createUser({ email: emailInput.value, password: passwordInput.value });
-      console.log(data);
+      await api.createUser({ email: emailInput.value, password: passwordInput.value });
     });
 
     loginLink.addEventListener('click', (event) => {
@@ -69,5 +78,32 @@ export class Auth {
     })
 
     return regContainer;
+  }
+
+  async loginUser(user: IUserReg): Promise<void> {
+    try {
+      const data = await api.loginUser(user);
+      this.user = data;
+      this.token = data.token;
+      localStorage.setItem('rs-lang-userInfo', JSON.stringify(this.user));
+      view.renderStartPage();
+      const authBtn = document.querySelector('.header__auth-btn') as HTMLButtonElement;
+      authBtn.textContent = 'Выйти';
+    } catch {
+      console.log('Неверный логин');
+    }
+  }
+
+  logoutUser(): void {
+    this.user = null;
+    this.token = '';
+    localStorage.removeItem('rs-lang-userInfo');
+    view.renderStartPage();
+    const authBtn = document.querySelector('.header__auth-btn') as HTMLButtonElement;
+    authBtn.textContent = 'Войти';
+  }
+
+  showStatusMessage() {
+
   }
 }
