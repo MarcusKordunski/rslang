@@ -1,6 +1,7 @@
 export interface IUserReg {
   email: string;
   password: string;
+  name?: string;
 }
 
 export interface IMain {

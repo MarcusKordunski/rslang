@@ -15,7 +15,7 @@ export class Header {
           <li class='menu__item statistic-page'>Статистика</li>
         </ul>
       </nav>
-      <div class="header__user-name show">Mihail</div>
+      <div class="header__user-name"></div>
       <button class='header__auth-btn'>Войти</button>
     </div>`
   }

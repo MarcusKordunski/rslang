@@ -67,7 +67,11 @@ export class Auth {
 
     regButton.addEventListener('click', async (event) => {
       event.preventDefault();
-      await api.createUser({ email: emailInput.value, password: passwordInput.value });
+      await api.createUser({ email: emailInput.value, password: passwordInput.value, name: nameInput.value });
+      emailInput.value, passwordInput.value, nameInput.value = '';
+      const main = document.querySelector('.main-content') as HTMLElement;
+      main.innerHTML = '';
+      main.append(this.viewLoginForm());
     });
 
     loginLink.addEventListener('click', (event) => {
@@ -83,10 +87,13 @@ export class Auth {
   async loginUser(user: IUserReg): Promise<void> {
     try {
       const data = await api.loginUser(user);
+      const { name } = await api.getUser(data.userId, data.token);
       this.user = data;
       this.token = data.token;
       localStorage.setItem('rs-lang-userInfo', JSON.stringify(this.user));
       view.renderStartPage();
+      const userName = document.querySelector('.header__user-name') as HTMLElement;
+      userName.textContent = name;
       const authBtn = document.querySelector('.header__auth-btn') as HTMLButtonElement;
       authBtn.textContent = 'Выйти';
     } catch {

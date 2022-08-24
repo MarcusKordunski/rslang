@@ -133,6 +133,9 @@ export class Textbook {
             if (count < this.wordsOnPage[index].audioTracks.length) {
               this.audioPlayer.src = `http://localhost:3000/${this.wordsOnPage[index].audioTracks[count]}`;
               this.audioPlayer.play();
+            } else {
+              this.wordsOnPage[index].audioBtnImg.src = `./assets/icons/play.png`;
+              this.wordsOnPage[index].isPlayed = false;
             }
           };
         } else {
