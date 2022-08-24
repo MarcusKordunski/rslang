@@ -12,7 +12,15 @@ export class Sprint {
 
   private isCorrect: boolean;
 
+  private streakSignal1!: HTMLElement;
+
+  private streakSignal2!: HTMLElement;
+
+  private streakSignal3!: HTMLElement;
+
   private wordsArr!: IWord[];
+
+  private wordsWrongArr!: IWord[];
 
   private index: number;
 
@@ -28,6 +36,10 @@ export class Sprint {
 
   public score!: HTMLElement;
 
+  public scoreCount: number;
+
+  public scoreAdd: number;
+
   public isTimeEnd!: boolean;
 
   public difficulty!: string;
@@ -37,6 +49,8 @@ export class Sprint {
     this.correctStreak = 0;
     this.isTimeEnd = false;
     this.index = 0;
+    this.scoreCount = 0;
+    this.scoreAdd = 20;
   }
 
   renderSprintMenu(): HTMLElement {
@@ -66,6 +80,9 @@ export class Sprint {
       await this.createWordsArr();
       this.timerCounter();
       this.setNewWord();
+      this.index = 0;
+      this.correctStreak = 0;
+      this.scoreCount = 0;
     });
 
     return sprintContainer;
@@ -74,7 +91,11 @@ export class Sprint {
   renderSprintGame(): HTMLElement {
     const sprintContainer = create('div', 'sprint-game');
     this.score = create('p', 'sprint-game__score', sprintContainer);
-    this.score.textContent = `Score: ${0}`;
+    this.score.textContent = `Score: ${this.scoreCount}`;
+    const streakContainer = create('div', 'sprint-game__streak', sprintContainer);
+    this.streakSignal1 = create('div', 'streak__signal1', streakContainer);
+    this.streakSignal2 = create('div', 'streak__signal2', streakContainer);
+    this.streakSignal3 = create('div', 'streak__signal3', streakContainer);
     this.timer = create('p', 'sprint-game__timer', sprintContainer);
     this.timer.textContent = `${60}`;
     this.word = create('p', 'sprint-game__word', sprintContainer);
@@ -87,9 +108,17 @@ export class Sprint {
     this.uncorrectBtn.textContent = 'Неверно';
     this.correctBtn.addEventListener('click', async (event) => {
       event.preventDefault();
+      this.answerHandler('correct');
+      this.streakHandler();
+      this.index += 1;
+      this.setNewWord();
     });
     this.uncorrectBtn.addEventListener('click', async (event) => {
       event.preventDefault();
+      this.answerHandler('uncorrect');
+      this.streakHandler();
+      this.index += 1;
+      this.setNewWord();
     });
 
     return sprintContainer;
@@ -113,11 +142,11 @@ export class Sprint {
   }
 
   randomPage(): number {
-    return Math.round(Math.random() * (30 - 0) + 0);
+    return Math.round(Math.random() * (29 - 0) + 0);
   }
 
   randomIndex(): number {
-    return Math.round(Math.random() * (20 - 0) + 0);
+    return Math.round(Math.random() * (19 - 0) + 0);
   }
 
 
@@ -128,22 +157,51 @@ export class Sprint {
       wrongPage = this.randomPage();
     }
     this.wordsArr = await api.getWords(this.difficulty, page);
-    const wordsWrongArr = await api.getWords(this.difficulty, wrongPage);
+    this.wordsWrongArr = await api.getWords(this.difficulty, wrongPage);
     this.wordsArr.forEach((item) => {
       if (this.coinThrow()) {
         return item;
       } else {
-        return item.wordTranslateWrong = wordsWrongArr[this.randomIndex()].wordTranslate;
+        return item.wordTranslateWrong = this.wordsWrongArr[this.randomIndex()].wordTranslate;
       }
     });
   }
 
-  async setNewWord() {
+  setNewWord() {
     this.word.textContent = this.wordsArr[this.index].word;
-    if (this.wordsArr[this.index].wordTranslateWrong && typeof this.translation.textContent === 'string' && typeof this.wordsArr[this.index].wordTranslateWrong === 'string') {
-      this.translation.textContent = this.wordsArr[this.index].wordTranslateWrong;
+    if (this.wordsArr[this.index].wordTranslateWrong) {
+      this.translation.textContent = this.wordsArr[this.index].wordTranslateWrong as string;
     } else {
       this.translation.textContent = this.wordsArr[this.index].wordTranslate;
     }
   }
+
+  answerHandler(correct: 'correct' | 'uncorrect') {
+    if (correct === 'correct' && !this.wordsArr[this.index].wordTranslateWrong) {
+      this.scoreCount += this.scoreAdd;
+      this.score.textContent = `Score: ${this.scoreCount}`;
+      this.correctStreak += 1;
+    } else if (correct === 'uncorrect' && this.wordsArr[this.index].wordTranslateWrong) {
+      this.scoreCount += this.scoreAdd;
+      this.score.textContent = `Score: ${this.scoreCount}`;
+      this.correctStreak += 1;
+    } else {
+      this.correctStreak = 0;
+    }
+  }
+
+  streakHandler() {
+    if (this.correctStreak === 1) {
+      this.streakSignal1.classList.add('active');
+    } else if (this.correctStreak === 2) {
+      this.streakSignal2.classList.add('active');
+    } else if (this.correctStreak >= 3) {
+      this.streakSignal3.classList.add('active');
+    } else if (this.correctStreak === 0) {
+      this.streakSignal1.classList.remove('active');
+      this.streakSignal2.classList.remove('active');
+      this.streakSignal3.classList.remove('active');
+    }
+  }
+
 }

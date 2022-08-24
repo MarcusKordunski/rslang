@@ -29,6 +29,7 @@
   flex-direction: column;
   gap: 1.2em;
   text-align: center;
+  align-items: center;
 }
 
 
@@ -57,4 +58,26 @@ ul li {
   height: 2em;
   margin-left: 0.5em;
   font-size: 1.8em;
+}
+
+.sprint-game__streak {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5em;
+}
+
+.streak__signal1,
+.streak__signal2,
+.streak__signal3 {
+  width: 3em;
+  height: 3em;
+  border: 0.2em solid black;
+  border-radius: 100%;
+}
+
+.streak__signal1.active,
+.streak__signal2.active,
+.streak__signal3.active {
+  background-color: forestgreen;
+  content: '3124124124';
 }
