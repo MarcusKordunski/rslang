@@ -56,7 +56,7 @@ const baseConfig = {
         new CleanWebpackPlugin(),
         // new CopyWebpackPlugin({
         //     patterns: [
-        //         { from: './src/assets/images', to: './assets/images' }
+        //         { from: './src/assets/icons', to: './assets/icons' }
         //     ]
         // })
     ],
