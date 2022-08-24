@@ -22,6 +22,10 @@ export class Sprint {
 
   private wordsWrongArr!: IWord[];
 
+  private resCorrectArr: IWord[];
+
+  private resUncorrectArr: IWord[];
+
   private index: number;
 
   public timer!: HTMLElement;
@@ -51,6 +55,8 @@ export class Sprint {
     this.index = 0;
     this.scoreCount = 0;
     this.scoreAdd = 20;
+    this.resCorrectArr = [];
+    this.resUncorrectArr = [];
   }
 
   renderSprintMenu(): HTMLElement {
@@ -124,6 +130,39 @@ export class Sprint {
     return sprintContainer;
   }
 
+  renderSprintResult(): HTMLElement {
+    const sprintContainer = create('div', 'sprint-result');
+    const resultTitle = create('p', 'sprint-result__title', sprintContainer);
+    resultTitle.textContent = 'Ваш результат:';
+    const correctTitle = create('p', 'sprint-result__correct-title', sprintContainer);
+    correctTitle.textContent = `ВЕРНО: ${this.resCorrectArr.length}`;
+    const correctWords = create('div', 'sprint-result__correct-words', sprintContainer);
+    for (let i = 0; i < this.resCorrectArr.length; i++) {
+      const word = create('p', undefined, correctWords);
+      word.textContent = `${this.resCorrectArr[i].word} - ${this.resCorrectArr[i].wordTranslate}`;
+    }
+    const uncorrectTitle = create('p', 'sprint-result__uncorrect-title', sprintContainer);
+    uncorrectTitle.textContent = `ОШИБОК: ${this.resUncorrectArr.length}`;
+    const uncorrectWords = create('div', 'sprint-result__uncorrect-words', sprintContainer);
+    for (let i = 0; i < this.resUncorrectArr.length; i++) {
+      const word = create('p', undefined, uncorrectWords);
+      word.textContent = `${this.resUncorrectArr[i].word} - ${this.resUncorrectArr[i].wordTranslate}`;
+    }
+    const resultButtons = create('div', 'sprint-result__buttons', sprintContainer);
+    const playAgain = create('button', 'sprint-result__play-again', resultButtons, undefined, ['type', 'button']);
+    const exit = create('button', 'sprint-result__exit', resultButtons, undefined, ['type', 'button']);
+    playAgain.textContent = 'Играть еще';
+    exit.textContent = 'Выйти';
+    playAgain.addEventListener('click', async (event) => {
+      event.preventDefault();
+    });
+    exit.addEventListener('click', async (event) => {
+      event.preventDefault();
+    });
+
+    return sprintContainer;
+  }
+
   timerCounter() {
     this.isTimeEnd = false;
     let time = 60;
@@ -133,6 +172,8 @@ export class Sprint {
       if (time === 0) {
         clearInterval(timer);
         this.isTimeEnd = true;
+        this.mainContent.innerHTML = '';
+        this.mainContent.appendChild(this.renderSprintResult());
       }
     }, 1000);
   }
@@ -168,11 +209,16 @@ export class Sprint {
   }
 
   setNewWord() {
-    this.word.textContent = this.wordsArr[this.index].word;
-    if (this.wordsArr[this.index].wordTranslateWrong) {
-      this.translation.textContent = this.wordsArr[this.index].wordTranslateWrong as string;
+    if (this.index === 20) {
+      this.mainContent.innerHTML = '';
+      this.mainContent.appendChild(this.renderSprintResult());
     } else {
-      this.translation.textContent = this.wordsArr[this.index].wordTranslate;
+      this.word.textContent = this.wordsArr[this.index].word;
+      if (this.wordsArr[this.index].wordTranslateWrong) {
+        this.translation.textContent = this.wordsArr[this.index].wordTranslateWrong as string;
+      } else {
+        this.translation.textContent = this.wordsArr[this.index].wordTranslate;
+      }
     }
   }
 
@@ -181,27 +227,33 @@ export class Sprint {
       this.scoreCount += this.scoreAdd;
       this.score.textContent = `Score: ${this.scoreCount}`;
       this.correctStreak += 1;
+      this.resCorrectArr.push(this.wordsArr[this.index]);
     } else if (correct === 'uncorrect' && this.wordsArr[this.index].wordTranslateWrong) {
       this.scoreCount += this.scoreAdd;
       this.score.textContent = `Score: ${this.scoreCount}`;
       this.correctStreak += 1;
+      this.resCorrectArr.push(this.wordsArr[this.index]);
     } else {
       this.correctStreak = 0;
+      this.resUncorrectArr.push(this.wordsArr[this.index]);
     }
   }
 
   streakHandler() {
-    if (this.correctStreak === 1) {
+    if (this.correctStreak % 3 === 1) {
       this.streakSignal1.classList.add('active');
-    } else if (this.correctStreak === 2) {
+      this.streakSignal2.classList.remove('active');
+      this.streakSignal3.classList.remove('active');
+    } else if (this.correctStreak % 3 === 2) {
       this.streakSignal2.classList.add('active');
-    } else if (this.correctStreak >= 3) {
+    } else if (this.correctStreak % 3 === 0 && this.correctStreak > 0) {
       this.streakSignal3.classList.add('active');
     } else if (this.correctStreak === 0) {
       this.streakSignal1.classList.remove('active');
       this.streakSignal2.classList.remove('active');
       this.streakSignal3.classList.remove('active');
     }
+    this.scoreAdd = 20 + (20 * Math.round(this.correctStreak / 3));
   }
 
 }

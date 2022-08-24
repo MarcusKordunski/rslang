@@ -40,7 +40,8 @@ ul li {
 }
 
 .sprint-menu__buttons,
-.sprint-game__buttons {
+.sprint-game__buttons,
+.sprint-result__buttons {
   display: flex;
   justify-content: center;
 }
@@ -58,6 +59,10 @@ ul li {
   height: 2em;
   margin-left: 0.5em;
   font-size: 1.8em;
+}
+
+.sprint-result__title {
+  font-size: 2em;
 }
 
 .sprint-game__streak {
@@ -80,4 +85,50 @@ ul li {
 .streak__signal3.active {
   background-color: forestgreen;
   content: '3124124124';
+}
+
+.sprint-result {
+  width: 40rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2em;
+  text-align: center;
+  align-items: center;
+}
+
+.sprint-result__correct-words {
+  background-color: white;
+  border-radius: 4%;
+  text-align: left;
+  width: 25rem;
+  padding: 1em;
+}
+
+.sprint-result__uncorrect-words {
+  background-color: white;
+  border-radius: 4%;
+  text-align: left;
+  width: 25rem;
+  padding: 1em;
+}
+
+.sprint-result__correct-title {
+  color: forestgreen;
+}
+
+.sprint-result__uncorrect-title {
+  color: red;
+}
+
+.sprint-result__play-again {
+  width: 7em;
+  height: 2em;
+  font-size: 0.8em;
+}
+
+.sprint-result__exit {
+  width: 7em;
+  height: 2em;
+  margin-left: 0.5em;
+  font-size: 0.8em;
 }
