@@ -15,12 +15,18 @@ export class View {
   private footer: IFooter;
   private auth: Auth;
   private textbook: Textbook;
-  constructor() {
-    this.header = new Header();
-    this.main = new Main();
-    this.footer = new Footer();
-    this.auth = new Auth();
-    this.textbook = new Textbook();
+  constructor(
+    header: IHeader,
+    main: IMain,
+    footer: IFooter,
+    auth: Auth,
+    textbook: Textbook,
+  ) {
+    this.header = header;
+    this.main = main;
+    this.footer = footer;
+    this.auth = auth;
+    this.textbook = textbook;
   }
 
 
@@ -49,8 +55,10 @@ export class View {
     const header = document.querySelector('.header') as HTMLElement;
     header!.innerHTML = this.header.getHtml();
     const authPageBtn = document.querySelector('.header__auth-btn') as HTMLElement;
+    const userName = document.querySelector('.header__user-name') as HTMLElement;
     if (this.auth.user) {
       authPageBtn.textContent = 'Выйти';
+      userName.textContent = this.auth.user.name;
     } else {
       authPageBtn.textContent = 'Войти';
     }
@@ -83,7 +91,6 @@ export class View {
     textbookPageBtn.addEventListener('click', () => {
       main.innerHTML = '';
       main.appendChild(this.textbook.init());
-      this.textbook.initWords();
     })
   }
 }

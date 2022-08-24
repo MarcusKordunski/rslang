@@ -2,6 +2,7 @@ import { IWord } from "../../types/types";
 import create from "../../utils/create";
 import { Word } from "./word";
 import { api } from "../../ts/api";
+import { auth } from "../../index";
 
 export class Textbook {
 
@@ -19,11 +20,14 @@ export class Textbook {
   public groupsDiv!: HTMLElement;
   public audioPlayer!: HTMLAudioElement;
 
+  // public auth: Auth;
+
   constructor() {
     this.textbookContainer = create('div', 'textbook-container');
     this.activePage = Number(localStorage.getItem('rs-lang-active-page')) || 0;
     this.activeGroup = Number(localStorage.getItem('rs-lang-active-group')) || 0;
     this.audioPlayer = new Audio();
+    // this.auth = new Auth();
   }
 
   getHtml() {
@@ -47,6 +51,7 @@ export class Textbook {
     this.getHtml();
     this.initGroups();
     this.initPagination();
+    this.initWords();
     return this.textbookContainer;
   }
 
@@ -61,6 +66,7 @@ export class Textbook {
       groupsArray.push(group);
     }
     groupsArray[this.activeGroup].classList.add('active');
+    !auth.user ? groupsArray[6].classList.add('close') : groupsArray[6].classList.remove('close');
 
     groupsArray.forEach((group, index) => {
       group.addEventListener('click', async () => {
@@ -158,6 +164,7 @@ export class Textbook {
       this.wordsOnPage.push(word);
       this.textbook.appendChild(word.wordContainer);
     });
+    // this.checkAuth();
     this.initAudio();
     if (this.activePage === 0) {
       this.prevPageBtn.disabled = true;
@@ -178,5 +185,12 @@ export class Textbook {
     this.activePageDiv.textContent = `${this.activePage + 1}`;
   }
 
-
+  // checkAuth() {
+  //   // const wordButtons = document.querySelector('.worc-card__buttons') as HTMLElement;
+  //   const hardGroup = document.getElementById('group-6') as HTMLElement;
+  //   if (!auth.user) {
+  //     // wordButtons.classList.add('closed');
+  //     hardGroup.classList.add('close');
+  //   }
+  // }
 }

@@ -67,11 +67,9 @@ export class Auth {
 
     regButton.addEventListener('click', async (event) => {
       event.preventDefault();
-      await api.createUser({ email: emailInput.value, password: passwordInput.value, name: nameInput.value });
+      const user: IUserReg = { email: emailInput.value, password: passwordInput.value, name: nameInput.value }
+      await this.regUser(user);
       emailInput.value, passwordInput.value, nameInput.value = '';
-      const main = document.querySelector('.main-content') as HTMLElement;
-      main.innerHTML = '';
-      main.append(this.viewLoginForm());
     });
 
     loginLink.addEventListener('click', (event) => {
@@ -82,6 +80,20 @@ export class Auth {
     })
 
     return regContainer;
+  }
+
+  async regUser(user: IUserReg): Promise<void> {
+    try {
+      const data = await api.createUser(user);
+      console.log(data.error);
+      const main = document.querySelector('.main-content') as HTMLElement;
+      main.innerHTML = '';
+      main.append(this.viewLoginForm());
+      this.showStatusMessage('Поздравляем! Вы успешно зарегистрировались.', 'green');
+    }
+    catch {
+      this.showStatusMessage('Пожалуйста, введите корректный e-mail или пароль');
+    }
   }
 
   async loginUser(user: IUserReg): Promise<void> {
@@ -97,7 +109,7 @@ export class Auth {
       const authBtn = document.querySelector('.header__auth-btn') as HTMLButtonElement;
       authBtn.textContent = 'Выйти';
     } catch {
-      console.log('Неверный логин');
+      this.showStatusMessage('Неверный логин или пароль');
     }
   }
 
@@ -110,7 +122,12 @@ export class Auth {
     authBtn.textContent = 'Войти';
   }
 
-  showStatusMessage() {
-
+  showStatusMessage(message: string, background?: string) {
+    const messageContainer = create('div', 'status-message', document.body);
+    if (background) messageContainer.style.backgroundColor = background;
+    messageContainer.innerHTML = message;
+    setTimeout(() => {
+      messageContainer.remove()
+    }, 2500);
   }
 }

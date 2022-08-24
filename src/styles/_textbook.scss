@@ -175,7 +175,7 @@
 
 
 
-  #group-6 {
+  #group-6.close {
     display: none;
   }
 
@@ -272,6 +272,10 @@
 
   &__meaning-translate {
     margin: 0px 0px 15px 0px;
+  }
+
+  &__buttons.close {
+    display: none;
   }
 
   &__learned-btn,

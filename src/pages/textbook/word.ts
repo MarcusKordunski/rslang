@@ -1,5 +1,6 @@
 import { IWord } from "../../types/types";
 import create from "../../utils/create";
+import { auth } from "../..";
 
 export class Word {
 
@@ -22,8 +23,8 @@ export class Word {
   public wordAudio!: HTMLElement;
   public isPlayed: boolean;
   public audioBtnImg: HTMLImageElement;
-  public learnedButton: HTMLButtonElement;
-  public difficultyButton: HTMLButtonElement;
+  public learnedButton!: HTMLButtonElement;
+  public difficultyButton!: HTMLButtonElement;
 
   constructor(word: IWord) {
     this.id = word.id;
@@ -78,11 +79,12 @@ export class Word {
     wordExampleTranslate.textContent = `${this.textExampleTranslate}`;
 
     const wordTracker: HTMLElement = create('div', 'word-card__tracker', wordBody);
-    const wordButtons: HTMLElement = create('div', 'word-card__buttons', wordBody);
-    this.learnedButton = create('button', 'word-card__learned-btn', wordButtons) as HTMLButtonElement;
-    this.learnedButton.textContent = 'Изучено';
-    this.difficultyButton = create('button', 'word-card__hard-btn', wordButtons) as HTMLButtonElement;
-    this.difficultyButton.textContent = 'Сложное';
-
+    if (auth.user) {
+      const wordButtons: HTMLElement = create('div', 'word-card__buttons', wordBody);
+      this.learnedButton = create('button', 'word-card__learned-btn', wordButtons) as HTMLButtonElement;
+      this.learnedButton.textContent = 'Изучено';
+      this.difficultyButton = create('button', 'word-card__hard-btn', wordButtons) as HTMLButtonElement;
+      this.difficultyButton.textContent = 'Сложное';
+    }
   }
 }
