@@ -127,6 +127,22 @@ export class Sprint {
       this.setNewWord();
     });
 
+    document.addEventListener('keydown', async (event) => {
+      if (event.code === 'ArrowLeft') {
+        event.preventDefault();
+        this.answerHandler('correct');
+        this.streakHandler();
+        this.index += 1;
+        this.setNewWord();
+      } else if (event.code === 'ArrowRight') {
+        event.preventDefault();
+        this.answerHandler('uncorrect');
+        this.streakHandler();
+        this.index += 1;
+        this.setNewWord();
+      }
+    });
+
     return sprintContainer;
   }
 
