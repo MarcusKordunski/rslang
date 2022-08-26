@@ -20,14 +20,11 @@ export class Textbook {
   public groupsDiv!: HTMLElement;
   public audioPlayer!: HTMLAudioElement;
 
-  // public auth: Auth;
-
   constructor() {
     this.textbookContainer = create('div', 'textbook-container');
     this.activePage = Number(localStorage.getItem('rs-lang-active-page')) || 0;
     this.activeGroup = Number(localStorage.getItem('rs-lang-active-group')) || 0;
     this.audioPlayer = new Audio();
-    // this.auth = new Auth();
   }
 
   getHtml() {
@@ -122,6 +119,26 @@ export class Textbook {
     })
   }
 
+  checkPaginationButtons() {
+    if (this.activePage === 0) {
+      this.prevPageBtn.disabled = true;
+      this.nextPageBtn.disabled = false;
+      this.prevPageBtn.classList.add('disabled');
+      this.nextPageBtn.classList.remove('disabled');
+    } else if (this.activePage === 29) {
+      this.nextPageBtn.disabled = true;
+      this.prevPageBtn.disabled = false;
+      this.nextPageBtn.classList.add('disabled');
+      this.prevPageBtn.classList.remove('disabled');
+    } else {
+      this.nextPageBtn.disabled = false;
+      this.prevPageBtn.disabled = false;
+      this.nextPageBtn.classList.remove('disabled');
+      this.prevPageBtn.classList.remove('disabled');
+    }
+    this.activePageDiv.textContent = `${this.activePage + 1}`;
+  }
+
   initAudio() {
     const audioButtons: HTMLElement[] = this.wordsOnPage.map(item => item.wordAudio);
     audioButtons.forEach((btn, index) => {
@@ -158,39 +175,29 @@ export class Textbook {
   async initWords() {
     this.wordsOnPage = [];
     this.textbook.innerHTML = '';
-    const words: IWord[] = await api.getWords(this.activeGroup, this.activePage);
-    words.forEach((item) => {
-      const word = new Word(item);
-      this.wordsOnPage.push(word);
-      this.textbook.appendChild(word.wordContainer);
-    });
-    // this.checkAuth();
-    this.initAudio();
-    if (this.activePage === 0) {
-      this.prevPageBtn.disabled = true;
-      this.nextPageBtn.disabled = false;
-      this.prevPageBtn.classList.add('disabled');
-      this.nextPageBtn.classList.remove('disabled');
-    } else if (this.activePage === 29) {
-      this.nextPageBtn.disabled = true;
-      this.prevPageBtn.disabled = false;
-      this.nextPageBtn.classList.add('disabled');
-      this.prevPageBtn.classList.remove('disabled');
-    } else {
-      this.nextPageBtn.disabled = false;
-      this.prevPageBtn.disabled = false;
-      this.nextPageBtn.classList.remove('disabled');
-      this.prevPageBtn.classList.remove('disabled');
-    }
-    this.activePageDiv.textContent = `${this.activePage + 1}`;
-  }
 
-  // checkAuth() {
-  //   // const wordButtons = document.querySelector('.worc-card__buttons') as HTMLElement;
-  //   const hardGroup = document.getElementById('group-6') as HTMLElement;
-  //   if (!auth.user) {
-  //     // wordButtons.classList.add('closed');
-  //     hardGroup.classList.add('close');
-  //   }
-  // }
+    if (auth.user) {
+      const filter = `%7B%22$and%22%3A%5B%7B%22group%22%3A${this.activeGroup}%7D%2C%7B%22page%22%3A${this.activePage}%7D%5D%7D`;
+      const words: IWord[] = await api.getAggregatedWords(auth.user.userId, auth.user.token, filter);
+      words.forEach((item) => {
+        const word = new Word(item);
+        this.wordsOnPage.push(word);
+        word.init();
+        if (word.userWord?.difficulty === 'hard') word.wordContainer.classList.add('hard');
+        if (word.userWord?.difficulty === 'easy') word.wordContainer.classList.add('easy');
+        this.textbook.appendChild(word.wordContainer);
+      });
+    } else {
+      const words: IWord[] = await api.getWords(this.activeGroup, this.activePage);
+      words.forEach((item) => {
+        const word = new Word(item);
+        word.init();
+        this.textbook.appendChild(word.wordContainer);
+        this.wordsOnPage.push(word);
+      });
+    }
+    this.initAudio();
+    console.log(this.wordsOnPage);
+    this.checkPaginationButtons();
+  }
 }

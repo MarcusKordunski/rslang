@@ -1,9 +1,3 @@
-export interface IUserReg {
-  email: string;
-  password: string;
-  name?: string;
-}
-
 export interface IMain {
   getHtml: () => string;
 }
@@ -20,7 +14,22 @@ export interface INavigation {
   getHtml: () => string;
 }
 
+export interface IUserReg {
+  email: string;
+  password: string;
+  name?: string;
+}
+
+export interface IUserObject {
+  message: string;
+  token: string;
+  refreshToken: string;
+  userId: string;
+  name: string;
+}
+
 export interface IWord {
+  _id?: string;
   id: string;
   group: number;
   page: number;
@@ -35,12 +44,17 @@ export interface IWord {
   wordTranslate: string;
   textMeaningTranslate: string;
   textExampleTranslate: string;
+  userWord?: IUserWord;
 }
 
-export interface IUserObject {
-  message: string;
-  token: string;
-  refreshToken: string;
-  userId: string;
-  name: string;
+export interface IUserWord {
+  difficulty: string;
+  optional: IOptionalWord;
 }
+
+export interface IOptionalWord {
+  correctCount: number;
+  totalCorrectCount: number;
+  totalIncorrectCount: number;
+}
+
