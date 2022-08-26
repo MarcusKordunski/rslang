@@ -26,6 +26,7 @@ export class Word {
   public audioBtnImg!: HTMLImageElement;
   public learnedButton!: HTMLButtonElement;
   public difficultyButton!: HTMLButtonElement;
+  public deleteFromHardButton!: HTMLButtonElement;
   public wordBody!: HTMLElement;
   public userWord!: IUserWord | undefined;
 
@@ -98,9 +99,16 @@ export class Word {
     this.learnedButton.textContent = 'Изучено';
     this.difficultyButton = create('button', 'word-card__hard-btn', wordButtons) as HTMLButtonElement;
     this.difficultyButton.textContent = 'Сложное';
+    this.deleteFromHardButton = create('button', 'word-card__delete-btn', wordButtons) as HTMLButtonElement;
+    this.deleteFromHardButton.textContent = 'Удалить';
+
 
     this.learnedButton.addEventListener('click', () => { this.toggleEasyUserWord() });
     this.difficultyButton.addEventListener('click', () => { this.toggleHardUserWord() });
+    this.deleteFromHardButton.addEventListener('click', async () => {
+      await this.toggleHardUserWord();
+      this.wordContainer.style.display = 'none';
+    })
   }
 
   createUserWordOptions(
@@ -119,18 +127,18 @@ export class Word {
     }
   }
 
-  toggleEasyUserWord() {
+  async toggleEasyUserWord() {
     if (!this.userWord) {
-      api.createUserWord(auth.user!.userId, this.id, auth.token, this.createUserWordOptions('easy'));
+      await api.createUserWord(auth.user!.userId, this.id, auth.token, this.createUserWordOptions('easy'));
       this.userWord = this.createUserWordOptions('easy');
       this.wordContainer.classList.add('easy');
     } else {
       if (this.userWord.difficulty === 'easy') {
-        api.updateUserWord(auth.user!.userId, auth.token, this.id, this.createUserWordOptions('normal'));
+        await api.updateUserWord(auth.user!.userId, auth.token, this.id, this.createUserWordOptions('normal'));
         this.userWord = this.createUserWordOptions('normal');
         this.wordContainer.classList.remove('easy');
       } else if (this.userWord.difficulty === 'hard' || this.userWord.difficulty === 'normal') {
-        api.updateUserWord(auth.user!.userId, auth.token, this.id, this.createUserWordOptions('easy'));
+        await api.updateUserWord(auth.user!.userId, auth.token, this.id, this.createUserWordOptions('easy'));
         this.userWord = this.createUserWordOptions('easy');
         this.wordContainer.classList.remove('hard');
         this.wordContainer.classList.add('easy');
@@ -138,18 +146,18 @@ export class Word {
     }
   }
 
-  toggleHardUserWord() {
+  async toggleHardUserWord() {
     if (!this.userWord) {
-      api.createUserWord(auth.user!.userId, this.id, auth.token, this.createUserWordOptions('hard'));
+      await api.createUserWord(auth.user!.userId, this.id, auth.token, this.createUserWordOptions('hard'));
       this.userWord = this.createUserWordOptions('hard');
       this.wordContainer.classList.add('hard');
     } else {
       if (this.userWord.difficulty === 'hard') {
-        api.updateUserWord(auth.user!.userId, auth.token, this.id, this.createUserWordOptions('normal'));
+        await api.updateUserWord(auth.user!.userId, auth.token, this.id, this.createUserWordOptions('normal'));
         this.userWord = this.createUserWordOptions('normal');
         this.wordContainer.classList.remove('hard');
       } else if (this.userWord.difficulty === 'easy' || this.userWord.difficulty === 'normal') {
-        api.updateUserWord(auth.user!.userId, auth.token, this.id, this.createUserWordOptions('hard'));
+        await api.updateUserWord(auth.user!.userId, auth.token, this.id, this.createUserWordOptions('hard'));
         this.userWord = this.createUserWordOptions('hard');
         this.wordContainer.classList.remove('easy');
         this.wordContainer.classList.add('hard');

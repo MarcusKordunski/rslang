@@ -12,7 +12,7 @@
   display: flex;
   justify-content: center;
   padding: 20px;
-  margin-top: 20px;
+  margin: 20px 0px;
   background: $bg-auth-form;
   border-radius: 10px;
   gap: 10px;
@@ -33,11 +33,12 @@
 
 .textbook-pagination {
   width: 80%;
-  height: 80px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
+  margin-bottom: 15px;
 
   &__btn,
   &__page {
@@ -309,7 +310,8 @@
   }
 
   &__learned-btn,
-  &__hard-btn {
+  &__hard-btn,
+  &__delete-btn {
     margin: 10px;
     width: 80px;
     height: 30px;

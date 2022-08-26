@@ -117,6 +117,8 @@ export class Auth {
     this.user = null;
     this.token = '';
     localStorage.removeItem('rs-lang-userInfo');
+    localStorage.removeItem('rs-lang-active-page');
+    localStorage.removeItem('rs-lang-active-group');
     view.renderStartPage();
     const authBtn = document.querySelector('.header__auth-btn') as HTMLButtonElement;
     authBtn.textContent = 'Войти';

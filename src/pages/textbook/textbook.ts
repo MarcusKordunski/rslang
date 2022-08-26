@@ -48,7 +48,11 @@ export class Textbook {
     this.getHtml();
     this.initGroups();
     this.initPagination();
-    this.initWords();
+    if (this.activeGroup !== 6) {
+      this.initWords();
+    } else {
+      this.initHardWords();
+    }
     return this.textbookContainer;
   }
 
@@ -74,8 +78,12 @@ export class Textbook {
         localStorage.setItem('rs-lang-active-page', `${this.activePage}`);
         this.activePageDiv.textContent = `${this.activePage + 1}`;
         localStorage.setItem('rs-lang-active-group', `${this.activeGroup}`);
-        await this.initWords();
-      })
+        if (this.activeGroup === 6) {
+          await this.initHardWords();
+        } else {
+          await this.initWords();
+        };
+      });
     })
   }
 
@@ -175,6 +183,7 @@ export class Textbook {
   async initWords() {
     this.wordsOnPage = [];
     this.textbook.innerHTML = '';
+    this.paginationDiv.style.display = 'flex';
 
     if (auth.user) {
       const filter = `%7B%22$and%22%3A%5B%7B%22group%22%3A${this.activeGroup}%7D%2C%7B%22page%22%3A${this.activePage}%7D%5D%7D`;
@@ -183,6 +192,7 @@ export class Textbook {
         const word = new Word(item);
         this.wordsOnPage.push(word);
         word.init();
+        word.deleteFromHardButton.remove();
         if (word.userWord?.difficulty === 'hard') word.wordContainer.classList.add('hard');
         if (word.userWord?.difficulty === 'easy') word.wordContainer.classList.add('easy');
         this.textbook.appendChild(word.wordContainer);
@@ -192,12 +202,31 @@ export class Textbook {
       words.forEach((item) => {
         const word = new Word(item);
         word.init();
+        word.deleteFromHardButton.remove();
         this.textbook.appendChild(word.wordContainer);
         this.wordsOnPage.push(word);
       });
     }
     this.initAudio();
-    console.log(this.wordsOnPage);
     this.checkPaginationButtons();
   }
+
+  async initHardWords() {
+    this.wordsOnPage = [];
+    this.textbook.innerHTML = '';
+    this.paginationDiv.style.display = 'none';
+    const filter: string = '%7B%22userWord.difficulty%22%3A%22hard%22%7D';
+    const words: IWord[] = await api.getAggregatedWords(auth.user!.userId, auth.user!.token, filter, 3600);
+    words.forEach((item) => {
+      const word = new Word(item);
+      this.wordsOnPage.push(word);
+      word.init();
+      word.difficultyButton.remove();
+      word.learnedButton.remove();
+      this.textbook.appendChild(word.wordContainer);
+    });
+    this.initAudio();
+  }
+
+
 }
