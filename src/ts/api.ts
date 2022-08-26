@@ -66,6 +66,59 @@ class Api {
     return data;
   }
 
+  async getUserWords(userId: string, token: string) {
+    const response = await fetch(`${this.usersUrl}/${userId}/words`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    });
+    const data = await response.json();
+    return data;
+  }
+
+  async getUserWord(userId: string, token: string, wordId: string) {
+    const response = await fetch(`${this.usersUrl}/${userId}/words/${wordId}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    });
+    const data = await response.json();
+    return data;
+  }
+
+  async updateUserWord(userId: string, token: string, wordId: string, body: IUserWord) {
+    const response = await fetch(`${this.usersUrl}/${userId}/words/${wordId}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+    const data = await response.json();
+    return data;
+  }
+
+  async deleteUserWord(userId: string, token: string, wordId: string) {
+    const response = await fetch(`${this.usersUrl}/${userId}/words/${wordId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    });
+    const data = await response.json();
+    return data;
+  }
+
   async getAggregatedWords(userId: string, token: string, filter: string, wordsPerPage: number = 20,) {
     const response = await fetch(`${this.usersUrl}/${userId}/aggregatedWords?wordsPerPage=${wordsPerPage}&filter=${filter}`, {
       method: 'GET',

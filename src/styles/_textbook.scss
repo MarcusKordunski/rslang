@@ -317,5 +317,13 @@
     border-radius: 3px;
     box-shadow: 0 0 5px black;
     font-family: RobotoMed, serif;
+
+    &:hover {
+      background: $bg-main-hover;
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
   }
 }
