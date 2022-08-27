@@ -210,9 +210,11 @@
 }
 
 .textbook {
+  // position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
 }
 
 .word-card {
@@ -251,8 +253,6 @@
       transform: rotate(45deg);
     }
   }
-
-
 
   &__img-box {
     max-width: 30%;
@@ -327,5 +327,39 @@
     &:active {
       transform: scale(0.95);
     }
+  }
+
+  &__tracker {
+    margin-bottom: 10px;
+  }
+
+  &__correct-div,
+  &__incorrect-div {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 5px;
+  }
+
+  &__statistic-title {
+    font-size: 14px;
+    color: rgb(67, 67, 67);
+    padding: 2px 0px;
+  }
+
+  &__correct-count {
+    margin-left: 15px;
+    padding: 2px 7px;
+    background-color: $bg-main;
+    border-radius: 2px;
+    box-shadow: 0 0 3px black;
+    color: rgb(0, 139, 0);
+  }
+
+  &__incorrect-count {
+    padding: 2px 7px;
+    background-color: $bg-main;
+    border-radius: 2px;
+    box-shadow: 0 0 3px black;
+    color: rgb(180, 0, 0);
   }
 }

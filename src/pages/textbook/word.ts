@@ -19,14 +19,17 @@ export class Word {
   public wordTranslate: string;
   public textMeaningTranslate: string;
   public textExampleTranslate: string;
+
   public wordContainer!: HTMLElement;
   public audioTracks!: string[];
   public wordAudio!: HTMLElement;
   public isPlayed: boolean;
   public audioBtnImg!: HTMLImageElement;
+
   public learnedButton!: HTMLButtonElement;
   public difficultyButton!: HTMLButtonElement;
   public deleteFromHardButton!: HTMLButtonElement;
+
   public wordBody!: HTMLElement;
   public userWord!: IUserWord | undefined;
 
@@ -51,7 +54,11 @@ export class Word {
 
   init() {
     this.getHtml();
-    if (auth.user) this.getUserButtons();
+    if (auth.user) {
+      this.getUserWordsStatistic();
+      this.getUserButtons();
+    }
+
   }
 
   getHtml() {
@@ -89,8 +96,6 @@ export class Word {
     wordExample.innerHTML = `${this.textExample}`;
     const wordExampleTranslate: HTMLElement = create('div', 'word-card__example-translate', wordMid);
     wordExampleTranslate.textContent = `${this.textExampleTranslate}`;
-
-    const wordTracker: HTMLElement = create('div', 'word-card__tracker', this.wordBody);
   }
 
   getUserButtons() {
@@ -109,6 +114,20 @@ export class Word {
       await this.toggleHardUserWord();
       this.wordContainer.style.display = 'none';
     })
+  }
+
+  getUserWordsStatistic() {
+    const wordTracker: HTMLElement = create('div', 'word-card__tracker', this.wordBody);
+    const correctDiv: HTMLElement = create('div', 'word-card__correct-div', wordTracker);
+    const incorrectDiv: HTMLElement = create('div', 'word-card__incorrect-div', wordTracker);
+    const correctTitle: HTMLElement = create('p', 'word-card__statistic-title', correctDiv);
+    correctTitle.textContent = 'Правильно отгадано: ';
+    const incorrectTitle: HTMLElement = create('p', 'word-card__statistic-title', incorrectDiv);
+    incorrectTitle.textContent = 'Неправильно отгадано: ';
+    const correctCount: HTMLElement = create('p', 'word-card__correct-count', correctDiv);
+    correctCount.textContent = this.userWord ? `${this.userWord.optional.totalCorrectCount}` : `0`;
+    const incorrectCount: HTMLElement = create('p', 'word-card__incorrect-count', incorrectDiv);
+    incorrectCount.textContent = this.userWord ? `${this.userWord.optional.totalIncorrectCount}` : `0`;
   }
 
   createUserWordOptions(
