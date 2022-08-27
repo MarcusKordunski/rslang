@@ -202,7 +202,6 @@ export class Textbook {
       words.forEach((item) => {
         const word = new Word(item);
         word.init();
-        word.deleteFromHardButton.remove();
         this.textbook.appendChild(word.wordContainer);
         this.wordsOnPage.push(word);
       });
