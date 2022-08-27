@@ -54,11 +54,11 @@ const baseConfig = {
             filename: '[name].[contenthash].css'
         }),
         new CleanWebpackPlugin(),
-        // new CopyWebpackPlugin({
-        //     patterns: [
-        //         { from: './src/assets/images', to: './assets/images' }
-        //     ]
-        // })
+        new CopyWebpackPlugin({
+            patterns: [
+                { from: './src/assets/icons', to: './assets/icons' }
+            ]
+        })
     ],
 };
 
