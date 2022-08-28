@@ -1,7 +1,7 @@
 export class Main {
   getHtml(): string {
-    return `
-      <div id='main-content'></div>
-    `;
+    return `<div class='main-container container'>
+              <div class='main-content'></div>
+            </div>`;
   }
 }

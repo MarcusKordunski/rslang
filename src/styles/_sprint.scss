@@ -1,9 +1,11 @@
-.sprint-menu {
+.sprint-menu,
+.sprint-game,
+.sprint-result {
   width: 40rem;
   display: flex;
   flex-direction: column;
   gap: 1.2em;
-  margin-top: 5em;
+  margin: 3em auto 2em auto;
 }
 
 .sprint-menu__title {
@@ -13,6 +15,7 @@
 
 .sprint-menu__about {
   font-size: 1.5em;
+  white-space: pre-line;
 }
 
 .sprint-game__score {
@@ -76,7 +79,7 @@ ul li {
 .streak__signal3 {
   width: 3em;
   height: 3em;
-  border: 0.2em solid black;
+  border: 0.15em solid black;
   border-radius: 100%;
 }
 
@@ -84,7 +87,6 @@ ul li {
 .streak__signal2.active,
 .streak__signal3.active {
   background-color: forestgreen;
-  content: '3124124124';
 }
 
 .sprint-result {

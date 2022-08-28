@@ -1,0 +1,365 @@
+@import './_variables.scss';
+
+.textbook-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.textbook-games {
+  width: 80%;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  margin: 20px 0px;
+  background: $bg-auth-form;
+  border-radius: 10px;
+  gap: 10px;
+
+  &__sprint,
+  &__audio {
+    width: 150px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: $bg-auth-form;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px black;
+    color: $text-color;
+  }
+}
+
+.textbook-pagination {
+  width: 80%;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+
+  &__btn,
+  &__page {
+    width: 60px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: $bg-auth-form;
+    color: $text-color;
+    border-radius: 5px;
+    box-shadow: 0 0 5px black;
+
+    &.disabled {
+      background: rgb(181, 181, 181);
+      color: whitesmoke;
+      box-shadow: none;
+      cursor: default;
+
+      &:hover {
+        border: none;
+      }
+
+      &:active {
+        transform: none;
+      }
+    }
+  }
+
+  &__btn {
+    &:hover {
+      border: 2px solid rgb(3, 3, 145);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  &__enter {
+    width: 60px;
+    height: 30px;
+    color: $text-blue;
+    border-radius: 3px;
+    border: 2px solid $text-blue;
+    box-shadow: 0 0 5px black;
+    text-align: center;
+  }
+}
+
+// .textbook-body {
+//   display: flex;
+// }
+
+.textbook-groups {
+  position: absolute;
+  top: 20px;
+  right: 0.5%;
+  // position: relative;
+  // right: 0;
+  width: 70px;
+  padding: 20px 5px;
+  background: $bg-main;
+  border-radius: 5px;
+  box-shadow: 0 0 5px black;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+
+  .group-title {
+    font-family: RobotoMed, serif;
+    color: rgb(159, 135, 0);
+  }
+
+  .words-group {
+    width: 50px;
+    height: 50px;
+    // border: 1px solid black;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: .2s;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    &__num {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      color: $text-color;
+    }
+  }
+
+  @media(max-width: 1023.95px) {
+    right: -1%;
+  }
+
+  #group-0.active {
+    border: 3px solid rgb(77, 187, 82);
+  }
+
+  #group-1.active {
+    border: 3px solid rgb(187, 185, 77);
+  }
+
+  #group-2.active {
+    border: 3px solid rgb(187, 137, 77);
+  }
+
+  #group-3.active {
+    border: 3px solid rgb(167, 77, 187);
+  }
+
+  #group-4.active {
+    border: 3px solid rgb(187, 77, 108);
+  }
+
+  #group-5.active {
+    border: 3px solid rgb(46, 137, 137);
+  }
+
+  #group-6.active {
+    border: 3px solid rgb(214, 3, 3);
+  }
+
+
+
+  #group-6.close {
+    display: none;
+  }
+
+  #group-10 {
+    background-color: rgb(77, 187, 82);
+  }
+
+  #group-11 {
+    background-color: rgb(187, 185, 77);
+  }
+
+  #group-12 {
+    background-color: rgb(187, 137, 77);
+  }
+
+  #group-13 {
+    background-color: rgb(167, 77, 187);
+  }
+
+  #group-14 {
+    background-color: rgb(187, 77, 108);
+  }
+
+  #group-15 {
+    background-color: rgb(46, 137, 137);
+  }
+
+  #group-16 {
+    background-color: rgb(214, 3, 3);
+  }
+}
+
+.textbook {
+  // position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.word-card {
+  position: relative;
+  display: flex;
+  width: 85%;
+  margin: 10px 0px;
+  background: $bg-main;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0px 0px 5px rgb(67, 67, 67);
+  overflow: hidden;
+
+  &.hard {
+    &::after {
+      content: '';
+      position: absolute;
+      right: -75px;
+      bottom: -75px;
+      width: 150px;
+      height: 150px;
+      background-color: red;
+      transform: rotate(45deg);
+    }
+  }
+
+  &.easy {
+    &::after {
+      content: '';
+      position: absolute;
+      right: -75px;
+      bottom: -75px;
+      width: 150px;
+      height: 150px;
+      background-color: green;
+      transform: rotate(45deg);
+    }
+  }
+
+  &__img-box {
+    max-width: 30%;
+  }
+
+  &__img {
+    height: 100%;
+    max-width: 100%;
+  }
+
+  &__body {
+    padding: 0px 20px;
+    width: 70%;
+  }
+
+  &__top {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0px 20px 0px;
+    padding: 0px 0px 0px 10px;
+    border-left: 4px solid rgb(175, 0, 0);
+  }
+
+  &__word {
+    font-family: RobotoBold, serif;
+    text-transform: capitalize;
+    font-size: 22px;
+  }
+
+  &__audio {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+  }
+
+  &__audio-btn {
+    width: 100%;
+  }
+
+  &__title-row {
+    display: flex;
+    gap: 10px;
+  }
+
+  &__mid {
+    margin: 10px 0px 20px 0px;
+  }
+
+  &__meaning-translate {
+    margin: 0px 0px 15px 0px;
+  }
+
+  &__buttons.close {
+    display: none;
+  }
+
+  &__learned-btn,
+  &__hard-btn,
+  &__delete-btn {
+    margin: 10px;
+    width: 80px;
+    height: 30px;
+    background: $bg-main;
+    border-radius: 3px;
+    box-shadow: 0 0 5px black;
+    font-family: RobotoMed, serif;
+
+    &:hover {
+      background: $bg-main-hover;
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  &__tracker {
+    margin-bottom: 10px;
+  }
+
+  &__correct-div,
+  &__incorrect-div {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 5px;
+  }
+
+  &__statistic-title {
+    font-size: 14px;
+    color: rgb(67, 67, 67);
+    padding: 2px 0px;
+  }
+
+  &__correct-count {
+    margin-left: 15px;
+    padding: 2px 7px;
+    background-color: $bg-main;
+    border-radius: 2px;
+    box-shadow: 0 0 3px black;
+    color: rgb(0, 139, 0);
+  }
+
+  &__incorrect-count {
+    padding: 2px 7px;
+    background-color: $bg-main;
+    border-radius: 2px;
+    box-shadow: 0 0 3px black;
+    color: rgb(180, 0, 0);
+  }
+}

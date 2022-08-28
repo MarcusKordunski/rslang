@@ -51,3 +51,14 @@
     color: whitesmoke;
   }
 }
+
+.status-message {
+  position: absolute;
+  top: 11px;
+  right: 20px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  animation: bounceInOutRight 3s;
+  background-color: rgb(182, 0, 0);
+  color: $text-color;
+}

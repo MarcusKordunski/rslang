@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const { merge } = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -12,16 +13,16 @@ const baseConfig = {
     rules: [
       {
         test: /\.html$/,
-        use: ["html-loader"],
+        use: ['html-loader'],
       },
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader']
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
 
       {
         test: /\.s[ac]ss/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
       },
       {
         test: /\.ts$/i,
@@ -51,14 +52,14 @@ const baseConfig = {
       filename: 'index.html',
     }),
     new MiniCssExtractPlugin({
-      filename: '[name].[contenthash].css'
+      filename: '[name].[contenthash].css',
     }),
     new CleanWebpackPlugin(),
-    // new CopyWebpackPlugin({
-    //     patterns: [
-    //         { from: './src/assets/images', to: './assets/images' }
-    //     ]
-    // })
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: './src/assets/icons', to: './assets/icons' },
+      ],
+    }),
   ],
 };
 

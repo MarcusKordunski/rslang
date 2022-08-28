@@ -2,39 +2,44 @@ import {
   IHeader,
   IMain,
   IFooter,
-  INavigation,
 } from "../types/types";
 import { Footer } from '../components/footer';
-import { Navigation } from '../components/navigation';
 import { Header } from '../components/header';
 import { Main } from '../pages/main';
 import { Auth } from "../pages/auth";
+import { Textbook } from "../pages/textbook/textbook";
+import { Sprint } from "../pages/sprint";
 
 export class View {
   private header: IHeader;
-  private navigation: INavigation;
   private main: IMain;
   private footer: IFooter;
   private auth: Auth;
-  constructor() {
-    this.header = new Header();
-    this.navigation = new Navigation();
-    this.main = new Main();
-    this.footer = new Footer();
-    this.auth = new Auth();
+  private textbook: Textbook;
+  constructor(
+    header: IHeader,
+    main: IMain,
+    footer: IFooter,
+    auth: Auth,
+    textbook: Textbook,
+  ) {
+    this.header = header;
+    this.main = main;
+    this.footer = footer;
+    this.auth = auth;
+    this.textbook = textbook;
   }
 
 
   public renderContainers(): void {
     let body = document.body;
     body.innerHTML = `
-    <div id='root'>
-      <header id='header'></header>
-        <main id='container'>
-          <nav id='nav'></nav>
-          <section id='main'></section>
+    <div class='root'>
+      <header class='header'></header>
+        <main class='main'>
+          <div class='main-container container'></div>
         </main>
-      <footer id='footer'></footer>
+      <footer class='footer'></footer>
     </div>`
 
   }
@@ -42,37 +47,62 @@ export class View {
   public renderStartPage(): void {
     this.renderContainers();
     this.renderHeader();
-    this.renderNav();
     this.renderMain();
+    this.renderFooter();
     this.addHeaderListeners();
   }
 
   public renderHeader(): void {
-    const header: HTMLElement | null = document.querySelector('#header');
+    const header = document.querySelector('.header') as HTMLElement;
     header!.innerHTML = this.header.getHtml();
-  }
-
-  public renderNav(): void {
-    const nav: HTMLElement | null = document.querySelector('#nav');
-    nav!.innerHTML = this.navigation.getHtml();
+    const authPageBtn = document.querySelector('.header__auth-btn') as HTMLElement;
+    const userName = document.querySelector('.header__user-name') as HTMLElement;
+    if (this.auth.user) {
+      authPageBtn.textContent = 'Выйти';
+      userName.textContent = this.auth.user.name;
+    } else {
+      authPageBtn.textContent = 'Войти';
+    }
   }
 
   public renderMain(): void {
-    const main: HTMLElement | null = document.querySelector('#main');
+    const main = document.querySelector('.main') as HTMLElement;
     main!.innerHTML = this.main.getHtml();
   }
 
   public renderFooter(): void {
-    const footer: HTMLElement | null = document.querySelector('#footer');
+    const footer = document.querySelector('.footer') as HTMLElement;
     footer!.innerHTML = this.footer.getHtml();
   }
 
   public addHeaderListeners(): void {
-    const authButton = document.querySelector('#auth-icon') as HTMLElement;
-    const main = document.querySelector('#main') as HTMLElement;
-    authButton.addEventListener('click', () => {
-      main.innerHTML = '';
-      main.append(this.auth.viewLoginForm());
+    const main = document.querySelector('.main-content') as HTMLElement;
+    const authPageBtn = document.querySelector('.header__auth-btn') as HTMLElement;
+    const textbookPageBtn = document.querySelector('.textbook-page') as HTMLElement;
+    const sprintGameBtn = document.querySelector('.sprint-page') as HTMLElement;
+
+    authPageBtn.addEventListener('click', () => {
+      if (!this.auth.user) {
+        main.innerHTML = '';
+        main.append(this.auth.viewLoginForm());
+      } else {
+        this.auth.logoutUser();
+      }
     });
+
+    textbookPageBtn.addEventListener('click', () => {
+      main.innerHTML = '';
+      main.appendChild(this.textbook.init());
+    });
+
+    sprintGameBtn.addEventListener('click', () => {
+      main.innerHTML = '';
+      const sprintMenu = new Sprint();
+      sprintMenu.mainContent.appendChild(sprintMenu.renderSprintMenu());
+      sprintMenu.arrowsListener();
+    });
+
   }
 }
+
+// export const view = new View();

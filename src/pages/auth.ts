@@ -1,7 +1,17 @@
 import create from "../utils/create";
 import { api } from "../ts/api";
+import { IUserObject, IUserReg } from "../types/types";
+import { view } from "../";
 
 export class Auth {
+  public user!: IUserObject | null;
+  public token!: string;
+
+  constructor() {
+    const user: string | null = localStorage.getItem('rs-lang-userInfo') || null;
+    this.user = JSON.parse(user!);
+    if (this.user) this.token = this.user.token;
+  }
 
   viewLoginForm(): HTMLElement {
     const loginContainer = create('div', 'login');
@@ -22,13 +32,13 @@ export class Auth {
 
     loginButton.addEventListener('click', async (event) => {
       event.preventDefault();
-      const data = await api.loginUser({ email: emailInput.value, password: passwordInput.value });
-      console.log(data);
+      const user: IUserReg = { email: emailInput.value, password: passwordInput.value };
+      await this.loginUser(user);
     });
 
     regLink.addEventListener('click', (event) => {
       event.preventDefault();
-      const main = document.querySelector('#main') as HTMLElement;
+      const main = document.querySelector('.main-content') as HTMLElement;
       main.innerHTML = '';
       main.append(this.viewRegForm());
     })
@@ -57,17 +67,69 @@ export class Auth {
 
     regButton.addEventListener('click', async (event) => {
       event.preventDefault();
-      const data = await api.createUser({ email: emailInput.value, password: passwordInput.value });
-      console.log(data);
+      const user: IUserReg = { email: emailInput.value, password: passwordInput.value, name: nameInput.value }
+      await this.regUser(user);
+      emailInput.value, passwordInput.value, nameInput.value = '';
     });
 
     loginLink.addEventListener('click', (event) => {
       event.preventDefault();
-      const main = document.querySelector('#main') as HTMLElement;
+      const main = document.querySelector('.main-content') as HTMLElement;
       main.innerHTML = '';
       main.append(this.viewLoginForm());
     })
 
     return regContainer;
+  }
+
+  async regUser(user: IUserReg): Promise<void> {
+    try {
+      const data = await api.createUser(user);
+      console.log(data.error);
+      const main = document.querySelector('.main-content') as HTMLElement;
+      main.innerHTML = '';
+      main.append(this.viewLoginForm());
+      this.showStatusMessage('Поздравляем! Вы успешно зарегистрировались.', 'green');
+    }
+    catch {
+      this.showStatusMessage('Пожалуйста, введите корректный e-mail или пароль');
+    }
+  }
+
+  async loginUser(user: IUserReg): Promise<void> {
+    try {
+      const data = await api.loginUser(user);
+      const { name } = await api.getUser(data.userId, data.token);
+      this.user = data;
+      this.token = data.token;
+      localStorage.setItem('rs-lang-userInfo', JSON.stringify(this.user));
+      view.renderStartPage();
+      const userName = document.querySelector('.header__user-name') as HTMLElement;
+      userName.textContent = name;
+      const authBtn = document.querySelector('.header__auth-btn') as HTMLButtonElement;
+      authBtn.textContent = 'Выйти';
+    } catch {
+      this.showStatusMessage('Неверный логин или пароль');
+    }
+  }
+
+  logoutUser(): void {
+    this.user = null;
+    this.token = '';
+    localStorage.removeItem('rs-lang-userInfo');
+    localStorage.removeItem('rs-lang-active-page');
+    localStorage.removeItem('rs-lang-active-group');
+    view.renderStartPage();
+    const authBtn = document.querySelector('.header__auth-btn') as HTMLButtonElement;
+    authBtn.textContent = 'Войти';
+  }
+
+  showStatusMessage(message: string, background?: string) {
+    const messageContainer = create('div', 'status-message', document.body);
+    if (background) messageContainer.style.backgroundColor = background;
+    messageContainer.innerHTML = message;
+    setTimeout(() => {
+      messageContainer.remove()
+    }, 2500);
   }
 }
