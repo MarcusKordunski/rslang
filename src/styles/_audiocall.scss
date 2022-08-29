@@ -1,0 +1,263 @@
+@import './_variables.scss';
+
+.audiocall-content {
+  height: 580px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.levels-list {
+  display: flex;
+  justify-content: space-between;
+  width: 24%;
+}
+
+.levels-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 15%;
+  background-color: rgb(0, 0, 255);
+  cursor: pointer;
+}
+
+.levels-list-item:hover {
+  background-color: #7b1b1b;
+  color: rgb(255, 255, 255);
+  transition: 0.3s all;
+}
+
+
+.audiocall-gamepage {
+  height: 580px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.sound-btn {
+  text-align: center;
+  width: 27%;
+  height: 27%;
+  outline: none;
+  background: no-repeat url("./assets/icons/play-btn.svg");
+  background-size: 100% 100%;
+  cursor: pointer;
+}
+
+.options-list {
+  display: flex;
+  justify-content: space-between;
+  width: 60%;
+}
+
+.scroll-btn {
+  width: 15%;
+  height: 8%;
+  background-color: rgb(7, 7, 237);
+}
+
+.gamepage-item {
+  margin-top: 5%;
+}
+
+.options-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20%;
+  padding: 2%;
+  border: 2px solid black;
+  cursor: pointer;
+}
+
+.options-list-item:hover {
+  transition: 0.3s all;
+  background-color: rgb(7, 7, 237);
+  color: #c5deea;
+}
+
+.audiocall-title {
+  font-size: 3.75rem;
+  color: rgb(53, 62, 163);
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  margin-bottom: 2%;
+}
+
+.game-desciption {
+  width: 35%;
+  font-size: 1.2rem;
+  color: rgb(53, 62, 163);
+  letter-spacing: 0.2em;
+ 
+}
+
+.game-rules {
+  width: 30%;
+  margin: 1.5% 0;
+}
+
+.game-rules-item {
+  font-size: 1rem;
+  color: rgb(53, 62, 163);
+  letter-spacing: 0.2em;
+  list-style-type: disc;
+}
+
+.audiocall-select-title {
+  font-size: 1.55rem;
+  color: rgb(53, 62, 163);
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  margin-bottom: 1%;
+}
+
+// game-page-style
+
+.correct-answer {
+  background-color: rgb(6, 128, 6);
+}
+
+.wrong-answer {
+  background-color: rgb(151, 10, 10);
+}
+
+.del-points-events {
+  pointer-events: none;
+}
+
+// results
+
+.audiocall-results {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 580px;
+}
+
+.audiocall-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgb(90, 90, 134);
+  width: 50%;
+  height: 50%;
+}
+
+.results-title {
+  font-size: 22px;
+  margin-top: 5%;
+}
+
+.result-percent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
+  background-color: aqua;
+  border-radius: 50%;
+  margin-top: 3%;
+}
+
+
+.answers-stats {
+  margin-top: 3%;
+}
+
+.end-options-menu {
+  display: flex;
+  width: 70%;
+  justify-content: space-between;
+  margin-top: 3%;
+}
+
+.end-options-menu-item {
+  background-color: #5906ab;
+  width: 30%;
+  padding: 2% 0%;
+  text-align: center;
+}
+
+
+// statistic-page
+
+.statistic-answer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 580px;
+}
+
+.statistic-container {
+  text-align: center;
+  width: 70%;
+  background-color: #b8a2cf;
+  padding: 2% 2%;
+}
+
+.statistic-answer-item {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: black 2px solid;
+}
+
+.sound-word {
+  display: flex;
+  width: 10%;
+  background: no-repeat url("./assets/icons/play-btn.svg");
+  background-size: contain;
+  cursor: pointer;
+}
+
+.word {
+  display: flex;
+  width: 20%;
+}
+
+.word-transc {
+  display: flex;
+  width: 20%;
+}
+
+.word-translate {
+  display: flex;
+  width: 38%;
+}
+
+.answer-status {
+  display: flex;
+  width: 2%;
+  justify-content: end;
+}
+
+.return-btn {
+  display: flex;
+  justify-content: center;
+  margin-top: 3%;
+}
+
+.return-endpage-btn {
+  background-color: #c5deea;
+  width: 20%;
+}
+
+.true-answer {
+  background: no-repeat url("./assets/icons/png-true.png");
+  background-size: contain;
+  cursor: pointer;
+}
+
+.falsy-answer {
+  background: no-repeat url("./assets/icons/png-false.png");
+  background-size: contain;
+  cursor: pointer;
+}
