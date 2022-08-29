@@ -98,7 +98,7 @@ export class StartPage {
     scrollBtn?.addEventListener('mousedown',  (e: Event) => {
       if (scrollBtn.textContent === 'Не знаю') {
         this.errors++;
-        this.answerStatuses.push('Неверно');
+        this.answerStatuses.push('falsy-answer');
       }
       if (this.wordNumber < 19) {
         this.wordNumber++;
@@ -120,7 +120,7 @@ export class StartPage {
     if (e.key === 'Enter') {
       if (scrollBtn!.textContent === 'Не знаю') {
         this.errors++;
-        this.answerStatuses.push('Неверно');
+        this.answerStatuses.push('falsy-answer');
         if (this.wordNumber < 19) {
         this.wordNumber++;
         this.getNewPage(wordsArr, this.wordNumber);
@@ -197,7 +197,7 @@ export class StartPage {
               this.changeStyle(variantBtns, wordsArr, this.wordNumber, 'del-points-events', 'all');
               this.correctAnswers++;
               scrollBtn!.textContent = 'Next'
-              this.answerStatuses.push('Верно');
+              this.answerStatuses.push('true-answer');
             } else if (varBtn.textContent !== wordsArr[this.wordNumber].wordTranslate) {
               console.log('Неверный ответ');
               const btn = (varientBtn) as HTMLElement;
@@ -206,7 +206,7 @@ export class StartPage {
               this.changeStyle(variantBtns, wordsArr, this.wordNumber, 'del-points-events', 'all');
               this.errors++;
               scrollBtn!.textContent = 'Next'
-              this.answerStatuses.push('Неверно');
+              this.answerStatuses.push('falsy-answer');
             } 
           }
         }
@@ -220,7 +220,7 @@ export class StartPage {
           this.changeStyle(variantBtns, wordsArr, this.wordNumber, 'del-points-events', 'all');
           this.correctAnswers++;
           scrollBtn!.textContent = 'Next'
-          this.answerStatuses.push('Верно');
+          this.answerStatuses.push('true-answer');
         } else if (varBtn.textContent !== wordsArr[this.wordNumber].wordTranslate) {
           const btn = (e.target) as HTMLElement;
           console.log('Неверный ответ');
@@ -229,7 +229,7 @@ export class StartPage {
           this.changeStyle(variantBtns, wordsArr, this.wordNumber, 'del-points-events', 'all');
           this.errors++;
           scrollBtn!.textContent = 'Next'
-          this.answerStatuses.push('Неверно');
+          this.answerStatuses.push('falsy-answer');
         } 
       });
    
@@ -335,7 +335,7 @@ export class StartPage {
         <div class='word'>${wordsArr[index].word}</div>
         <div class='word-transc'>${wordsArr[index].transcription}</div>
         <div class='word-translate'>${wordsArr[index].wordTranslate}</div>
-        <div class='answer-status answer-status-${index}'>${this.answerStatuses[index]}</div>
+        <div class='answer-status answer-status-${index} ${this.answerStatuses[index]}'></div>
       </div>`
     }
     for(let i = 0; i < wordsArr.length; i++) {

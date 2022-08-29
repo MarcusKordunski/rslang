@@ -4,6 +4,7 @@ import {
   IFooter,
   INavigation,
   IAudiocallPage
+
 } from "../types/types";
 import { Footer } from '../components/footer';
 import { Header } from '../components/header';
@@ -21,14 +22,20 @@ export class View {
   private textbook: Textbook;
   private audiocall: IAudiocallPage;
 
-  constructor() {
-    this.header = new Header();
-    this.main = new Main();
-    this.footer = new Footer();
-    this.auth = new Auth();
-    this.textbook = new Textbook();
-    this.audiocall = new AudiocallPage();
 
+  constructor(
+    header: IHeader,
+    main: IMain,
+    footer: IFooter,
+    auth: Auth,
+    textbook: Textbook,
+  ) {
+    this.header = header;
+    this.main = main;
+    this.footer = footer;
+    this.auth = auth;
+    this.textbook = textbook;
+    this.audiocall = new AudiocallPage();
   }
 
 
@@ -57,6 +64,14 @@ export class View {
   public renderHeader(): void {
     const header = document.querySelector('.header') as HTMLElement;
     header!.innerHTML = this.header.getHtml();
+    const authPageBtn = document.querySelector('.header__auth-btn') as HTMLElement;
+    const userName = document.querySelector('.header__user-name') as HTMLElement;
+    if (this.auth.user) {
+      authPageBtn.textContent = 'Выйти';
+      userName.textContent = this.auth.user.name;
+    } else {
+      authPageBtn.textContent = 'Войти';
+    }
   }
 
   public renderMain(): void {
@@ -75,14 +90,17 @@ export class View {
     const textbookPageBtn = document.querySelector('.textbook-page') as HTMLElement;
 
     authPageBtn.addEventListener('click', () => {
-      main.innerHTML = '';
-      main.append(this.auth.viewLoginForm());
+      if (!this.auth.user) {
+        main.innerHTML = '';
+        main.append(this.auth.viewLoginForm());
+      } else {
+        this.auth.logoutUser();
+      }
     });
 
     textbookPageBtn.addEventListener('click', () => {
       main.innerHTML = '';
       main.appendChild(this.textbook.init());
-      this.textbook.initWords();
     })
   }
 
@@ -91,3 +109,6 @@ export class View {
     
   }
 }
+
+// export const view = new View();
+
