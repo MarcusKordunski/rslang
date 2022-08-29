@@ -59,6 +59,7 @@ const baseConfig = {
                 { from: './src/assets/icons', to: './assets/icons' }
             ]
         })
+
     ],
 };
 
