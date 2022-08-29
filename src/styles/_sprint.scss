@@ -1,0 +1,136 @@
+.sprint-menu,
+.sprint-game,
+.sprint-result {
+  width: 40rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2em;
+  margin: 3em auto 2em auto;
+}
+
+.sprint-menu__title {
+  text-align: center;
+  font-size: 3em;
+}
+
+.sprint-menu__about {
+  font-size: 1.5em;
+  white-space: pre-line;
+}
+
+.sprint-game__score {
+  font-size: 3em;
+}
+
+.sprint-game__timer {
+  font-size: 3em;
+}
+
+.sprint-game {
+  width: 40rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2em;
+  text-align: center;
+  align-items: center;
+}
+
+
+ul li {
+  list-style-type: circle;
+  font-size: 1.5em;
+  list-style-position: inside;
+}
+
+.sprint-menu__buttons,
+.sprint-game__buttons,
+.sprint-result__buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.sprint-menu__difficulty,
+.sprint-game__correct-btn {
+  width: 5em;
+  height: 2em;
+  font-size: 1.8em;
+}
+
+.sprint-menu__start,
+.sprint-game__uncorrect-btn {
+  width: 5em;
+  height: 2em;
+  margin-left: 0.5em;
+  font-size: 1.8em;
+}
+
+.sprint-result__title {
+  font-size: 2em;
+}
+
+.sprint-game__streak {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5em;
+}
+
+.streak__signal1,
+.streak__signal2,
+.streak__signal3 {
+  width: 3em;
+  height: 3em;
+  border: 0.15em solid black;
+  border-radius: 100%;
+}
+
+.streak__signal1.active,
+.streak__signal2.active,
+.streak__signal3.active {
+  background-color: forestgreen;
+}
+
+.sprint-result {
+  width: 40rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2em;
+  text-align: center;
+  align-items: center;
+}
+
+.sprint-result__correct-words {
+  background-color: white;
+  border-radius: 4%;
+  text-align: left;
+  width: 25rem;
+  padding: 1em;
+}
+
+.sprint-result__uncorrect-words {
+  background-color: white;
+  border-radius: 4%;
+  text-align: left;
+  width: 25rem;
+  padding: 1em;
+}
+
+.sprint-result__correct-title {
+  color: forestgreen;
+}
+
+.sprint-result__uncorrect-title {
+  color: red;
+}
+
+.sprint-result__play-again {
+  width: 7em;
+  height: 2em;
+  font-size: 0.8em;
+}
+
+.sprint-result__exit {
+  width: 7em;
+  height: 2em;
+  margin-left: 0.5em;
+  font-size: 0.8em;
+}
