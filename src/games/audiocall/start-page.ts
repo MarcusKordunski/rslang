@@ -35,8 +35,15 @@ export class StartPage {
   getHtml(): string {
     return `
       <div class='audiocall-content'>
-        <h2>Audio challenge</h2>
-        <h3>Select the Level</h3>
+        <h2 class='audiocall-title'>Аудиовызов</h2>
+        <p class='game-desciption'>Аудивызов - игра на тренировку навыков аудирования. В процессе игры десять попыток угадать слово, произнесенное на английском языке.</p>
+        <ul class='game-rules'>
+          <li class='game-rules-item'>Используйте мышь, чтобы выбрать.</li>
+          <li class='game-rules-item'>Используйте цифровые клавиши от 1 до 5 для выбора ответа.</li>
+          <li class='game-rules-item'>Используйте пробел для повтроного звучания слова.</li>
+          <li class='game-rules-item'>Используйте клавишу Enter для подсказки или для перехода к следующему слову.</li>
+        </ul>
+        <h4 class='audiocall-select-title'>Выберите уровень сложности</h3>
         <ul class='levels-list'>
           <li class='levels-list-item'>1</li>
           <li class='levels-list-item'>2</li>
@@ -53,14 +60,14 @@ export class StartPage {
     const main = document.querySelector('.main-content') as HTMLElement;
     main.innerHTML = `
       <div class='audiocall-gamepage'>
-        <div class='sound-btn gamepage-item'></div>
+        <div tabindex="0" class='sound-btn gamepage-item'></div>
         <ul class='options-list gamepage-item'>
-        <li class='options-list-item'></li>
-        <li class='options-list-item'></li>
-        <li class='options-list-item'></li>
-        <li class='options-list-item'></li>
+        <li tabindex="0" class='options-list-item'></li>
+        <li tabindex="0" class='options-list-item'></li>
+        <li tabindex="0" class='options-list-item'></li>
+        <li tabindex="0" class='options-list-item'></li>
         </ul>
-        <button class='scroll-btn gamepage-item'>Не знаю</button>
+        <button tabindex="0" class='scroll-btn gamepage-item'>Не знаю</button>
       </div>
     `
   }
@@ -78,11 +85,9 @@ export class StartPage {
       const scrollBtn: HTMLElement | null = document.querySelector('.scroll-btn');
       await this.getNewPage(wordsArr, this.wordNumber);
 
-      const variantBtns: NodeList= document.querySelectorAll('.options-list-item');
+      const variantBtns: NodeList = document.querySelectorAll('.options-list-item');
       this.scrollBtnListener(wordsArr, variantBtns);
       this.variantsBtnsListener(variantBtns, wordsArr, scrollBtn);
-      
-      
       
       });
     });
@@ -90,7 +95,7 @@ export class StartPage {
 
   scrollBtnListener(wordsArr: any, variantBtns: NodeList) {
     const scrollBtn: HTMLElement | null = document.querySelector('.scroll-btn');
-    scrollBtn?.addEventListener('click',  () => {
+    scrollBtn?.addEventListener('mousedown',  (e: Event) => {
       if (scrollBtn.textContent === 'Не знаю') {
         this.errors++;
         this.answerStatuses.push('Неверно');
@@ -103,17 +108,110 @@ export class StartPage {
       } else {
         console.log('Конец игры');
         this.createEndPage(wordsArr);
+      }
+  });
+  document.addEventListener('keypress', (e)=> {
+    if (e.key === 'Enter') {
+      scrollBtn!.focus();
+    } 
+  })
+ 
+  scrollBtn?.addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') {
+      if (scrollBtn!.textContent === 'Не знаю') {
+        this.errors++;
+        this.answerStatuses.push('Неверно');
+        if (this.wordNumber < 19) {
+        this.wordNumber++;
+        this.getNewPage(wordsArr, this.wordNumber);
+        this.resetStyles(variantBtns);
+        scrollBtn!.textContent = 'Не знаю'
+        } else {
+        console.log('Конец игры');
+        this.createEndPage(wordsArr);
+        }
+      } else if (scrollBtn!.textContent === 'Next') {
+        if (this.wordNumber < 19) {
+        this.wordNumber++;
+        this.getNewPage(wordsArr, this.wordNumber);
+        this.resetStyles(variantBtns);
+        scrollBtn!.textContent = 'Не знаю';
+        } else {
+          console.log('Конец игры');
+          this.createEndPage(wordsArr);
+        }
+      }
     }
+   
   });
   }
 
   variantsBtnsListener(variantBtns: NodeList, wordsArr: any, scrollBtn: HTMLElement | null) {
     const soundBtn: HTMLElement | null = document.querySelector('.sound-btn');
+    document.addEventListener('keypress', (e)=> {
+      if (e.key === ' ') {
+        soundBtn!.focus();
+      } else if (e.key === '1') {
+        const firstBtn = (variantBtns[0]) as HTMLElement;
+        firstBtn.focus();
+      } else if (e.key === '2') {
+        const firstBtn = (variantBtns[1]) as HTMLElement;
+        firstBtn.focus();
+      } else if (e.key === '3') {
+        const firstBtn = (variantBtns[2]) as HTMLElement;
+        firstBtn.focus();
+      } else if (e.key === '4') {
+        const firstBtn = (variantBtns[3]) as HTMLElement;
+        firstBtn.focus();
+      }
+    });
     soundBtn?.addEventListener('click', () => {
       const audio = new Audio(`http://localhost:3000/${wordsArr[this.wordNumber].audio}`);
       audio.play();
+    });    
+    soundBtn!.addEventListener('keyup', (e) => {
+      if (e.key === ' ') {
+        const audio = new Audio(`http://localhost:3000/${wordsArr[this.wordNumber].audio}`);
+        audio.play();
+      }
     });
-    variantBtns.forEach(varBtn => {
+    
+    variantBtns.forEach((varBtn, index) => {
+      const varientBtn = (varBtn) as HTMLElement;
+      
+      varientBtn.addEventListener('keyup', (e) => {
+      const variantsBtns: NodeList = document.querySelectorAll('.options-list-item');
+      let iSgamed = false;
+      variantsBtns.forEach(el => {
+        const vBtn = (el) as HTMLElement;
+        if (vBtn.classList.contains('correct-answer') || vBtn.classList.contains('wrong-answer')) {
+          iSgamed = true;
+        }
+      });
+      if (iSgamed === false) {
+          if (e.key === String(index+1)) {
+            if (varBtn.textContent === wordsArr[this.wordNumber].wordTranslate) {
+              console.log('Верный ответ');
+              const btn = (varientBtn) as HTMLElement;
+              btn.classList.add('correct-answer');
+              this.changeStyle(variantBtns, wordsArr, this.wordNumber, 'del-points-events', 'all');
+              this.correctAnswers++;
+              scrollBtn!.textContent = 'Next'
+              this.answerStatuses.push('Верно');
+            } else if (varBtn.textContent !== wordsArr[this.wordNumber].wordTranslate) {
+              console.log('Неверный ответ');
+              const btn = (varientBtn) as HTMLElement;
+              btn.classList.add('wrong-answer');
+              this.changeStyle(variantBtns, wordsArr, this.wordNumber, 'correct-answer', 'one');
+              this.changeStyle(variantBtns, wordsArr, this.wordNumber, 'del-points-events', 'all');
+              this.errors++;
+              scrollBtn!.textContent = 'Next'
+              this.answerStatuses.push('Неверно');
+            } 
+          }
+        }
+      });
+
       varBtn.addEventListener('click', (e: Event) => {
         if (varBtn.textContent === wordsArr[this.wordNumber].wordTranslate) {
           console.log('Верный ответ');
@@ -138,8 +236,10 @@ export class StartPage {
     });
   }
   
+  
 
   async getNewPage(wordsArray: any, wordNumber: number): Promise<void>{
+    
     const randomNum = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
     const randomWordsIndex = randomNum.filter( num => num !== wordNumber).sort(function() { return Math.random() - 0.5 }).slice(0, 3);
     randomWordsIndex.push(wordNumber);
@@ -149,7 +249,8 @@ export class StartPage {
     const variantsBtns: NodeList = document.querySelectorAll('.options-list-item');
     variantsBtns.forEach((varBtns, index) => {
       varBtns.textContent = wordsArray[mix[index]].wordTranslate;
-    })
+    });
+    
   }
 
   changeStyle(nodeList: NodeList, wordsArr: Array<IWord>, wordNum: number, style: string, count:string) {
@@ -171,7 +272,7 @@ export class StartPage {
       btn.classList.remove('del-points-events');
       btn.classList.remove('correct-answer');
       btn.classList.remove('wrong-answer');
-    })
+    });
   }
 
   getEndPageHtml(correctAnswers: number, errors: number): string {

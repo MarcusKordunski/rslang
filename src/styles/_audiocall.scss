@@ -12,7 +12,7 @@
 .levels-list {
   display: flex;
   justify-content: space-between;
-  width: 30%;
+  width: 24%;
 }
 
 .levels-list-item {
@@ -21,13 +21,19 @@
   justify-content: center;
   width: 40px;
   height: 40px;
-  border-radius: 50%;
-  background-color: blue;
+  border-radius: 15%;
+  background-color: rgb(0, 0, 255);
+  cursor: pointer;
 }
 
+.levels-list-item:hover {
+  background-color: #7b1b1b;
+  color: rgb(255, 255, 255);
+  transition: 0.3s all;
+}
+
+
 .audiocall-gamepage {
-  background-color: linear-gradient(to bottom, #c5deea 0%, #8abbd7 0%, #066dab 100%);
-  background-image: linear-gradient(rgb(197, 222, 234) 0%, rgb(138, 187, 215) 0%, rgb(6, 109, 171) 100%);
   height: 580px;
   display: flex;
   flex-direction: column;
@@ -40,6 +46,8 @@
   height: 20%;
   border-radius: 50%;
   background-color: #c5deea;
+  outline: none;
+  // background: no-repeat url("../assets/icons/png-true.png");
 }
 
 .options-list {
@@ -65,7 +73,47 @@
   width: 20%;
   padding: 2%;
   border: 2px solid black;
+  
 }
+
+
+.audiocall-title {
+  font-size: 3.75rem;
+  color: rgb(53, 62, 163);
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  margin-bottom: 2%;
+}
+
+.game-desciption {
+  width: 35%;
+  font-size: 1.2rem;
+  color: rgb(53, 62, 163);
+  letter-spacing: 0.2em;
+ 
+}
+
+.game-rules {
+  width: 30%;
+  margin: 1.5% 0;
+}
+
+.game-rules-item {
+  font-size: 1rem;
+  color: rgb(53, 62, 163);
+  letter-spacing: 0.2em;
+  list-style-type: disc;
+}
+
+.audiocall-select-title {
+  font-size: 1.55rem;
+  color: rgb(53, 62, 163);
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  margin-bottom: 1%;
+}
+
+// game-page-style
 
 .correct-answer {
   background-color: rgb(6, 128, 6);
