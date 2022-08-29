@@ -44,6 +44,7 @@ export interface IWord {
   wordTranslate: string;
   textMeaningTranslate: string;
   textExampleTranslate: string;
+  wordTranslateWrong?: string
   userWord?: IUserWord;
 }
 

@@ -10,3 +10,4 @@ export const auth = new Auth();
 
 export const view = new View(new Header(), new Main(), new Footer(), auth, new Textbook());
 view.renderStartPage();
+

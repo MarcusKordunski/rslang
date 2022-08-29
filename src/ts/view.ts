@@ -7,6 +7,7 @@ import {
 } from "../types/types";
 import { Auth } from "../pages/auth";
 import { Textbook } from "../pages/textbook/textbook";
+import { Sprint } from "../pages/sprint";
 import { AudiocallPage } from "../games/audiocall/create-page";
 
 
@@ -84,6 +85,7 @@ export class View {
     const main = document.querySelector('.main-content') as HTMLElement;
     const authPageBtn = document.querySelector('.header__auth-btn') as HTMLElement;
     const textbookPageBtn = document.querySelector('.textbook-page') as HTMLElement;
+    const sprintGameBtn = document.querySelector('.sprint-page') as HTMLElement;
 
     authPageBtn.addEventListener('click', () => {
       if (!this.auth.user) {
@@ -97,7 +99,15 @@ export class View {
     textbookPageBtn.addEventListener('click', () => {
       main.innerHTML = '';
       main.appendChild(this.textbook.init());
-    })
+    });
+
+    sprintGameBtn.addEventListener('click', () => {
+      main.innerHTML = '';
+      const sprintMenu = new Sprint();
+      sprintMenu.mainContent.appendChild(sprintMenu.renderSprintMenu());
+      sprintMenu.arrowsListener();
+    });
+
   }
 
   public renderAudiocall(): void {
