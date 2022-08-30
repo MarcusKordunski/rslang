@@ -2,6 +2,9 @@ import {
   IHeader,
   IMain,
   IFooter,
+  INavigation,
+  IAudiocallPage
+
 } from "../types/types";
 import { Footer } from '../components/footer';
 import { Header } from '../components/header';
@@ -9,6 +12,8 @@ import { Main } from '../pages/main';
 import { Auth } from "../pages/auth";
 import { Textbook } from "../pages/textbook/textbook";
 import { Sprint } from "../pages/sprint";
+import { AudiocallPage } from "../games/audiocall/create-page";
+
 
 export class View {
   private header: IHeader;
@@ -16,6 +21,9 @@ export class View {
   private footer: IFooter;
   private auth: Auth;
   private textbook: Textbook;
+  private audiocall: IAudiocallPage;
+
+
   constructor(
     header: IHeader,
     main: IMain,
@@ -28,6 +36,7 @@ export class View {
     this.footer = footer;
     this.auth = auth;
     this.textbook = textbook;
+    this.audiocall = new AudiocallPage();
   }
 
 
@@ -50,6 +59,7 @@ export class View {
     this.renderMain();
     this.renderFooter();
     this.addHeaderListeners();
+    this.renderAudiocall();
   }
 
   public renderHeader(): void {
@@ -103,6 +113,12 @@ export class View {
     });
 
   }
+
+  public renderAudiocall(): void {
+    this.audiocall.createPage();
+    
+  }
 }
 
 // export const view = new View();
+

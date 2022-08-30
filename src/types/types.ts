@@ -58,3 +58,7 @@ export interface IOptionalWord {
   totalCorrectCount: number;
   totalIncorrectCount: number;
 }
+
+export interface IAudiocallPage {
+  createPage: () => void;
+}
