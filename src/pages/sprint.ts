@@ -225,6 +225,7 @@ export class Sprint {
     if (this.index === 20) {
       this.mainContent.innerHTML = '';
       this.mainContent.appendChild(this.renderSprintResult());
+      clearInterval(this.timerInterval);
     } else {
       this.word.textContent = this.wordsArr[this.index].word;
       if (this.wordsArr[this.index].wordTranslateWrong) {
