@@ -8,6 +8,14 @@
   margin: 3em auto 2em auto;
 }
 
+.sprint-menu {
+  ul li {
+    list-style-type: circle;
+    font-size: 1.5em;
+    list-style-position: inside;
+  }
+}
+
 .sprint-menu__title {
   text-align: center;
   font-size: 3em;
@@ -33,13 +41,6 @@
   gap: 1.2em;
   text-align: center;
   align-items: center;
-}
-
-
-ul li {
-  list-style-type: circle;
-  font-size: 1.5em;
-  list-style-position: inside;
 }
 
 .sprint-menu__buttons,

@@ -19,8 +19,11 @@ class Api {
       },
       body: JSON.stringify(user),
     });
-    const data = await response.json();
-    return data;
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    }
+    throw new Error('error');
   }
 
   async loginUser(user: IUserReg) {

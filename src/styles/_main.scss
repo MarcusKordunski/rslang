@@ -15,3 +15,149 @@
   width: 100%;
   height: 100%;
 }
+
+.about {
+  display: flex;
+  justify-content: space-between;
+
+  &__title-box {
+    display: flex;
+    flex-direction: column;
+    margin-top: 50px;
+  }
+
+  &__title {
+    font-family: Dynapuff, serif;
+    font-size: 8rem;
+    color: $text-blue;
+  }
+
+  &__subtitle {
+    margin-top: 30px;
+    font-family: RobotoMed, serif;
+    color: $text-form-color;
+    letter-spacing: 0.1em;
+    line-height: 120%;
+  }
+
+  &__start-btn {
+    width: 150px;
+    height: 50px;
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    border-radius: 5px;
+    border: 2px solid $text-blue;
+    box-shadow: 0px 0px 2px black;
+    color: $text-blue;
+    font-size: 20px;
+    margin-left: auto;
+  }
+
+  &__img {
+    width: 50%;
+  }
+}
+
+.benefits {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  &__title {
+    font-family: Amatic, serif;
+    font-size: 4rem;
+    color: $text-blue;
+    margin: 50px 0px;
+  }
+
+  &__container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+.ben-item {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+  background: $bg-main;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0px 0px 5px $text-blue;
+  overflow: hidden;
+  gap: 20px;
+  color: $text-form-color;
+
+  &__title {
+    font-family: Amatic, serif;
+    font-size: 2em;
+  }
+}
+
+.team {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  &__title {
+    font-family: Amatic, serif;
+    font-size: 4rem;
+    color: $text-blue;
+    margin: 50px 0px;
+  }
+}
+
+.team-item {
+  margin: 30px 0;
+  width: 70%;
+  display: flex;
+  background: linear-gradient(to bottom, #066dab 0%, #2175a5 0%, #a0d0e7 100%);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 0px 5px black;
+
+  &__img-box {
+    width: 320px;
+    height: 308px;
+    overflow: hidden;
+  }
+
+  &__photo {
+    width: 100%;
+  }
+
+  &__gh-icon {
+    width: 50px;
+    height: 50px;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  &__name {
+    font-family: Amatic, serif;
+    font-size: 2em;
+    color: aliceblue;
+  }
+
+  &__subtitle {
+    margin: 5px 0px 20px 0px;
+    font-style: italic;
+    color: rgb(224, 224, 224);
+  }
+
+  &__link {
+    margin-top: auto;
+  }
+}

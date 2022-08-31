@@ -53,6 +53,7 @@ export class View {
     this.renderContainers();
     this.renderHeader();
     this.renderMain();
+    this.main.init();
     this.renderFooter();
     this.addHeaderListeners();
     this.renderAudiocall();
@@ -83,9 +84,15 @@ export class View {
 
   public addHeaderListeners(): void {
     const main = document.querySelector('.main-content') as HTMLElement;
+    const mainPageBtn = document.querySelector('.main-page') as HTMLElement;
     const authPageBtn = document.querySelector('.header__auth-btn') as HTMLElement;
     const textbookPageBtn = document.querySelector('.textbook-page') as HTMLElement;
     const sprintGameBtn = document.querySelector('.sprint-page') as HTMLElement;
+
+    mainPageBtn.addEventListener('click', () => {
+      main.innerHTML = '';
+      this.main.init();
+    })
 
     authPageBtn.addEventListener('click', () => {
       if (!this.auth.user) {
@@ -107,12 +114,10 @@ export class View {
       sprintMenu.mainContent.appendChild(sprintMenu.renderSprintMenu());
       sprintMenu.arrowsListener();
     });
-
   }
 
   public renderAudiocall(): void {
     this.audiocall.createPage();
-
   }
 }
 
