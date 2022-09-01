@@ -148,15 +148,31 @@ export class Sprint {
     correctTitle.textContent = `ВЕРНО: ${this.resCorrectArr.length}`;
     const correctWords = create('div', 'sprint-result__correct-words', sprintContainer);
     for (let i = 0; i < this.resCorrectArr.length; i++) {
+      const sound = create('span', undefined, correctWords);
       const word = create('p', undefined, correctWords);
+      create('br', undefined, correctWords);
+      create('br', undefined, correctWords);
+      sound.textContent = '🎧';
       word.textContent = `${this.resCorrectArr[i].word} - ${this.resCorrectArr[i].wordTranslate}`;
+      sound.addEventListener('click', async () => {
+        const audio = new Audio(`http://localhost:3000/${this.resCorrectArr[i].audio}`);
+        audio.play();
+      });
     }
     const uncorrectTitle = create('p', 'sprint-result__uncorrect-title', sprintContainer);
     uncorrectTitle.textContent = `ОШИБОК: ${this.resUncorrectArr.length}`;
     const uncorrectWords = create('div', 'sprint-result__uncorrect-words', sprintContainer);
     for (let i = 0; i < this.resUncorrectArr.length; i++) {
+      const sound = create('span', undefined, uncorrectWords);
       const word = create('p', undefined, uncorrectWords);
+      create('br', undefined, uncorrectWords);
+      create('br', undefined, uncorrectWords);
+      sound.textContent = '🎧';
       word.textContent = `${this.resUncorrectArr[i].word} - ${this.resUncorrectArr[i].wordTranslate}`;
+      sound.addEventListener('click', async () => {
+        const audio = new Audio(`http://localhost:3000/${this.resUncorrectArr[i].audio}`);
+        audio.play();
+      });
     }
     const resultButtons = create('div', 'sprint-result__buttons', sprintContainer);
     const playAgain = create('button', 'sprint-result__play-again', resultButtons, undefined, ['type', 'button']);
