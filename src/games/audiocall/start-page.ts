@@ -1,6 +1,6 @@
 import { api } from "../../ts/api";
 import { IWord } from "../../types/types";
-
+import { model } from "../../ts/model";
 
 export class StartPage {
 
@@ -14,6 +14,7 @@ export class StartPage {
 
   answerStatuses: Array<string>;
 
+
   constructor () {
     this.wordNumber = 0;
     this.correctAnswers = 0;
@@ -22,7 +23,7 @@ export class StartPage {
     this.answerStatuses = [];
   }
   
-  createGame(): void {
+  createNavVersion(): void {
     const audiocallBtn: HTMLElement | null = document.querySelector('.audio-page');
     const main = document.querySelector('.main-content') as HTMLElement;
     audiocallBtn?.addEventListener('click', async () => {
@@ -30,6 +31,21 @@ export class StartPage {
     const lvlListItems: NodeList = document.querySelectorAll('.levels-list-item');
     this.lvlListItemslistener(lvlListItems);
   });
+  }
+
+  async createBookVersion(): Promise<void> {
+    this.resetCounters();
+    const section = Number(localStorage.getItem('rs-lang-active-group'));
+    const page = Number(localStorage.getItem('rs-lang-active-page'));
+    const wordsArr = await api.getWords(section, page);
+    this.getGamePage();
+    const scrollBtn: HTMLElement | null = document.querySelector('.scroll-btn');
+    await this.getNewPage(wordsArr, this.wordNumber);
+    const variantBtns: NodeList = document.querySelectorAll('.options-list-item');
+    this.scrollBtnListener(wordsArr, variantBtns, true);
+    this.variantsBtnsClickListener(variantBtns, wordsArr, scrollBtn);
+    this.variantsBtnsKeyListener(variantBtns, wordsArr, scrollBtn);
+    
   }
 
   getHtml(): string {
@@ -75,10 +91,7 @@ export class StartPage {
   lvlListItemslistener(lvlListItems: NodeList) {
     lvlListItems.forEach((listItem, sectionDictionary) => {
       listItem.addEventListener('click', async () => {
-      this.wordNumber = 0;
-      this.correctAnswers = 0;
-      this.errors = 0;
-      this.answerStatuses = [];
+      this.resetCounters();
       this.getGamePage();
       const pageSectionNumber = Math.floor(Math.random() * 30);
       const wordsArr = await api.getWords(sectionDictionary, pageSectionNumber);
@@ -87,13 +100,21 @@ export class StartPage {
 
       const variantBtns: NodeList = document.querySelectorAll('.options-list-item');
       this.scrollBtnListener(wordsArr, variantBtns);
-      this.variantsBtnsListener(variantBtns, wordsArr, scrollBtn);
+      this.variantsBtnsClickListener(variantBtns, wordsArr, scrollBtn);
+      this.variantsBtnsKeyListener(variantBtns, wordsArr, scrollBtn);
       
       });
     });
   }
 
-  scrollBtnListener(wordsArr: any, variantBtns: NodeList) {
+  resetCounters() {
+    this.wordNumber = 0;
+    this.correctAnswers = 0;
+    this.errors = 0;
+    this.answerStatuses = [];
+  }
+
+  scrollBtnListener(wordsArr: any, variantBtns: NodeList, isTextbook?: boolean | undefined) {
     const scrollBtn: HTMLElement | null = document.querySelector('.scroll-btn');
     scrollBtn?.addEventListener('mousedown',  (e: Event) => {
       if (scrollBtn.textContent === 'Не знаю') {
@@ -107,7 +128,7 @@ export class StartPage {
         scrollBtn!.textContent = 'Не знаю'
       } else {
         console.log('Конец игры');
-        this.createEndPage(wordsArr);
+        this.createEndPage(wordsArr, isTextbook);
       }
   });
   document.addEventListener('keypress', (e)=> {
@@ -128,7 +149,7 @@ export class StartPage {
         scrollBtn!.textContent = 'Не знаю'
         } else {
         console.log('Конец игры');
-        this.createEndPage(wordsArr);
+        this.createEndPage(wordsArr, isTextbook);
         }
       } else if (scrollBtn!.textContent === 'Next') {
         if (this.wordNumber < 19) {
@@ -138,7 +159,7 @@ export class StartPage {
         scrollBtn!.textContent = 'Не знаю';
         } else {
           console.log('Конец игры');
-          this.createEndPage(wordsArr);
+          this.createEndPage(wordsArr, isTextbook);
         }
       }
     }
@@ -146,7 +167,7 @@ export class StartPage {
   });
   }
 
-  variantsBtnsListener(variantBtns: NodeList, wordsArr: any, scrollBtn: HTMLElement | null) {
+  variantsBtnsKeyListener(variantBtns: NodeList, wordsArr: any, scrollBtn: HTMLElement | null) {
     const soundBtn: HTMLElement | null = document.querySelector('.sound-btn');
     document.addEventListener('keypress', (e)=> {
       if (e.key === ' ') {
@@ -165,17 +186,14 @@ export class StartPage {
         firstBtn.focus();
       }
     });
-    soundBtn?.addEventListener('click', () => {
-      const audio = new Audio(`http://localhost:3000/${wordsArr[this.wordNumber].audio}`);
-      audio.play();
-    });    
+
     soundBtn!.addEventListener('keyup', (e) => {
       if (e.key === ' ') {
         const audio = new Audio(`http://localhost:3000/${wordsArr[this.wordNumber].audio}`);
         audio.play();
       }
     });
-    
+
     variantBtns.forEach((varBtn, index) => {
       const varientBtn = (varBtn) as HTMLElement;
       
@@ -196,7 +214,7 @@ export class StartPage {
               btn.classList.add('correct-answer');
               this.changeStyle(variantBtns, wordsArr, this.wordNumber, 'del-points-events', 'all');
               this.correctAnswers++;
-              scrollBtn!.textContent = 'Next'
+              scrollBtn!.textContent = 'Next';
               this.answerStatuses.push('true-answer');
             } else if (varBtn.textContent !== wordsArr[this.wordNumber].wordTranslate) {
               console.log('Неверный ответ');
@@ -205,15 +223,27 @@ export class StartPage {
               this.changeStyle(variantBtns, wordsArr, this.wordNumber, 'correct-answer', 'one');
               this.changeStyle(variantBtns, wordsArr, this.wordNumber, 'del-points-events', 'all');
               this.errors++;
-              scrollBtn!.textContent = 'Next'
+              scrollBtn!.textContent = 'Next';
               this.answerStatuses.push('falsy-answer');
             } 
           }
         }
       });
+    });
+  }
 
+  variantsBtnsClickListener(variantBtns: NodeList, wordsArr: any, scrollBtn: HTMLElement | null) {
+    const soundBtn: HTMLElement | null = document.querySelector('.sound-btn');
+    
+    soundBtn?.addEventListener('click', () => {
+      const audio = new Audio(`http://localhost:3000/${wordsArr[this.wordNumber].audio}`);
+      audio.play();
+    });    
+    
+    variantBtns.forEach((varBtn, index) => {
       varBtn.addEventListener('click', (e: Event) => {
         if (varBtn.textContent === wordsArr[this.wordNumber].wordTranslate) {
+          console.log(wordsArr[this.wordNumber].id)
           console.log('Верный ответ');
           const btn = (e.target) as HTMLElement;
           btn.classList.add('correct-answer');
@@ -222,6 +252,7 @@ export class StartPage {
           scrollBtn!.textContent = 'Next'
           this.answerStatuses.push('true-answer');
         } else if (varBtn.textContent !== wordsArr[this.wordNumber].wordTranslate) {
+          console.log(wordsArr[this.wordNumber].id, wordsArr[this.wordNumber].userId)
           const btn = (e.target) as HTMLElement;
           console.log('Неверный ответ');
           btn.classList.add('wrong-answer');
@@ -232,7 +263,6 @@ export class StartPage {
           this.answerStatuses.push('falsy-answer');
         } 
       });
-   
     });
   }
   
@@ -294,7 +324,7 @@ export class StartPage {
     `
   }
   
-  createEndPage(wordsArr: Array<IWord>) {
+  createEndPage(wordsArr: Array<IWord>, isTextbook?: boolean | undefined) {
     const main = document.querySelector('.main-content') as HTMLElement;
     this.endPageContent = this.getEndPageHtml(this.correctAnswers, this.errors)
     main!.innerHTML = this.endPageContent;
@@ -302,9 +332,15 @@ export class StartPage {
     const repeateGameBtn = document.querySelector('.repeate-game-btn');
 
     repeateGameBtn?.addEventListener('click', () => {
-      main.innerHTML = this.getHtml();
-      const lvlListItems: NodeList = document.querySelectorAll('.levels-list-item');
-      this.lvlListItemslistener(lvlListItems);
+      if (isTextbook === undefined) {
+        main.innerHTML = this.getHtml();
+        const lvlListItems: NodeList = document.querySelectorAll('.levels-list-item');
+        this.lvlListItemslistener(lvlListItems);
+        console.log(1)
+      } else if (isTextbook === true) {
+        this.createBookVersion();
+        console.log(2)
+      }
     });
 
     statBtn?.addEventListener('click', () => {
@@ -319,7 +355,7 @@ export class StartPage {
     });
     returnBtn?.addEventListener('click', ()=> {
       main.innerHTML = this.endPageContent;
-      this.createEndPage(wordsArr);
+      this.createEndPage(wordsArr, isTextbook);
     }); 
 
     console.log(this.answerStatuses)
