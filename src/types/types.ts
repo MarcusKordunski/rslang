@@ -1,6 +1,6 @@
 export interface IMain {
   getHtml: () => string;
-  init: () => void;
+  init: () => HTMLElement;
   getAbout: () => HTMLElement;
 }
 

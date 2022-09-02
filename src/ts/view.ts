@@ -53,7 +53,6 @@ export class View {
     this.renderContainers();
     this.renderHeader();
     this.renderMain();
-    this.main.init();
     this.renderFooter();
     this.addHeaderListeners();
     this.renderAudiocall();
@@ -74,7 +73,9 @@ export class View {
 
   public renderMain(): void {
     const main = document.querySelector('.main') as HTMLElement;
-    main!.innerHTML = this.main.getHtml();
+    main.innerHTML = this.main.getHtml();
+    const mainContent = document.querySelector('.main-content') as HTMLElement;
+    mainContent.appendChild(this.main.init());
   }
 
   public renderFooter(): void {
@@ -99,7 +100,7 @@ export class View {
     mainPageBtn.forEach((item) => {
       item.addEventListener('click', () => {
         main.innerHTML = '';
-        this.main.init();
+        main.appendChild(this.main.init());
         if (burgerMenu.classList.contains('open')) {
           burger.classList.remove('open');
           burgerMenu.classList.remove('open')
@@ -138,7 +139,7 @@ export class View {
           burgerMenu.classList.remove('open')
         };
       });
-    })
+    });
 
   }
 

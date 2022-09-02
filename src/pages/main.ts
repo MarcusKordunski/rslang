@@ -1,7 +1,7 @@
 import create from "../utils/create";
 import benefits from "../utils/benefits.json";
 import team from "../utils/team.json";
-import { auth } from "..";
+import { auth, textbook } from "..";
 
 export class Main {
   getHtml(): string {
@@ -11,12 +11,13 @@ export class Main {
   }
 
   init() {
-    const main = document.querySelector('.main-content') as HTMLElement;
-    const mainPage = create('div', 'main-page', main);
+    const mainPage = create('div', 'main-page');
     mainPage.appendChild(this.getAbout());
     mainPage.appendChild(this.getBenefits());
     if (!auth.user) mainPage.appendChild(this.getRegsLink());
     mainPage.appendChild(this.getTeam());
+
+    return mainPage;
   }
 
   getAbout() {
@@ -29,6 +30,14 @@ export class Main {
     const startBtn = create('button', 'about__start-btn', aboutTitleBox);
     startBtn.textContent = 'Начать';
     const aboutImg = create('img', 'about__img', mainAbout, undefined, ['src', './assets/images/main-page.png'], ['alt', 'learn english']);
+
+    startBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const main = document.querySelector('.main-content') as HTMLElement;
+      main.innerHTML = '';
+      main.appendChild(textbook.init());
+    })
+
     return mainAbout;
   }
 
@@ -64,6 +73,20 @@ export class Main {
     reglinkRegBtn.textContent = 'Регистрация';
     const reglinkLogBtn = create('button', 'reglink__log-btn', reglinkBtnsBox);
     reglinkLogBtn.textContent = 'Войти';
+
+    reglinkRegBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const main = document.querySelector('.main-content') as HTMLElement;
+      main.innerHTML = '';
+      main.append(auth.viewRegForm());
+    })
+
+    reglinkLogBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const main = document.querySelector('.main-content') as HTMLElement;
+      main.innerHTML = '';
+      main.append(auth.viewLoginForm());
+    })
 
     return mainReglink;
   }
