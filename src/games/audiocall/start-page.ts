@@ -23,13 +23,22 @@ export class StartPage {
   }
 
   createGame(): void {
-    const audiocallBtn: HTMLElement | null = document.querySelector('.audio-page');
+    const audiocallBtn: NodeList | null = document.querySelectorAll('.audio-page');
     const main = document.querySelector('.main-content') as HTMLElement;
-    audiocallBtn?.addEventListener('click', async () => {
-      main.innerHTML = this.getHtml();
-      const lvlListItems: NodeList = document.querySelectorAll('.levels-list-item');
-      this.lvlListItemslistener(lvlListItems);
-    });
+    const burger = document.querySelector('.burger') as HTMLElement;
+    const burgerMenu = document.querySelector('.burger-menu') as HTMLElement;
+    audiocallBtn.forEach((item) => {
+      item.addEventListener('click', async () => {
+        main.innerHTML = this.getHtml();
+        const lvlListItems: NodeList = document.querySelectorAll('.levels-list-item');
+        this.lvlListItemslistener(lvlListItems);
+        if (burgerMenu.classList.contains('open')) {
+          burger.classList.remove('open');
+          burgerMenu.classList.remove('open')
+        };
+      });
+    })
+
   }
 
   getHtml(): string {

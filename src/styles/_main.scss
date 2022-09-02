@@ -20,6 +20,12 @@
   display: flex;
   justify-content: space-between;
 
+  @media (max-width: 767.95px) {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
   &__title-box {
     display: flex;
     flex-direction: column;
@@ -47,13 +53,23 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: transparent;
+    background-color: transparent;
     border-radius: 5px;
     border: 2px solid $text-blue;
     box-shadow: 0px 0px 2px black;
     color: $text-blue;
     font-size: 20px;
     margin-left: auto;
+    transition: .2s;
+
+    &:hover {
+      background-color: #066dab;
+      color: aliceblue;
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
   }
 
   &__img {
@@ -79,6 +95,13 @@
     flex-wrap: wrap;
     justify-content: center;
   }
+
+  @media (max-width: 767.95px) {
+    &__container {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
 }
 
 .ben-item {
@@ -94,6 +117,10 @@
   overflow: hidden;
   gap: 20px;
   color: $text-form-color;
+
+  @media (max-width: 767.95px) {
+    width: 80%;
+  }
 
   &__title {
     font-family: Amatic, serif;
@@ -159,5 +186,93 @@
 
   &__link {
     margin-top: auto;
+  }
+
+  @media (max-width: 767.95px) {
+    flex-direction: column;
+    width: 320px;
+
+
+  }
+}
+
+.reglink {
+  display: flex;
+  margin: 50px;
+
+
+  &__img-box {
+    width: 50%;
+    overflow: hidden;
+  }
+
+  &__image {
+    width: 100%;
+  }
+
+
+
+  &__body {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__title {
+    font-family: Amatic, serif;
+    font-size: 4rem;
+    color: $text-blue;
+    margin: 50px 0px;
+  }
+
+  &__description {
+    line-height: 130%;
+  }
+
+  &__btns-container {
+    display: flex;
+    gap: 30px;
+  }
+
+  &__reg-btn,
+  &__log-btn {
+    width: 150px;
+    height: 50px;
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    border-radius: 5px;
+    border: 2px solid $text-blue;
+    box-shadow: 0px 0px 2px black;
+    color: $text-blue;
+    font-size: 20px;
+    transition: .2s;
+
+    &:hover {
+      background-color: #066dab;
+      color: aliceblue;
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  @media (max-width: 767.95px) {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    &__img-box {
+      width: 80%;
+    }
+
+    &__body {
+      width: 80%;
+      align-items: center;
+    }
   }
 }

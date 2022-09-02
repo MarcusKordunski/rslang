@@ -29,6 +29,10 @@
     box-shadow: 0px 0px 5px black;
     color: $text-color;
   }
+
+  @media(max-width: 1023.95px) {
+    margin-bottom: 120px;
+  }
 }
 
 .textbook-pagination {
@@ -143,8 +147,20 @@
   }
 
   @media(max-width: 1023.95px) {
-    right: -1%;
+    flex-direction: row;
+    right: 15%;
+    top: 140px;
+    width: 70%;
+    height: 70px;
   }
+
+  @media (max-width: 767.95px) {
+    .group-title {
+      display: none;
+    }
+  }
+
+
 
   #group-0.active {
     border: 3px solid rgb(77, 187, 82);

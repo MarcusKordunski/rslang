@@ -1,6 +1,7 @@
 import create from "../utils/create";
 import benefits from "../utils/benefits.json";
 import team from "../utils/team.json";
+import { auth } from "..";
 
 export class Main {
   getHtml(): string {
@@ -14,6 +15,7 @@ export class Main {
     const mainPage = create('div', 'main-page', main);
     mainPage.appendChild(this.getAbout());
     mainPage.appendChild(this.getBenefits());
+    if (!auth.user) mainPage.appendChild(this.getRegsLink());
     mainPage.appendChild(this.getTeam());
   }
 
@@ -46,6 +48,24 @@ export class Main {
 
 
     return mainBenefits;
+  }
+
+  getRegsLink() {
+    const mainReglink = create('div', 'main-page__reglink reglink');
+    const reglinkImgBox = create('div', 'reglink__img-box', mainReglink);
+    const reglinkImg = create('img', 'reglink__image', reglinkImgBox, undefined, ['src', './assets/images/english.png'], ['alt', 'english']);
+    const reglinkBody = create('div', 'reglink__body', mainReglink);
+    const reglinkTitle = create('h2', 'reglink__title', reglinkBody);
+    reglinkTitle.textContent = 'Зарегистрируйся';
+    const reglinkDescription = create('p', 'reglink__description', reglinkBody);
+    reglinkDescription.textContent = 'Не забудь зарегистрироваться. Это позволит тебе получить доступ к полному функционалу нашего приложения. А именно: возможность отмечать сложные и изученные слова в учебнике, доступ к ежедневной статистике и многое другое.';
+    const reglinkBtnsBox = create('div', 'reglink__btns-container', reglinkBody);
+    const reglinkRegBtn = create('button', 'reglink__reg-btn', reglinkBtnsBox);
+    reglinkRegBtn.textContent = 'Регистрация';
+    const reglinkLogBtn = create('button', 'reglink__log-btn', reglinkBtnsBox);
+    reglinkLogBtn.textContent = 'Войти';
+
+    return mainReglink;
   }
 
   getTeam() {
