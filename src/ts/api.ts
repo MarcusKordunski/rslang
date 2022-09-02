@@ -94,6 +94,9 @@ class Api {
         'Content-Type': 'application/json',
       },
     });
+    if (!response.ok) {
+      return { difficulty: 'normal', optional: { correctCount: 0, totalCorrectCount: 0, totalIncorrectCount: 0 } };
+    }
     const data = await response.json();
     return data;
   }

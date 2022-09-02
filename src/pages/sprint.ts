@@ -1,6 +1,7 @@
 import create from '../utils/create';
 import { api } from '../ts/api';
 import { IWord } from '../types/types';
+import { auth } from '../index';
 
 export class Sprint {
 
@@ -123,14 +124,14 @@ export class Sprint {
     this.uncorrectBtn.textContent = 'Неверно';
     this.correctBtn.addEventListener('click', async (event) => {
       event.preventDefault();
-      this.answerHandler('correct');
+      await this.answerHandler('correct');
       this.streakHandler();
       this.index += 1;
       this.setNewWord();
     });
     this.uncorrectBtn.addEventListener('click', async (event) => {
       event.preventDefault();
-      this.answerHandler('uncorrect');
+      await this.answerHandler('uncorrect');
       this.streakHandler();
       this.index += 1;
       this.setNewWord();
@@ -188,9 +189,22 @@ export class Sprint {
       event.preventDefault();
       this.mainContent.innerHTML = '';
     });
-
     return sprintContainer;
   }
+  // async wordStatisticCounter() {
+  //   for (let i = 0; i < this.resCorrectArr.length; i++) {
+  //     if (auth.user?.userId) {
+  //       const body = await api.getUserWord(auth.user?.userId, auth.token, this.resCorrectArr[0].id);
+  //       await api.createUserWord(auth.user?.userId, this.resCorrectArr[0].id, auth.token, { difficulty: 'normal', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
+  //     }
+  //   }
+  //   for (let i = 0; i < this.resUncorrectArr.length; i++) {
+  //     if (auth.user?.userId) {
+  //       const body = await api.getUserWord(auth.user?.userId, auth.token, this.resCorrectArr[0].id);
+  //       await api.createUserWord(auth.user?.userId, this.resUncorrectArr[0].id, auth.token, { difficulty: 'hard', optional: { correctCount: body.optional.correctCount, totalCorrectCount: body.optional.totalCorrectCount, totalIncorrectCount: body.optional.totalIncorrectCount + 1 } });
+  //     }
+  //   }
+  // }
 
   timerCounter() {
     this.isTimeEnd = false;
@@ -220,8 +234,13 @@ export class Sprint {
   }
 
 
-  async createWordsArr() {
-    const page = this.randomPage();
+  async createWordsArr(pageParam?: number) {
+    let page: number;
+    if (pageParam === undefined) {
+      page = this.randomPage();
+    } else {
+      page = pageParam;
+    }
     let wrongPage = this.randomPage();
     while (page === wrongPage) {
       wrongPage = this.randomPage();
@@ -252,20 +271,44 @@ export class Sprint {
     }
   }
 
-  answerHandler(correct: 'correct' | 'uncorrect') {
+  async answerHandler(correct: 'correct' | 'uncorrect') {
     if (correct === 'correct' && !this.wordsArr[this.index].wordTranslateWrong) {
       this.scoreCount += this.scoreAdd;
       this.score.textContent = `Score: ${this.scoreCount}`;
       this.correctStreak += 1;
       this.resCorrectArr.push(this.wordsArr[this.index]);
+      if (auth.user?.userId) {
+        const body = await api.getUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id);
+        if (body.optional.totalCorrectCount === 0 && body.optional.correctCount === 0 && body.optional.totalIncorrectCount === 0) {
+          await api.createUserWord(auth.user?.userId, this.wordsArr[this.index].id, auth.token, { difficulty: 'normal', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
+        } else {
+          await api.updateUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id, { difficulty: 'normal', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
+        }
+      }
     } else if (correct === 'uncorrect' && this.wordsArr[this.index].wordTranslateWrong) {
       this.scoreCount += this.scoreAdd;
       this.score.textContent = `Score: ${this.scoreCount}`;
       this.correctStreak += 1;
       this.resCorrectArr.push(this.wordsArr[this.index]);
+      if (auth.user?.userId) {
+        const body = await api.getUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id);
+        if (body.optional.totalCorrectCount === 0 && body.optional.correctCount === 0 && body.optional.totalIncorrectCount === 0) {
+          await api.createUserWord(auth.user?.userId, this.wordsArr[this.index].id, auth.token, { difficulty: 'normal', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
+        } else {
+          await api.updateUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id, { difficulty: 'normal', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
+        }
+      }
     } else {
       this.correctStreak = 0;
       this.resUncorrectArr.push(this.wordsArr[this.index]);
+      if (auth.user?.userId) {
+        const body = await api.getUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id);
+        if (body.optional.totalCorrectCount === 0 && body.optional.correctCount === 0 && body.optional.totalIncorrectCount === 0) {
+          await api.createUserWord(auth.user?.userId, this.wordsArr[this.index].id, auth.token, { difficulty: 'hard', optional: { correctCount: body.optional.correctCount, totalCorrectCount: body.optional.totalCorrectCount, totalIncorrectCount: body.optional.totalIncorrectCount + 1 } });
+        } else {
+          await api.updateUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id, { difficulty: 'hard', optional: { correctCount: body.optional.correctCount, totalCorrectCount: body.optional.totalCorrectCount, totalIncorrectCount: body.optional.totalIncorrectCount + 1 } });
+        }
+      }
     }
   }
 
@@ -290,13 +333,13 @@ export class Sprint {
     document.addEventListener('keydown', async (event) => {
       if (event.code === 'ArrowLeft' && this.view === 'game') {
         event.preventDefault();
-        this.answerHandler('correct');
+        await this.answerHandler('correct');
         this.streakHandler();
         this.index += 1;
         this.setNewWord();
       } else if (event.code === 'ArrowRight' && this.view === 'game') {
         event.preventDefault();
-        this.answerHandler('uncorrect');
+        await this.answerHandler('uncorrect');
         this.streakHandler();
         this.index += 1;
         this.setNewWord();
@@ -304,4 +347,22 @@ export class Sprint {
     });
   }
 
+  eventListenerTextbook() {
+    const btn = document.querySelector('.textbook-games__sprint') as HTMLElement;
+    btn.addEventListener('click', async () => {
+      this.mainContent = document.querySelector('.main-content') as HTMLElement;
+      this.difficulty = String(1 + Number(localStorage.getItem('rs-lang-active-group'))) as string;
+      this.resCorrectArr = [];
+      this.resUncorrectArr = [];
+      this.index = 0;
+      this.correctStreak = 0;
+      this.scoreCount = 0;
+      this.mainContent.innerHTML = '';
+      await this.createWordsArr(Number(localStorage.getItem('rs-lang-active-page')));
+      this.mainContent.appendChild(this.renderSprintGame());
+      clearInterval(this.timerInterval);
+      this.timerCounter();
+      this.setNewWord();
+    });
+  }
 }

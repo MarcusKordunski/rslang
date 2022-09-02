@@ -90,7 +90,7 @@ export class View {
     const authPageBtn = document.querySelector('.header__auth-btn') as HTMLElement;
     const textbookPageBtn = document.querySelector('.textbook-page') as HTMLElement;
     const sprintGameBtn = document.querySelector('.sprint-page') as HTMLElement;
-
+    const sprint = new Sprint()
     authPageBtn.addEventListener('click', () => {
       if (!this.auth.user) {
         main.innerHTML = '';
@@ -103,20 +103,19 @@ export class View {
     textbookPageBtn.addEventListener('click', () => {
       main.innerHTML = '';
       main.appendChild(this.textbook.init());
+      sprint.eventListenerTextbook();
     });
 
     sprintGameBtn.addEventListener('click', () => {
       main.innerHTML = '';
-      const sprintMenu = new Sprint();
-      sprintMenu.mainContent.appendChild(sprintMenu.renderSprintMenu());
-      sprintMenu.arrowsListener();
+      main.appendChild(sprint.renderSprintMenu());
+      sprint.arrowsListener();
     });
 
   }
 
   public renderAudiocall(): void {
     this.audiocall.createPage();
-    
   }
 }
 
