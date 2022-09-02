@@ -3,7 +3,7 @@
 .sprint-menu,
 .sprint-game,
 .sprint-result {
-  width: 40rem;
+  max-width: 40rem;
   display: flex;
   flex-direction: column;
   gap: 1.2em;

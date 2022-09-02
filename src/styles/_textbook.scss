@@ -378,4 +378,19 @@
     box-shadow: 0 0 3px black;
     color: rgb(180, 0, 0);
   }
+
+  @media(max-width: 767.95px) {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+
+    &__img-box {
+      max-width: 100%;
+    }
+
+    &__body {
+      width: 100%;
+    }
+  }
 }
