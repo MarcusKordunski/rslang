@@ -89,7 +89,7 @@ export class View {
     const authPageBtn = document.querySelector('.header__auth-btn') as HTMLElement;
     const sprint = new Sprint();
     sprint.arrowsListener();
-    
+
     const textbookPageBtn = document.querySelectorAll('.textbook-page') as NodeList;
     const sprintGameBtn = document.querySelectorAll('.sprint-page') as NodeList;
     const burger = document.querySelector('.burger') as HTMLElement;
@@ -124,6 +124,7 @@ export class View {
       item.addEventListener('click', () => {
         main.innerHTML = '';
         main.appendChild(this.textbook.init());
+        sprint.eventListenerTextbook();
         if (burgerMenu.classList.contains('open')) {
           burger.classList.remove('open');
           burgerMenu.classList.remove('open')
