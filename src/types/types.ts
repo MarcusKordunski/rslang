@@ -59,6 +59,25 @@ export interface IOptionalWord {
   totalIncorrectCount: number;
 }
 
+export interface IStatisticsObj {
+  id?: string;
+  learnedWords?: number;
+  optional: {
+    sprint: {
+      correctWords: number;
+      incorrectWords: number;
+      streak: number;
+      newWords: number;
+    }
+    audiocall: {
+      correctWords: number;
+      incorrectWords: number;
+      streak: number;
+      newWords: number;
+    }
+  }
+}
+
 export interface IAudiocallPage {
   createPage: () => void;
 }
