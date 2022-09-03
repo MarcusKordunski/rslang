@@ -2,7 +2,7 @@ import { IUserReg, IUserWord, IWord } from '../types/types';
 
 class Api {
 
-  readonly baseUrl: string = 'http://localhost:3000';
+  readonly baseUrl: string = 'https://rs-lang-learnsword.herokuapp.com';
 
   readonly usersUrl: string = `${this.baseUrl}/users`;
 
