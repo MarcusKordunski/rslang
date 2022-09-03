@@ -3,7 +3,8 @@ import {
   IMain,
   IFooter,
   INavigation,
-  IAudiocallPage
+  IAudiocallPage,
+  IStatistics
 
 } from "../types/types";
 import { Footer } from '../components/footer';
@@ -13,7 +14,7 @@ import { Auth } from "../pages/auth";
 import { Textbook } from "../pages/textbook/textbook";
 import { Sprint } from "../pages/sprint";
 import { AudiocallPage } from "../games/audiocall/create-page";
-
+import { Statistic } from "../pages/statistics";
 
 export class View {
   private header: IHeader;
@@ -22,7 +23,7 @@ export class View {
   private auth: Auth;
   private textbook: Textbook;
   private audiocall: IAudiocallPage;
-
+  private statistics: IStatistics;
 
   constructor(
     header: IHeader,
@@ -37,6 +38,7 @@ export class View {
     this.auth = auth;
     this.textbook = textbook;
     this.audiocall = new AudiocallPage();
+    this.statistics = new Statistic();
   }
 
 
@@ -60,6 +62,7 @@ export class View {
     this.renderFooter();
     this.addHeaderListeners();
     this.renderAudiocall();
+    this.renderStatisics();
   }
 
   public renderHeader(): void {
@@ -117,6 +120,10 @@ export class View {
   public renderAudiocall(): void {
     this.audiocall.createPage();
     
+  }
+
+  public renderStatisics(): void {
+    this.statistics.create();
   }
 }
 

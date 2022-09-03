@@ -12,4 +12,5 @@ export class AudiocallPage {
     const startPageHtml = new StartPage();
     startPageHtml.createBookVersion();
   }
+  
 }

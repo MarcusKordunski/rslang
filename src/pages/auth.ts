@@ -4,9 +4,9 @@ import { IUserObject, IUserReg } from "../types/types";
 import { view } from "../";
 
 export class Auth {
-  public user!: IUserObject | null;
-  public token!: string;
-
+  public user!: IUserObject | null;                                                                                                                                                                                
+  public token!: string;                                                                                                         
+                  
   constructor() {
     const user: string | null = localStorage.getItem('rs-lang-userInfo') || null;
     this.user = JSON.parse(user!);
