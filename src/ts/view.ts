@@ -90,7 +90,8 @@ export class View {
     const authPageBtn = document.querySelector('.header__auth-btn') as HTMLElement;
     const textbookPageBtn = document.querySelector('.textbook-page') as HTMLElement;
     const sprintGameBtn = document.querySelector('.sprint-page') as HTMLElement;
-    const sprint = new Sprint()
+    const sprint = new Sprint();
+    sprint.arrowsListener();
     authPageBtn.addEventListener('click', () => {
       if (!this.auth.user) {
         main.innerHTML = '';
@@ -109,7 +110,6 @@ export class View {
     sprintGameBtn.addEventListener('click', () => {
       main.innerHTML = '';
       main.appendChild(sprint.renderSprintMenu());
-      sprint.arrowsListener();
     });
 
   }
