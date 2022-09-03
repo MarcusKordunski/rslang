@@ -2,7 +2,7 @@ import { IStatisticsObj, IUserReg, IUserWord, IWord } from '../types/types';
 
 class Api {
 
-  readonly baseUrl: string = 'http://localhost:3000';
+  readonly baseUrl: string = 'https://rs-lang-learnsword.herokuapp.com';
 
   readonly usersUrl: string = `${this.baseUrl}/users`;
 
@@ -19,8 +19,11 @@ class Api {
       },
       body: JSON.stringify(user),
     });
-    const data = await response.json();
-    return data;
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    }
+    throw new Error('error');
   }
 
   async loginUser(user: IUserReg) {

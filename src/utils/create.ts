@@ -17,7 +17,7 @@ export default function create(
   }
   if (dataAttr.length) {
     dataAttr.forEach(([attName, attValue]) => {
-      if (attName.match(/value|id|placeholder|cols|rows|alt|src|name|for|type/)) {
+      if (attName.match(/value|id|placeholder|cols|rows|alt|src|name|for|type|href/)) {
         element.setAttribute(attName, attValue);
       } else {
         element.dataset[attName] = attValue;
