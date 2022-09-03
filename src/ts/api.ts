@@ -1,4 +1,4 @@
-import { IUserReg, IUserWord, IWord } from '../types/types';
+import { IStatisticsObj, IUserReg, IUserWord, IWord } from '../types/types';
 
 class Api {
 
@@ -97,6 +97,9 @@ class Api {
         'Content-Type': 'application/json',
       },
     });
+    if (!response.ok) {
+      return { difficulty: 'normal', optional: { correctCount: 0, totalCorrectCount: 0, totalIncorrectCount: 0 } };
+    }
     const data = await response.json();
     return data;
   }
@@ -139,6 +142,44 @@ class Api {
     });
     const data = await response.json();
     return data[0].paginatedResults;
+  }
+
+  async updateStatistics(userId: string, token: string, body: IStatisticsObj) {
+    try {
+      await fetch(
+        `${this.usersUrl}/${userId}/statistics`,
+        {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(body),
+        },
+      );
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async getStatistics(userId: string, token: string) {
+    const response = await fetch(
+      `${this.usersUrl} / ${userId} / statistics`,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    if (response.ok) {
+      return (await response.json()) as IStatisticsObj;
+    } else {
+      console.warn('Новая статисктика была создана.');
+      return null;
+    }
   }
 }
 

@@ -139,12 +139,32 @@
   padding: 1em;
 }
 
+.sprint-result__correct-words span {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.sprint-result__correct-words p {
+  display: inline-block;
+  white-space: pre-line;
+}
+
 .sprint-result__uncorrect-words {
   background-color: white;
   border-radius: 4%;
   text-align: left;
   width: 25rem;
   padding: 1em;
+}
+
+.sprint-result__uncorrect-words p {
+  display: inline-block;
+  white-space: pre-line;
+}
+
+.sprint-result__uncorrect-words span {
+  display: inline-block;
+  cursor: pointer;
 }
 
 .sprint-result__correct-title {

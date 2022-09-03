@@ -87,6 +87,9 @@ export class View {
     const main = document.querySelector('.main-content') as HTMLElement;
     const mainPageBtn = document.querySelectorAll('.main-page') as NodeList;
     const authPageBtn = document.querySelector('.header__auth-btn') as HTMLElement;
+    const sprint = new Sprint();
+    sprint.arrowsListener();
+    
     const textbookPageBtn = document.querySelectorAll('.textbook-page') as NodeList;
     const sprintGameBtn = document.querySelectorAll('.sprint-page') as NodeList;
     const burger = document.querySelector('.burger') as HTMLElement;
