@@ -1,5 +1,7 @@
 export interface IMain {
   getHtml: () => string;
+  init: () => HTMLElement;
+  getAbout: () => HTMLElement;
 }
 
 export interface IFooter {

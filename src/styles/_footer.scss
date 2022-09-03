@@ -2,4 +2,18 @@
   height: 70px;
   width: 100%;
   background-color: bisque;
+  display: flex;
+  align-items: center;
+}
+
+.footer-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-rss {
+  width: 80px;
+
 }

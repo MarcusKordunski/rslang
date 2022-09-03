@@ -2,13 +2,9 @@ import {
   IHeader,
   IMain,
   IFooter,
-  INavigation,
   IAudiocallPage
 
 } from "../types/types";
-import { Footer } from '../components/footer';
-import { Header } from '../components/header';
-import { Main } from '../pages/main';
 import { Auth } from "../pages/auth";
 import { Textbook } from "../pages/textbook/textbook";
 import { Sprint } from "../pages/sprint";
@@ -77,7 +73,9 @@ export class View {
 
   public renderMain(): void {
     const main = document.querySelector('.main') as HTMLElement;
-    main!.innerHTML = this.main.getHtml();
+    main.innerHTML = this.main.getHtml();
+    const mainContent = document.querySelector('.main-content') as HTMLElement;
+    mainContent.appendChild(this.main.init());
   }
 
   public renderFooter(): void {
@@ -87,9 +85,28 @@ export class View {
 
   public addHeaderListeners(): void {
     const main = document.querySelector('.main-content') as HTMLElement;
+    const mainPageBtn = document.querySelectorAll('.main-page') as NodeList;
     const authPageBtn = document.querySelector('.header__auth-btn') as HTMLElement;
-    const textbookPageBtn = document.querySelector('.textbook-page') as HTMLElement;
-    const sprintGameBtn = document.querySelector('.sprint-page') as HTMLElement;
+    const textbookPageBtn = document.querySelectorAll('.textbook-page') as NodeList;
+    const sprintGameBtn = document.querySelectorAll('.sprint-page') as NodeList;
+    const burger = document.querySelector('.burger') as HTMLElement;
+    const burgerMenu = document.querySelector('.burger-menu') as HTMLElement;
+
+    burger.addEventListener('click', () => {
+      burger.classList.toggle('open');
+      burgerMenu.classList.toggle('open');
+    });
+
+    mainPageBtn.forEach((item) => {
+      item.addEventListener('click', () => {
+        main.innerHTML = '';
+        main.appendChild(this.main.init());
+        if (burgerMenu.classList.contains('open')) {
+          burger.classList.remove('open');
+          burgerMenu.classList.remove('open')
+        };
+      })
+    });
 
     authPageBtn.addEventListener('click', () => {
       if (!this.auth.user) {
@@ -100,25 +117,34 @@ export class View {
       }
     });
 
-    textbookPageBtn.addEventListener('click', () => {
-      main.innerHTML = '';
-      main.appendChild(this.textbook.init());
-    });
+    textbookPageBtn.forEach((item) => {
+      item.addEventListener('click', () => {
+        main.innerHTML = '';
+        main.appendChild(this.textbook.init());
+        if (burgerMenu.classList.contains('open')) {
+          burger.classList.remove('open');
+          burgerMenu.classList.remove('open')
+        };
+      });
+    })
 
-    sprintGameBtn.addEventListener('click', () => {
-      main.innerHTML = '';
-      const sprintMenu = new Sprint();
-      sprintMenu.mainContent.appendChild(sprintMenu.renderSprintMenu());
-      sprintMenu.arrowsListener();
+    sprintGameBtn.forEach((item) => {
+      item.addEventListener('click', () => {
+        main.innerHTML = '';
+        const sprintMenu = new Sprint();
+        sprintMenu.mainContent.appendChild(sprintMenu.renderSprintMenu());
+        sprintMenu.arrowsListener();
+        if (burgerMenu.classList.contains('open')) {
+          burger.classList.remove('open');
+          burgerMenu.classList.remove('open')
+        };
+      });
     });
 
   }
 
   public renderAudiocall(): void {
     this.audiocall.createPage();
-    
   }
 }
-
-// export const view = new View();
 
