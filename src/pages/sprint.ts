@@ -55,6 +55,16 @@ export class Sprint {
 
   public view!: string;
 
+  public learnedWordsStat: number;
+
+  public correctWordsStat: number;
+
+  public uncorrectWordsStat: number;
+
+  public newWordsStat: number;
+
+  public maxStreak: number;
+
   constructor() {
     this.isCorrect = true;
     this.correctStreak = 0;
@@ -65,6 +75,11 @@ export class Sprint {
     this.scoreAdd = 20;
     this.resCorrectArr = [];
     this.resUncorrectArr = [];
+    this.learnedWordsStat = 0;
+    this.correctWordsStat = 0;
+    this.uncorrectWordsStat = 0;
+    this.newWordsStat = 0;
+    this.maxStreak = 0;
   }
 
   renderSprintMenu(): HTMLElement {
@@ -95,6 +110,11 @@ export class Sprint {
       this.index = 0;
       this.correctStreak = 0;
       this.scoreCount = 0;
+      this.learnedWordsStat = 0;
+      this.newWordsStat = 0;
+      this.correctWordsStat = 0;
+      this.uncorrectWordsStat = 0;
+      this.maxStreak = 0;
       this.mainContent.innerHTML = '';
       this.mainContent.appendChild(this.renderSprintGame());
       clearInterval(this.timerInterval);
@@ -159,7 +179,7 @@ export class Sprint {
       sound.textContent = '🎧';
       word.textContent = `${this.resCorrectArr[i].word} - ${this.resCorrectArr[i].wordTranslate}`;
       sound.addEventListener('click', async () => {
-        const audio = new Audio(`http://localhost:3000/${this.resCorrectArr[i].audio}`);
+        const audio = new Audio(`https://rs-lang-learnsword.herokuapp.com/${this.resCorrectArr[i].audio}`);
         audio.play();
       });
     }
@@ -174,7 +194,7 @@ export class Sprint {
       sound.textContent = '🎧';
       word.textContent = `${this.resUncorrectArr[i].word} - ${this.resUncorrectArr[i].wordTranslate}`;
       sound.addEventListener('click', async () => {
-        const audio = new Audio(`http://localhost:3000/${this.resUncorrectArr[i].audio}`);
+        const audio = new Audio(`https://rs-lang-learnsword.herokuapp.com/${this.resUncorrectArr[i].audio}`);
         audio.play();
       });
     }
@@ -203,6 +223,7 @@ export class Sprint {
       this.timer.textContent = `${time}`;
       if (time === 0) {
         clearInterval(this.timerInterval);
+        this.updateSprintStats();
         this.isTimeEnd = true;
         this.mainContent.innerHTML = '';
         this.mainContent.appendChild(this.renderSprintResult());
@@ -234,8 +255,20 @@ export class Sprint {
     while (page === wrongPage) {
       wrongPage = this.randomPage();
     }
-    this.wordsArr = await api.getWordsSprint(this.difficulty, page);
-    this.wordsWrongArr = await api.getWordsSprint(this.difficulty, wrongPage);
+    const filter = { '$and': [{ '$or': [{ 'userWord.difficulty': 'hard' }, { 'userWord.difficulty': 'normal' }, { 'userWord': null }] }, { '$and': [{ 'group': Number(this.difficulty) - 1 }, { 'page': page }] }] };
+    const wrongFilter = { '$and': [{ '$or': [{ 'userWord.difficulty': 'hard' }, { 'userWord.difficulty': 'normal' }, { 'userWord': null }] }, { '$and': [{ 'group': Number(this.difficulty) - 1 }, { 'page': wrongPage }] }] };
+    console.log(this.difficulty);
+    if ((pageParam === undefined || !auth.user?.userId) && Number(this.difficulty) < 7) {
+      this.wordsArr = await api.getWordsSprint(this.difficulty, page);
+      this.wordsWrongArr = await api.getWordsSprint(this.difficulty, wrongPage);
+    } else if (Number(this.difficulty) === 7 && auth.user?.userId) {
+      this.wordsArr = await api.getAggregatedWords(auth.user?.userId, auth.token, JSON.stringify({ 'userWord.difficulty': 'hard' }));
+      this.wordsWrongArr = await api.getWordsSprint('5', wrongPage);
+    } else if (auth.user?.userId) {
+      this.wordsArr = await api.getAggregatedWords(auth.user?.userId, auth.token, JSON.stringify(filter));
+      this.wordsWrongArr = await api.getAggregatedWords(auth.user?.userId, auth.token, JSON.stringify(wrongFilter));
+    }
+
     this.wordsArr.forEach((item) => {
       if (this.coinThrow()) {
         return item;
@@ -245,8 +278,9 @@ export class Sprint {
     });
   }
 
-  setNewWord() {
-    if (this.index === 20) {
+  async setNewWord() {
+    if (this.index === this.wordsArr.length) {
+      this.updateSprintStats();
       this.mainContent.innerHTML = '';
       this.mainContent.appendChild(this.renderSprintResult());
       clearInterval(this.timerInterval);
@@ -270,7 +304,6 @@ export class Sprint {
     this.correctBtn.removeAttribute('disabled');
     this.uncorrectBtn.removeAttribute('disabled');
     this.arrowBlock = false;
-    console.log(this.arrowBlock);
   }
 
   async answerHandler(correct: 'correct' | 'uncorrect') {
@@ -280,14 +313,20 @@ export class Sprint {
       this.correctStreak += 1;
       this.resCorrectArr.push(this.wordsArr[this.index]);
       if (auth.user?.userId) {
+        this.correctWordsStat++;
         this.blockGameButtons();
         const body = await api.getUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id);
         if (body.optional.totalCorrectCount === 0 && body.optional.correctCount === 0 && body.optional.totalIncorrectCount === 0) {
           await api.createUserWord(auth.user?.userId, this.wordsArr[this.index].id, auth.token, { difficulty: 'normal', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
+          this.newWordsStat++;
         } else if (body.optional.correctCount === 2) {
+          this.learnedWordsStat++;
+          await api.updateUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id, { difficulty: 'easy', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
+        } else if (body.optional.correctCount === 4 && body.difficulty === 'hard') {
+          this.learnedWordsStat++;
           await api.updateUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id, { difficulty: 'easy', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
         } else {
-          await api.updateUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id, { difficulty: 'normal', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
+          await api.updateUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id, { difficulty: body.difficulty, optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
         }
         this.unlockGameButtons();
       }
@@ -297,14 +336,20 @@ export class Sprint {
       this.correctStreak += 1;
       this.resCorrectArr.push(this.wordsArr[this.index]);
       if (auth.user?.userId) {
+        this.correctWordsStat++;
         this.blockGameButtons();
         const body = await api.getUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id);
         if (body.optional.totalCorrectCount === 0 && body.optional.correctCount === 0 && body.optional.totalIncorrectCount === 0) {
           await api.createUserWord(auth.user?.userId, this.wordsArr[this.index].id, auth.token, { difficulty: 'normal', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
-        } else if (body.optional.correctCount === 2) {
+          this.newWordsStat++;
+        } else if (body.optional.correctCount === 2 && body.difficulty === 'normal') {
+          this.learnedWordsStat++;
+          await api.updateUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id, { difficulty: 'easy', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
+        } else if (body.optional.correctCount === 4 && body.difficulty === 'hard') {
+          this.learnedWordsStat++;
           await api.updateUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id, { difficulty: 'easy', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
         } else {
-          await api.updateUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id, { difficulty: 'normal', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
+          await api.updateUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id, { difficulty: body.difficulty, optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
         }
         this.unlockGameButtons();
       }
@@ -312,12 +357,14 @@ export class Sprint {
       this.correctStreak = 0;
       this.resUncorrectArr.push(this.wordsArr[this.index]);
       if (auth.user?.userId) {
+        this.uncorrectWordsStat++;
         this.blockGameButtons();
         const body = await api.getUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id);
         if (body.optional.totalCorrectCount === 0 && body.optional.correctCount === 0 && body.optional.totalIncorrectCount === 0) {
-          await api.createUserWord(auth.user?.userId, this.wordsArr[this.index].id, auth.token, { difficulty: 'hard', optional: { correctCount: 0, totalCorrectCount: body.optional.totalCorrectCount, totalIncorrectCount: body.optional.totalIncorrectCount + 1 } });
+          await api.createUserWord(auth.user?.userId, this.wordsArr[this.index].id, auth.token, { difficulty: 'normal', optional: { correctCount: 0, totalCorrectCount: body.optional.totalCorrectCount, totalIncorrectCount: body.optional.totalIncorrectCount + 1 } });
+          this.newWordsStat++;
         } else {
-          await api.updateUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id, { difficulty: 'hard', optional: { correctCount: 0, totalCorrectCount: body.optional.totalCorrectCount, totalIncorrectCount: body.optional.totalIncorrectCount + 1 } });
+          await api.updateUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id, { difficulty: body.difficulty, optional: { correctCount: 0, totalCorrectCount: body.optional.totalCorrectCount, totalIncorrectCount: body.optional.totalIncorrectCount + 1 } });
         }
         this.unlockGameButtons();
       }
@@ -325,6 +372,7 @@ export class Sprint {
   }
 
   streakHandler() {
+    this.createMaxStreak();
     if (this.correctStreak % 3 === 1) {
       this.streakSignal1.classList.add('active');
       this.streakSignal2.classList.remove('active');
@@ -341,6 +389,12 @@ export class Sprint {
     this.scoreAdd = 20 + (20 * Math.round(this.correctStreak / 3));
   }
 
+  createMaxStreak() {
+    if (this.maxStreak < this.correctStreak) {
+      this.maxStreak = this.correctStreak;
+    }
+  }
+
   arrowsListener() {
     document.addEventListener('keydown', async (event) => {
       if (event.code === 'ArrowLeft' && this.view === 'game' && event.repeat === false && this.arrowBlock === false) {
@@ -350,7 +404,6 @@ export class Sprint {
         this.streakHandler();
         this.index += 1;
         this.setNewWord();
-        console.log(this.arrowBlock);
       } else if (event.code === 'ArrowRight' && this.view === 'game' && event.repeat === false && this.arrowBlock === false) {
         this.arrowBlock = true;
         event.preventDefault();
@@ -373,6 +426,11 @@ export class Sprint {
       this.index = 0;
       this.correctStreak = 0;
       this.scoreCount = 0;
+      this.learnedWordsStat = 0;
+      this.newWordsStat = 0;
+      this.correctWordsStat = 0;
+      this.uncorrectWordsStat = 0;
+      this.maxStreak = 0;
       this.mainContent.innerHTML = '';
       await this.createWordsArr(Number(localStorage.getItem('rs-lang-active-page')));
       this.mainContent.appendChild(this.renderSprintGame());
@@ -380,5 +438,49 @@ export class Sprint {
       this.timerCounter();
       this.setNewWord();
     }, { once: true });
+  }
+
+  async updateSprintStats() {
+    if (auth.user?.userId) {
+      const currStats = await api.getStatistics(auth.user.userId, auth.token);
+      if (currStats === null) {
+        await api.updateStatistics(auth.user.userId, auth.token,
+          {
+            learnedWords: this.learnedWordsStat,
+            optional: {
+              audiocall: {
+                correctWords: 0,
+                incorrectWords: 0,
+                streak: 0,
+                newWords: 0,
+              },
+              sprint: {
+                correctWords: this.correctWordsStat,
+                incorrectWords: this.uncorrectWordsStat,
+                streak: this.maxStreak,
+                newWords: this.newWordsStat,
+              },
+            },
+          });
+      } else if (currStats.learnedWords !== undefined) {
+        await api.updateStatistics(auth.user.userId, auth.token, {
+          learnedWords: currStats.learnedWords + this.learnedWordsStat,
+          optional: {
+            audiocall: {
+              correctWords: currStats.optional.audiocall.correctWords,
+              incorrectWords: currStats.optional.audiocall.incorrectWords,
+              streak: currStats.optional.audiocall.streak,
+              newWords: currStats.optional.audiocall.newWords,
+            },
+            sprint: {
+              correctWords: currStats.optional.sprint.correctWords + this.correctWordsStat,
+              incorrectWords: currStats.optional.sprint.incorrectWords + this.uncorrectWordsStat,
+              streak: currStats.optional.sprint.streak > this.maxStreak ? currStats.optional.sprint.streak : this.maxStreak,
+              newWords: currStats.optional.sprint.newWords + this.newWordsStat,
+            },
+          },
+        });
+      }
+    }
   }
 }
