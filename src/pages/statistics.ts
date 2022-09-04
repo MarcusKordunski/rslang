@@ -4,7 +4,7 @@ import { IStatisticsObj } from "../types/types";
 
 export class Statistic {
 
-  create () {
+  create() {
     const statisticBtns = document.querySelectorAll('.statistic-page');
     const statisticBtn = statisticBtns[1];
     const main = document.querySelector('.main-content') as HTMLElement;
@@ -21,24 +21,27 @@ export class Statistic {
     });
   }
 
-  async getAuthHtml () {
+  async getAuthHtml() {
     return `
     <div class='statistics-content'>
-      <div class='statistics-container'>
-          <div class='words-statistics'>
-            <div class='words-learned words-statistics-item'> </div>
-            <div class='new-words words-statistics-item'> </div>
-            <div class='accuracy-words words-statistics-item'> </div>
+      <div class='statistics-container'>          
+          <div class='words-statistics stat-item'>
+            <h3 class='stat-title'>Статистика по словам</h3>
+            <div class='words-learned words-statistics-item stat-value'> </div>
+            <div class='new-words words-statistics-item stat-value'> </div>
+            <div class='accuracy-words words-statistics-item stat-value'> </div>
           </div>
-          <div class='audiocall-statistics'>
-            <div class='new-words-audiocall audiocall-statistics-item'> </div>
-            <div class='accuracy-words-audiocall audiocall-statistics-item'> </div>
-            <div class='combo-words-audiocall audiocall-statistics-item'> </div>
+          <div class='audiocall-statistics stat-item'>
+            <h3 class='stat-title'>Статистика по игре "Аудиовызов"</h3>
+            <div class='new-words-audiocall audiocall-statistics-item stat-value'> </div>
+            <div class='accuracy-words-audiocall audiocall-statistics-item stat-value'> </div>
+            <div class='combo-words-audiocall audiocall-statistics-item stat-value'> </div>
           </div>
-          <div class='sprint-statistics'>
-            <div class='new-words-sprint sprint-statistics-item'> </div>
-            <div class='accuracy-words-sprint sprint-statistics-item'> </div>
-            <div class='combo-words-sprint sprint-statistics-item'> </div>
+          <div class='sprint-statistics stat-item'>
+            <h3 class='stat-title'>Статитстика по игре "Спринт"</h3>
+            <div class='new-words-sprint sprint-statistics-item stat-value'> </div>
+            <div class='accuracy-words-sprint sprint-statistics-item stat-value'> </div>
+            <div class='combo-words-sprint sprint-statistics-item stat-value'> </div>
           </div>
        
       </div>
@@ -46,41 +49,41 @@ export class Statistic {
     `
   }
 
-  async getUnAuth () {
+  async getUnAuth() {
     return `
     <div class='statistics-content'>Вы не авторизованны</div>
     `
   }
 
-  async getAudiocallData(statistics: IStatisticsObj ) {
+  async getAudiocallData(statistics: IStatisticsObj) {
     const newWordsAudiocall = document.querySelector('.new-words-audiocall');
     const accurAudiocall = document.querySelector('.accuracy-words-audiocall');
     const comboAudiocall = document.querySelector('.combo-words-audiocall');
 
     newWordsAudiocall!.textContent = `Новые слова: ${statistics!.optional.audiocall.newWords}`;
-    accurAudiocall!.textContent = `Правильность ответов: ${Math.round((100/(statistics!.optional.audiocall.correctWords+statistics!.optional.audiocall.incorrectWords))*statistics!.optional.audiocall.correctWords)}%`;
+    accurAudiocall!.textContent = `Правильность ответов: ${Math.round((100 / (statistics!.optional.audiocall.correctWords + statistics!.optional.audiocall.incorrectWords)) * statistics!.optional.audiocall.correctWords)}%`;
     comboAudiocall!.textContent = `Максимальное комбо: ${statistics!.optional.audiocall.streak}`;
   }
 
-  async getSprintData(statistics: IStatisticsObj ) {
+  async getSprintData(statistics: IStatisticsObj) {
     const newWordSprint = document.querySelector('.new-words-sprint');
     const accurSprint = document.querySelector('.accuracy-words-sprint');
     const comboSprint = document.querySelector('.combo-words-sprint');
 
     newWordSprint!.textContent = `Новые слова: ${statistics!.optional.sprint.newWords}`;
-    accurSprint!.textContent = `Правильность ответов: ${Math.round((100/(statistics!.optional.sprint.correctWords+statistics!.optional.sprint.incorrectWords))*statistics!.optional.sprint.correctWords)}%`;
+    accurSprint!.textContent = `Правильность ответов: ${Math.round((100 / (statistics!.optional.sprint.correctWords + statistics!.optional.sprint.incorrectWords)) * statistics!.optional.sprint.correctWords)}%`;
     comboSprint!.textContent = `Максимальное комбо: ${statistics!.optional.sprint.streak}`;
   }
 
-  async getWordstData(statistics: IStatisticsObj ) {
+  async getWordstData(statistics: IStatisticsObj) {
     const newWords = document.querySelector('.words-learned');
     const accurWordst = document.querySelector('.new-words');
     const learnsWords = document.querySelector('.accuracy-words');
 
     const totalWords = statistics.optional.audiocall.correctWords + statistics.optional.audiocall.incorrectWords + statistics.optional.sprint.correctWords + statistics.optional.sprint.incorrectWords;
-    const totalCorrectWords = statistics.optional.audiocall.correctWords +  statistics.optional.sprint.correctWords;
+    const totalCorrectWords = statistics.optional.audiocall.correctWords + statistics.optional.sprint.correctWords;
     newWords!.textContent = `Новых слов изучено: ${statistics!.optional.audiocall.newWords + statistics!.optional.sprint.newWords}`;
-    accurWordst!.textContent = `Правильность ответов: ${Math.round((100/totalWords)*totalCorrectWords)}%`;
+    accurWordst!.textContent = `Правильность ответов: ${Math.round((100 / totalWords) * totalCorrectWords)}%`;
     learnsWords!.textContent = `Новых слов выучено: ${statistics!.learnedWords}`;
   }
 
