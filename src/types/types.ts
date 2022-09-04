@@ -83,3 +83,28 @@ export interface IStatisticsObj {
 export interface IAudiocallPage {
   createPage: () => void;
 }
+
+export interface IStatisticsObj {
+  id?: string;
+  learnedWords?: number;
+  optional: {
+    sprint: {
+      correctWords: number;
+      incorrectWords: number;
+      streak: number;
+      newWords: number;
+    }
+    audiocall: {
+      correctWords: number;
+      incorrectWords: number;
+      streak: number;
+      newWords: number;
+    }
+  }
+}
+
+export interface IStatistics {
+  create: () => void;
+  getAuthHtml: () => Promise<string>;
+  getUnAuth: () => Promise<string>;
+}

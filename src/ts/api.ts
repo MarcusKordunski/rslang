@@ -1,8 +1,9 @@
+
 import { IStatisticsObj, IUserReg, IUserWord, IWord } from '../types/types';
 
 class Api {
 
-  readonly baseUrl: string = 'https://rs-lang-learnsword.herokuapp.com';
+  readonly baseUrl: string = 'http://localhost:3000';
 
   readonly usersUrl: string = `${this.baseUrl}/users`;
 
@@ -19,11 +20,13 @@ class Api {
       },
       body: JSON.stringify(user),
     });
+
     if (response.ok) {
       const data = await response.json();
       return data;
     }
     throw new Error('error');
+
   }
 
   async loginUser(user: IUserReg) {
@@ -165,7 +168,7 @@ class Api {
 
   async getStatistics(userId: string, token: string) {
     const response = await fetch(
-      `${this.usersUrl} / ${userId} / statistics`,
+      `${this.usersUrl}/${userId}/statistics`,
       {
         headers: {
           'Authorization': `Bearer ${token}`,

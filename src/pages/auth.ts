@@ -4,13 +4,16 @@ import { IUserObject, IUserReg } from "../types/types";
 import { view } from "../";
 
 export class Auth {
-  public user!: IUserObject | null;
-  public token!: string;
+  public user!: IUserObject | null;                                                                                                                                                                                
+  public token!: string;    
+  public date!: string | void | null;                                                                                                     
 
   constructor() {
     const user: string | null = localStorage.getItem('rs-lang-userInfo') || null;
     this.user = JSON.parse(user!);
     if (this.user) this.token = this.user.token;
+    this.date = localStorage.getItem('date') === null? localStorage.setItem('date', String(Date.now())): localStorage.getItem('date');
+    
   }
 
   viewLoginForm(): HTMLElement {

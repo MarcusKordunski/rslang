@@ -1,0 +1,60 @@
+.statistics-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 570px;
+  width: 100%;
+}
+
+.statistics-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  height: 90%;
+}
+
+
+
+
+.words-statistics {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 30%;
+  height: 60%;
+}
+
+.words-statistics-item {
+  width: 100%;
+  height: 60%;
+  border: 2px solid black;
+}
+
+
+.audiocall-statistics {
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  height: 60%;
+}
+
+.audiocall-statistics-item {
+  width: 100%;
+  height: 60%;
+  border: 2px solid black;
+}
+
+.sprint-statistics {
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  height: 60%;
+}
+
+.sprint-statistics-item {
+  width: 100%;
+  height: 60%;
+  border: 2px solid black;
+}

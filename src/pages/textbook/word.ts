@@ -132,9 +132,11 @@ export class Word {
 
   createUserWordOptions(
     difficulty: string,
-    correctCount: number = this.userWord!.optional.correctCount || 0,
-    totalCorrectCount: number = this.userWord!.optional.totalCorrectCount || 0,
-    totalIncorrectCount: number = this.userWord!.optional.totalIncorrectCount || 0
+
+    correctCount: number = this.userWord ? this.userWord!.optional.correctCount : 0,
+    totalCorrectCount: number = this.userWord ? this.userWord!.optional.totalCorrectCount : 0,
+    totalIncorrectCount: number = this.userWord ? this.userWord!.optional.totalIncorrectCount : 0
+
   ): IUserWord {
     return {
       difficulty: difficulty,
