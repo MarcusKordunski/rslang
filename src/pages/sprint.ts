@@ -257,7 +257,6 @@ export class Sprint {
     }
     const filter = { '$and': [{ '$or': [{ 'userWord.difficulty': 'hard' }, { 'userWord.difficulty': 'normal' }, { 'userWord': null }] }, { '$and': [{ 'group': Number(this.difficulty) - 1 }, { 'page': page }] }] };
     const wrongFilter = { '$and': [{ '$or': [{ 'userWord.difficulty': 'hard' }, { 'userWord.difficulty': 'normal' }, { 'userWord': null }] }, { '$and': [{ 'group': Number(this.difficulty) - 1 }, { 'page': wrongPage }] }] };
-    console.log(this.difficulty);
     if ((pageParam === undefined || !auth.user?.userId) && Number(this.difficulty) < 7) {
       this.wordsArr = await api.getWordsSprint(this.difficulty, page);
       this.wordsWrongArr = await api.getWordsSprint(this.difficulty, wrongPage);
@@ -307,6 +306,10 @@ export class Sprint {
   }
 
   async answerHandler(correct: 'correct' | 'uncorrect') {
+    let id = this.wordsArr[this.index].id;
+    if (this.wordsArr[this.index].id === undefined) {
+      id = this.wordsArr[this.index]._id as string;
+    }
     if (correct === 'correct' && !this.wordsArr[this.index].wordTranslateWrong) {
       this.scoreCount += this.scoreAdd;
       this.score.textContent = `Score: ${this.scoreCount}`;
@@ -315,18 +318,19 @@ export class Sprint {
       if (auth.user?.userId) {
         this.correctWordsStat++;
         this.blockGameButtons();
-        const body = await api.getUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id);
-        if (body.optional.totalCorrectCount === 0 && body.optional.correctCount === 0 && body.optional.totalIncorrectCount === 0) {
-          await api.createUserWord(auth.user?.userId, this.wordsArr[this.index].id, auth.token, { difficulty: 'normal', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
+        const body = await api.getUserWord(auth.user?.userId, auth.token, id);
+        console.log(body);
+        if (body.difficulty === 'normal' && body.difficulty === 'normal' && body.optional.correctCount === 0 && body.optional.totalIncorrectCount === 0 && body.optional.totalCorrectCount === 0) {
+          await api.createUserWord(auth.user?.userId, id, auth.token, { difficulty: 'normal', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
           this.newWordsStat++;
         } else if (body.optional.correctCount === 2) {
           this.learnedWordsStat++;
-          await api.updateUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id, { difficulty: 'easy', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
+          await api.updateUserWord(auth.user?.userId, auth.token, id, { difficulty: 'easy', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
         } else if (body.optional.correctCount === 4 && body.difficulty === 'hard') {
           this.learnedWordsStat++;
-          await api.updateUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id, { difficulty: 'easy', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
+          await api.updateUserWord(auth.user?.userId, auth.token, id, { difficulty: 'easy', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
         } else {
-          await api.updateUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id, { difficulty: body.difficulty, optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
+          await api.updateUserWord(auth.user?.userId, auth.token, id, { difficulty: body.difficulty, optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
         }
         this.unlockGameButtons();
       }
@@ -338,18 +342,18 @@ export class Sprint {
       if (auth.user?.userId) {
         this.correctWordsStat++;
         this.blockGameButtons();
-        const body = await api.getUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id);
-        if (body.optional.totalCorrectCount === 0 && body.optional.correctCount === 0 && body.optional.totalIncorrectCount === 0) {
-          await api.createUserWord(auth.user?.userId, this.wordsArr[this.index].id, auth.token, { difficulty: 'normal', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
+        const body = await api.getUserWord(auth.user?.userId, auth.token, id);
+        if (body.difficulty === 'normal' && body.difficulty === 'normal' && body.optional.correctCount === 0 && body.optional.totalIncorrectCount === 0 && body.optional.totalCorrectCount === 0) {
+          await api.createUserWord(auth.user?.userId, id, auth.token, { difficulty: 'normal', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
           this.newWordsStat++;
         } else if (body.optional.correctCount === 2 && body.difficulty === 'normal') {
           this.learnedWordsStat++;
-          await api.updateUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id, { difficulty: 'easy', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
+          await api.updateUserWord(auth.user?.userId, auth.token, id, { difficulty: 'easy', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
         } else if (body.optional.correctCount === 4 && body.difficulty === 'hard') {
           this.learnedWordsStat++;
-          await api.updateUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id, { difficulty: 'easy', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
+          await api.updateUserWord(auth.user?.userId, auth.token, id, { difficulty: 'easy', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
         } else {
-          await api.updateUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id, { difficulty: body.difficulty, optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
+          await api.updateUserWord(auth.user?.userId, auth.token, id, { difficulty: body.difficulty, optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
         }
         this.unlockGameButtons();
       }
@@ -359,12 +363,12 @@ export class Sprint {
       if (auth.user?.userId) {
         this.uncorrectWordsStat++;
         this.blockGameButtons();
-        const body = await api.getUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id);
-        if (body.optional.totalCorrectCount === 0 && body.optional.correctCount === 0 && body.optional.totalIncorrectCount === 0) {
-          await api.createUserWord(auth.user?.userId, this.wordsArr[this.index].id, auth.token, { difficulty: 'normal', optional: { correctCount: 0, totalCorrectCount: body.optional.totalCorrectCount, totalIncorrectCount: body.optional.totalIncorrectCount + 1 } });
+        const body = await api.getUserWord(auth.user?.userId, auth.token, id);
+        if (body.difficulty === 'normal' && body.difficulty === 'normal' && body.optional.correctCount === 0 && body.optional.totalIncorrectCount === 0 && body.optional.totalCorrectCount === 0) {
+          await api.createUserWord(auth.user?.userId, id, auth.token, { difficulty: 'normal', optional: { correctCount: 0, totalCorrectCount: body.optional.totalCorrectCount, totalIncorrectCount: body.optional.totalIncorrectCount + 1 } });
           this.newWordsStat++;
         } else {
-          await api.updateUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id, { difficulty: body.difficulty, optional: { correctCount: 0, totalCorrectCount: body.optional.totalCorrectCount, totalIncorrectCount: body.optional.totalIncorrectCount + 1 } });
+          await api.updateUserWord(auth.user?.userId, auth.token, id, { difficulty: body.difficulty, optional: { correctCount: 0, totalCorrectCount: body.optional.totalCorrectCount, totalIncorrectCount: body.optional.totalIncorrectCount + 1 } });
         }
         this.unlockGameButtons();
       }
