@@ -65,7 +65,7 @@ export class Word {
     this.wordContainer = create('div', 'textbook__word word-card');
 
     const wordImgBox: HTMLElement = create('div', 'word-card__img-box', this.wordContainer);
-    const wordImg: HTMLElement = create('img', 'word-card__img', wordImgBox, undefined, ['src', `http://localhost:3000/${this.image}`], ['alt', `${this.word}`]);
+    const wordImg: HTMLElement = create('img', 'word-card__img', wordImgBox, undefined, ['src', `https://rs-lang-learnsword.herokuapp.com/${this.image}`], ['alt', `${this.word}`]);
 
     this.wordBody = create('div', 'word-card__body', this.wordContainer);
 
@@ -132,9 +132,11 @@ export class Word {
 
   createUserWordOptions(
     difficulty: string,
+
     correctCount: number = this.userWord ? this.userWord!.optional.correctCount : 0,
     totalCorrectCount: number = this.userWord ? this.userWord!.optional.totalCorrectCount : 0,
     totalIncorrectCount: number = this.userWord ? this.userWord!.optional.totalIncorrectCount : 0
+
   ): IUserWord {
     return {
       difficulty: difficulty,

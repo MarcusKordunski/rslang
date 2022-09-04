@@ -1,5 +1,7 @@
 export interface IMain {
   getHtml: () => string;
+  init: () => HTMLElement;
+  getAbout: () => HTMLElement;
 }
 
 export interface IFooter {
@@ -57,6 +59,25 @@ export interface IOptionalWord {
   correctCount: number;
   totalCorrectCount: number;
   totalIncorrectCount: number;
+}
+
+export interface IStatisticsObj {
+  id?: string;
+  learnedWords?: number;
+  optional: {
+    sprint: {
+      correctWords: number;
+      incorrectWords: number;
+      streak: number;
+      newWords: number;
+    }
+    audiocall: {
+      correctWords: number;
+      incorrectWords: number;
+      streak: number;
+      newWords: number;
+    }
+  }
 }
 
 export interface IAudiocallPage {

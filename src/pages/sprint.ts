@@ -1,6 +1,7 @@
 import create from '../utils/create';
 import { api } from '../ts/api';
 import { IWord } from '../types/types';
+import { auth } from '../index';
 
 export class Sprint {
 
@@ -30,6 +31,8 @@ export class Sprint {
 
   private index: number;
 
+  private arrowBlock: boolean;
+
   public timer!: HTMLElement;
 
   public word!: HTMLElement;
@@ -56,6 +59,7 @@ export class Sprint {
     this.isCorrect = true;
     this.correctStreak = 0;
     this.isTimeEnd = false;
+    this.arrowBlock = false;
     this.index = 0;
     this.scoreCount = 0;
     this.scoreAdd = 20;
@@ -123,14 +127,14 @@ export class Sprint {
     this.uncorrectBtn.textContent = 'Неверно';
     this.correctBtn.addEventListener('click', async (event) => {
       event.preventDefault();
-      this.answerHandler('correct');
+      await this.answerHandler('correct');
       this.streakHandler();
       this.index += 1;
       this.setNewWord();
     });
     this.uncorrectBtn.addEventListener('click', async (event) => {
       event.preventDefault();
-      this.answerHandler('uncorrect');
+      await this.answerHandler('uncorrect');
       this.streakHandler();
       this.index += 1;
       this.setNewWord();
@@ -148,15 +152,31 @@ export class Sprint {
     correctTitle.textContent = `ВЕРНО: ${this.resCorrectArr.length}`;
     const correctWords = create('div', 'sprint-result__correct-words', sprintContainer);
     for (let i = 0; i < this.resCorrectArr.length; i++) {
+      const sound = create('span', undefined, correctWords);
       const word = create('p', undefined, correctWords);
+      create('br', undefined, correctWords);
+      create('br', undefined, correctWords);
+      sound.textContent = '🎧';
       word.textContent = `${this.resCorrectArr[i].word} - ${this.resCorrectArr[i].wordTranslate}`;
+      sound.addEventListener('click', async () => {
+        const audio = new Audio(`http://localhost:3000/${this.resCorrectArr[i].audio}`);
+        audio.play();
+      });
     }
     const uncorrectTitle = create('p', 'sprint-result__uncorrect-title', sprintContainer);
     uncorrectTitle.textContent = `ОШИБОК: ${this.resUncorrectArr.length}`;
     const uncorrectWords = create('div', 'sprint-result__uncorrect-words', sprintContainer);
     for (let i = 0; i < this.resUncorrectArr.length; i++) {
+      const sound = create('span', undefined, uncorrectWords);
       const word = create('p', undefined, uncorrectWords);
+      create('br', undefined, uncorrectWords);
+      create('br', undefined, uncorrectWords);
+      sound.textContent = '🎧';
       word.textContent = `${this.resUncorrectArr[i].word} - ${this.resUncorrectArr[i].wordTranslate}`;
+      sound.addEventListener('click', async () => {
+        const audio = new Audio(`http://localhost:3000/${this.resUncorrectArr[i].audio}`);
+        audio.play();
+      });
     }
     const resultButtons = create('div', 'sprint-result__buttons', sprintContainer);
     const playAgain = create('button', 'sprint-result__play-again', resultButtons, undefined, ['type', 'button']);
@@ -172,7 +192,6 @@ export class Sprint {
       event.preventDefault();
       this.mainContent.innerHTML = '';
     });
-
     return sprintContainer;
   }
 
@@ -204,8 +223,13 @@ export class Sprint {
   }
 
 
-  async createWordsArr() {
-    const page = this.randomPage();
+  async createWordsArr(pageParam?: number) {
+    let page: number;
+    if (pageParam === undefined) {
+      page = this.randomPage();
+    } else {
+      page = pageParam;
+    }
     let wrongPage = this.randomPage();
     while (page === wrongPage) {
       wrongPage = this.randomPage();
@@ -225,6 +249,7 @@ export class Sprint {
     if (this.index === 20) {
       this.mainContent.innerHTML = '';
       this.mainContent.appendChild(this.renderSprintResult());
+      clearInterval(this.timerInterval);
     } else {
       this.word.textContent = this.wordsArr[this.index].word;
       if (this.wordsArr[this.index].wordTranslateWrong) {
@@ -235,20 +260,67 @@ export class Sprint {
     }
   }
 
-  answerHandler(correct: 'correct' | 'uncorrect') {
+  blockGameButtons() {
+    this.correctBtn.setAttribute('disabled', 'disabled');
+    this.uncorrectBtn.setAttribute('disabled', 'disabled');
+    this.arrowBlock = true;
+  }
+
+  unlockGameButtons() {
+    this.correctBtn.removeAttribute('disabled');
+    this.uncorrectBtn.removeAttribute('disabled');
+    this.arrowBlock = false;
+    console.log(this.arrowBlock);
+  }
+
+  async answerHandler(correct: 'correct' | 'uncorrect') {
     if (correct === 'correct' && !this.wordsArr[this.index].wordTranslateWrong) {
       this.scoreCount += this.scoreAdd;
       this.score.textContent = `Score: ${this.scoreCount}`;
       this.correctStreak += 1;
       this.resCorrectArr.push(this.wordsArr[this.index]);
+      if (auth.user?.userId) {
+        this.blockGameButtons();
+        const body = await api.getUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id);
+        if (body.optional.totalCorrectCount === 0 && body.optional.correctCount === 0 && body.optional.totalIncorrectCount === 0) {
+          await api.createUserWord(auth.user?.userId, this.wordsArr[this.index].id, auth.token, { difficulty: 'normal', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
+        } else if (body.optional.correctCount === 2) {
+          await api.updateUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id, { difficulty: 'easy', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
+        } else {
+          await api.updateUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id, { difficulty: 'normal', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
+        }
+        this.unlockGameButtons();
+      }
     } else if (correct === 'uncorrect' && this.wordsArr[this.index].wordTranslateWrong) {
       this.scoreCount += this.scoreAdd;
       this.score.textContent = `Score: ${this.scoreCount}`;
       this.correctStreak += 1;
       this.resCorrectArr.push(this.wordsArr[this.index]);
+      if (auth.user?.userId) {
+        this.blockGameButtons();
+        const body = await api.getUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id);
+        if (body.optional.totalCorrectCount === 0 && body.optional.correctCount === 0 && body.optional.totalIncorrectCount === 0) {
+          await api.createUserWord(auth.user?.userId, this.wordsArr[this.index].id, auth.token, { difficulty: 'normal', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
+        } else if (body.optional.correctCount === 2) {
+          await api.updateUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id, { difficulty: 'easy', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
+        } else {
+          await api.updateUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id, { difficulty: 'normal', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
+        }
+        this.unlockGameButtons();
+      }
     } else {
       this.correctStreak = 0;
       this.resUncorrectArr.push(this.wordsArr[this.index]);
+      if (auth.user?.userId) {
+        this.blockGameButtons();
+        const body = await api.getUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id);
+        if (body.optional.totalCorrectCount === 0 && body.optional.correctCount === 0 && body.optional.totalIncorrectCount === 0) {
+          await api.createUserWord(auth.user?.userId, this.wordsArr[this.index].id, auth.token, { difficulty: 'hard', optional: { correctCount: 0, totalCorrectCount: body.optional.totalCorrectCount, totalIncorrectCount: body.optional.totalIncorrectCount + 1 } });
+        } else {
+          await api.updateUserWord(auth.user?.userId, auth.token, this.wordsArr[this.index].id, { difficulty: 'hard', optional: { correctCount: 0, totalCorrectCount: body.optional.totalCorrectCount, totalIncorrectCount: body.optional.totalIncorrectCount + 1 } });
+        }
+        this.unlockGameButtons();
+      }
     }
   }
 
@@ -271,15 +343,18 @@ export class Sprint {
 
   arrowsListener() {
     document.addEventListener('keydown', async (event) => {
-      if (event.code === 'ArrowLeft' && this.view === 'game') {
+      if (event.code === 'ArrowLeft' && this.view === 'game' && event.repeat === false && this.arrowBlock === false) {
+        this.arrowBlock = true;
         event.preventDefault();
-        this.answerHandler('correct');
+        await this.answerHandler('correct');
         this.streakHandler();
         this.index += 1;
         this.setNewWord();
-      } else if (event.code === 'ArrowRight' && this.view === 'game') {
+        console.log(this.arrowBlock);
+      } else if (event.code === 'ArrowRight' && this.view === 'game' && event.repeat === false && this.arrowBlock === false) {
+        this.arrowBlock = true;
         event.preventDefault();
-        this.answerHandler('uncorrect');
+        await this.answerHandler('uncorrect');
         this.streakHandler();
         this.index += 1;
         this.setNewWord();
@@ -287,4 +362,23 @@ export class Sprint {
     });
   }
 
+
+  eventListenerTextbook() {
+    const btn = document.querySelector('.textbook-games__sprint') as HTMLElement;
+    btn.addEventListener('click', async () => {
+      this.mainContent = document.querySelector('.main-content') as HTMLElement;
+      this.difficulty = String(1 + Number(localStorage.getItem('rs-lang-active-group'))) as string;
+      this.resCorrectArr = [];
+      this.resUncorrectArr = [];
+      this.index = 0;
+      this.correctStreak = 0;
+      this.scoreCount = 0;
+      this.mainContent.innerHTML = '';
+      await this.createWordsArr(Number(localStorage.getItem('rs-lang-active-page')));
+      this.mainContent.appendChild(this.renderSprintGame());
+      clearInterval(this.timerInterval);
+      this.timerCounter();
+      this.setNewWord();
+    }, { once: true });
+  }
 }

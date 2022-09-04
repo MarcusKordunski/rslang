@@ -30,12 +30,35 @@ export class StartPage {
   }
   
   createNavVersion(): void {
-    const audiocallBtn: HTMLElement | null = document.querySelector('.audio-page');
+    const audiocallBtns: NodeList | null = document.querySelectorAll('.audio-page');
+    const audiocallBtn = audiocallBtns[1];
     const main = document.querySelector('.main-content') as HTMLElement;
     audiocallBtn?.addEventListener('click', async () => {
     main.innerHTML = this.getHtml();
     const lvlListItems: NodeList = document.querySelectorAll('.levels-list-item');
     this.lvlListItemslistener(lvlListItems);
+    if (auth.user) {
+      if (Date.now() - Number(localStorage.getItem('date')) > 86400000000) {
+        await api.updateStatistics(auth.user!.userId, auth.token, {
+          learnedWords: 0,
+          optional: {
+            audiocall: {
+              correctWords: 0,
+              incorrectWords: 0,
+              streak: 0,
+              newWords: 0,
+            },
+            sprint: {
+              correctWords: 0,
+              incorrectWords: 0,
+              streak: 0,
+              newWords: 0,
+            },
+          },
+        });
+        localStorage.setItem('date', String(Date.now()))
+      }
+    }
   });
   }
 
@@ -48,7 +71,10 @@ export class StartPage {
     if(auth.user){
       const getUsersWords: any = async function(page: number, array: any[]) {
         let pageNum = page;
-        const filter = `%7B%22$and%22%3A%5B%7B%22group%22%3A${section}%7D%2C%7B%22page%22%3A${page}%7D%5D%7D`;
+        let filter = `%7B%22$and%22%3A%5B%7B%22group%22%3A${section}%7D%2C%7B%22page%22%3A${page}%7D%5D%7D`;
+        if (section === 6) {
+          filter = '%7B%22userWord.difficulty%22%3A%22hard%22%7D';
+        }
         wordsArr = await api.getAggregatedWords(auth.user!.userId, auth.user!.token, filter);
         let filterWordsArr = wordsArr.filter((word: IWord) => word.userWord?.difficulty !== 'easy');
         let arr: any[] = array;
@@ -184,6 +210,7 @@ export class StartPage {
         this.createEndPage(wordsArr, isTextbook);
         if(auth.user){
           await this.changeStatistics(auth.user!.userId, auth.token, {
+            learnedWords: 0,
             optional: {
               audiocall: {
                 correctWords: this.correctAnswers,
@@ -223,6 +250,7 @@ export class StartPage {
           this.createEndPage(wordsArr, isTextbook);
           if(auth.user){
             await this.changeStatistics(auth.user!.userId, auth.token, {
+              learnedWords: 0,
               optional: {
                 audiocall: {
                   correctWords: this.correctAnswers,
@@ -251,6 +279,7 @@ export class StartPage {
             this.createEndPage(wordsArr, isTextbook);
             if(auth.user){
               await this.changeStatistics(auth.user!.userId, auth.token, {
+                learnedWords: 0,
                 optional: {
                   audiocall: {
                     correctWords: this.correctAnswers,
@@ -515,6 +544,7 @@ export class StartPage {
     if (wordsArr[this.wordNumber].userWord) {
       await api.updateUserWord(auth.user!.userId, auth.token, wordsArr[this.wordNumber]._id,  {difficulty: wordsArr[this.wordNumber].difficulty, optional: {correctCount: correctCount === 1?wordsArr[this.wordNumber].userWord.optional.correctCount + correctCount:0, totalIncorrectCount: wordsArr[this.wordNumber].userWord.optional.totalIncorrectCount + totalIncorrectCount, totalCorrectCount: wordsArr[this.wordNumber].userWord.optional.totalCorrectCount + totalCorrectCount}  } );
       const userWord = await api.getUserWord(auth.user!.userId, auth.token, wordsArr[this.wordNumber]._id);
+      
       if (userWord.optional.correctCount > 2 && userWord.difficulty === 'normal') {
         await api.updateUserWord(auth.user!.userId, auth.token, wordsArr[this.wordNumber]._id,  {difficulty: 'easy', optional: {correctCount: userWord.optional.correctCount, totalIncorrectCount: userWord.optional.totalIncorrectCount, totalCorrectCount: userWord.optional.totalCorrectCount}} );
         this.learnsWord++;
@@ -528,7 +558,6 @@ export class StartPage {
       
     } else {
       await api.createUserWord(auth.user!.userId, wordsArr[this.wordNumber]._id, auth.token, {difficulty: 'normal', optional: { correctCount: correctCount, totalIncorrectCount: totalIncorrectCount, totalCorrectCount: totalCorrectCount}} );
-      const userWord = await api.getUserWord(auth.user!.userId, auth.token, wordsArr[this.wordNumber]._id);
       this.newWords++;
     }
   }

@@ -163,12 +163,12 @@ export class Textbook {
           this.wordsOnPage.forEach(item => item.isPlayed = false);
           this.wordsOnPage[index].isPlayed = true;
           let count = 0;
-          this.audioPlayer.src = `http://localhost:3000/${this.wordsOnPage[index].audioTracks[count]}`;
+          this.audioPlayer.src = `https://rs-lang-learnsword.herokuapp.com/${this.wordsOnPage[index].audioTracks[count]}`;
           this.audioPlayer.play();
           this.audioPlayer.onended = () => {
             count++;
             if (count < this.wordsOnPage[index].audioTracks.length) {
-              this.audioPlayer.src = `http://localhost:3000/${this.wordsOnPage[index].audioTracks[count]}`;
+              this.audioPlayer.src = `https://rs-lang-learnsword.herokuapp.com/${this.wordsOnPage[index].audioTracks[count]}`;
               this.audioPlayer.play();
             } else {
               this.wordsOnPage[index].audioBtnImg.src = `./assets/icons/play.png`;

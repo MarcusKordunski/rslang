@@ -5,7 +5,8 @@ import { IStatisticsObj } from "../types/types";
 export class Statistic {
 
   create () {
-    const statisticBtn: HTMLElement | null = document.querySelector('.statistic-page');
+    const statisticBtns = document.querySelectorAll('.statistic-page');
+    const statisticBtn = statisticBtns[1];
     const main = document.querySelector('.main-content') as HTMLElement;
     statisticBtn?.addEventListener('click', async () => {
       if (auth.user) {
@@ -56,8 +57,8 @@ export class Statistic {
     const accurAudiocall = document.querySelector('.accuracy-words-audiocall');
     const comboAudiocall = document.querySelector('.combo-words-audiocall');
 
-    newWordsAudiocall!.textContent = `Новых слов изучено: ${statistics!.optional.audiocall.newWords}`;
-    accurAudiocall!.textContent = `Правильность ответов: %${Math.round((100/(statistics!.optional.audiocall.correctWords+statistics!.optional.audiocall.incorrectWords))*statistics!.optional.audiocall.correctWords)}`;
+    newWordsAudiocall!.textContent = `Новые слова: ${statistics!.optional.audiocall.newWords}`;
+    accurAudiocall!.textContent = `Правильность ответов: ${Math.round((100/(statistics!.optional.audiocall.correctWords+statistics!.optional.audiocall.incorrectWords))*statistics!.optional.audiocall.correctWords)}%`;
     comboAudiocall!.textContent = `Максимальное комбо: ${statistics!.optional.audiocall.streak}`;
   }
 
@@ -66,8 +67,8 @@ export class Statistic {
     const accurSprint = document.querySelector('.accuracy-words-sprint');
     const comboSprint = document.querySelector('.combo-words-sprint');
 
-    newWordSprint!.textContent = `Новых слов изучено: ${statistics!.optional.sprint.newWords}`;
-    accurSprint!.textContent = `Правильность ответов: %${Math.round((100/(statistics!.optional.sprint.correctWords+statistics!.optional.sprint.incorrectWords))*statistics!.optional.sprint.correctWords)}`;
+    newWordSprint!.textContent = `Новые слова: ${statistics!.optional.sprint.newWords}`;
+    accurSprint!.textContent = `Правильность ответов: ${Math.round((100/(statistics!.optional.sprint.correctWords+statistics!.optional.sprint.incorrectWords))*statistics!.optional.sprint.correctWords)}%`;
     comboSprint!.textContent = `Максимальное комбо: ${statistics!.optional.sprint.streak}`;
   }
 
@@ -79,7 +80,7 @@ export class Statistic {
     const totalWords = statistics.optional.audiocall.correctWords + statistics.optional.audiocall.incorrectWords + statistics.optional.sprint.correctWords + statistics.optional.sprint.incorrectWords;
     const totalCorrectWords = statistics.optional.audiocall.correctWords +  statistics.optional.sprint.correctWords;
     newWords!.textContent = `Новых слов изучено: ${statistics!.optional.audiocall.newWords + statistics!.optional.sprint.newWords}`;
-    accurWordst!.textContent = `Правильность ответов: %${Math.round((100/totalWords)*totalCorrectWords)}`;
+    accurWordst!.textContent = `Правильность ответов: ${Math.round((100/totalWords)*totalCorrectWords)}%`;
     learnsWords!.textContent = `Новых слов выучено: ${statistics!.learnedWords}`;
   }
 
