@@ -2,14 +2,16 @@ import {
   IHeader,
   IMain,
   IFooter,
-  IAudiocallPage
+  IAudiocallPage,
+  INavigation,
+  IStatistics
 
 } from "../types/types";
 import { Auth } from "../pages/auth";
 import { Textbook } from "../pages/textbook/textbook";
 import { Sprint } from "../pages/sprint";
 import { AudiocallPage } from "../games/audiocall/create-page";
-
+import { Statistic } from "../pages/statistics";
 
 export class View {
   private header: IHeader;
@@ -18,7 +20,7 @@ export class View {
   private auth: Auth;
   private textbook: Textbook;
   private audiocall: IAudiocallPage;
-
+  private statistics: IStatistics;
 
   constructor(
     header: IHeader,
@@ -33,6 +35,7 @@ export class View {
     this.auth = auth;
     this.textbook = textbook;
     this.audiocall = new AudiocallPage();
+    this.statistics = new Statistic();
   }
 
 
@@ -56,6 +59,7 @@ export class View {
     this.renderFooter();
     this.addHeaderListeners();
     this.renderAudiocall();
+    this.renderStatisics();
   }
 
   public renderHeader(): void {
@@ -87,6 +91,9 @@ export class View {
     const main = document.querySelector('.main-content') as HTMLElement;
     const mainPageBtn = document.querySelectorAll('.main-page') as NodeList;
     const authPageBtn = document.querySelector('.header__auth-btn') as HTMLElement;
+    const sprint = new Sprint();
+    sprint.arrowsListener();
+
     const textbookPageBtn = document.querySelectorAll('.textbook-page') as NodeList;
     const sprintGameBtn = document.querySelectorAll('.sprint-page') as NodeList;
     const burger = document.querySelector('.burger') as HTMLElement;
@@ -121,6 +128,7 @@ export class View {
       item.addEventListener('click', () => {
         main.innerHTML = '';
         main.appendChild(this.textbook.init());
+        sprint.eventListenerTextbook();
         if (burgerMenu.classList.contains('open')) {
           burger.classList.remove('open');
           burgerMenu.classList.remove('open')
@@ -145,6 +153,10 @@ export class View {
 
   public renderAudiocall(): void {
     this.audiocall.createPage();
+  }
+
+  public renderStatisics(): void {
+    this.statistics.create();
   }
 }
 

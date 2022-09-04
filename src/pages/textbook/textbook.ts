@@ -3,6 +3,7 @@ import create from "../../utils/create";
 import { Word } from "./word";
 import { api } from "../../ts/api";
 import { auth } from "../../index";
+import { AudiocallPage } from "../../games/audiocall/create-page";
 
 export class Textbook {
 
@@ -34,6 +35,10 @@ export class Textbook {
     const sprintTitle = create('p', 'textbook-games__title', sprintGame);
     sprintTitle.textContent = 'Спринт';
     const audioGame = create('div', 'textbook-games__audio', games);
+    audioGame.addEventListener('click', () => {
+      const audiocall = new AudiocallPage();
+      audiocall.createBookGame();
+    });
     const audioImg = create('img', 'textbook-games__img', audioGame);
     const audioTitle = create('p', 'textbook-games__title', audioGame);
     audioTitle.textContent = 'Аудио вызов';
@@ -41,6 +46,7 @@ export class Textbook {
     const textbookBody = create('div', 'textbook-body', this.textbookContainer);
     this.textbook = create('div', 'textbook', textbookBody);
     this.groupsDiv = create('div', 'textbook-groups', textbookBody);
+    
   }
 
   init() {
@@ -225,7 +231,10 @@ export class Textbook {
       this.textbook.appendChild(word.wordContainer);
     });
     this.initAudio();
+    console.log(words)
   }
+
+ 
 
 
 }
