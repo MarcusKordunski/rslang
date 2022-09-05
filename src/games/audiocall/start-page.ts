@@ -1,6 +1,6 @@
-import { api } from "../../ts/api";
-import { IWord, IStatisticsObj } from "../../types/types";
-import { auth } from "../..";
+import { api } from '../../ts/api';
+import { IWord, IStatisticsObj } from '../../types/types';
+import { auth, textbook } from '../..';
 
 export class StartPage {
 
@@ -38,6 +38,7 @@ export class StartPage {
     audiocallBtns.forEach((item) => {
       item.addEventListener('click', async () => {
         main.innerHTML = this.getHtml();
+        textbook.main.classList.remove('easy');
         const lvlListItems: NodeList = document.querySelectorAll('.levels-list-item');
         this.lvlListItemslistener(lvlListItems);
         if (auth.user) {
@@ -59,15 +60,15 @@ export class StartPage {
                 },
               },
             });
-            localStorage.setItem('date', String(Date.now()))
+            localStorage.setItem('date', String(Date.now()));
           }
         }
         if (burgerMenu.classList.contains('open')) {
           burger.classList.remove('open');
-          burgerMenu.classList.remove('open')
-        };
+          burgerMenu.classList.remove('open');
+        }
       });
-    })
+    });
 
 
   }
@@ -79,15 +80,15 @@ export class StartPage {
     // запрос на создание с учебника
     let wordsArr;
     if (auth.user) {
-      const getUsersWords: any = async function (page: number, array: any[]) {
+      const getUsersWords: any = async function (page: number, array: Array<IWord> | Array<void>) {
         let pageNum = page;
         let filter = `%7B%22$and%22%3A%5B%7B%22group%22%3A${section}%7D%2C%7B%22page%22%3A${page}%7D%5D%7D`;
         if (section === 6) {
           filter = '%7B%22userWord.difficulty%22%3A%22hard%22%7D';
         }
         wordsArr = await api.getAggregatedWords(auth.user!.userId, auth.user!.token, filter);
-        let filterWordsArr = wordsArr.filter((word: IWord) => word.userWord?.difficulty !== 'easy');
-        let arr: any[] = array;
+        const filterWordsArr = wordsArr.filter((word: IWord) => word.userWord?.difficulty !== 'easy');
+        const arr: Array<IWord> | Array<void> = array;
         if (arr.length === 20 || page === 0) {
           for (let i = 0; i < filterWordsArr.length; i++) {
             if (arr.length < 20) {
@@ -104,11 +105,10 @@ export class StartPage {
           pageNum = pageNum - 1;
           return await getUsersWords(pageNum, arr);
         }
-      }
+      };
       await getUsersWords(currentPage, []);
 
-    }
-    else { wordsArr = await api.getWords(section, currentPage) };
+    } else { wordsArr = await api.getWords(section, currentPage); }
     this.getGamePage();
     const scrollBtn: HTMLElement | null = document.querySelector('.scroll-btn');
     await this.getNewPage(wordsArr, this.wordNumber);
@@ -141,7 +141,7 @@ export class StartPage {
           </ul>
         </div>
       </div>
-    `
+    `;
   }
 
   getGamePage(): void {
@@ -157,7 +157,7 @@ export class StartPage {
         </ul>
         <button tabindex="0" class='scroll-btn gamepage-item'>Не знаю</button>
       </div>
-    `
+    `;
   }
 
   lvlListItemslistener(lvlListItems: NodeList) {
@@ -215,7 +215,7 @@ export class StartPage {
         this.wordNumber++;
         this.getNewPage(wordsArr, this.wordNumber);
         this.resetStyles(variantBtns);
-        scrollBtn!.textContent = 'Не знаю'
+        scrollBtn!.textContent = 'Не знаю';
       } else {
         this.createEndPage(wordsArr, isTextbook);
         if (auth.user) {
@@ -243,7 +243,7 @@ export class StartPage {
       if (e.key === 'Enter') {
         scrollBtn!.focus();
       }
-    })
+    });
 
     scrollBtn?.addEventListener('keyup', async (e) => {
       if (e.key === 'Enter') {
@@ -254,7 +254,7 @@ export class StartPage {
             this.wordNumber++;
             this.getNewPage(wordsArr, this.wordNumber);
             this.resetStyles(variantBtns);
-            scrollBtn!.textContent = 'Не знаю'
+            scrollBtn!.textContent = 'Не знаю';
           } else {
             this.createEndPage(wordsArr, isTextbook);
             if (auth.user) {
@@ -394,7 +394,7 @@ export class StartPage {
           btn.classList.add('correct-answer');
           this.changeStyle(variantBtns, wordsArr, this.wordNumber, 'del-points-events', 'all');
           this.correctAnswers++;
-          scrollBtn!.textContent = 'Next'
+          scrollBtn!.textContent = 'Next';
           this.answerStatuses.push('true-answer');
           if (auth.user) {
             await this.createUserWord(wordsArr, 1, 0, 1);
@@ -405,7 +405,7 @@ export class StartPage {
           this.changeStyle(variantBtns, wordsArr, this.wordNumber, 'correct-answer', 'one');
           this.changeStyle(variantBtns, wordsArr, this.wordNumber, 'del-points-events', 'all');
           this.errors++;
-          scrollBtn!.textContent = 'Next'
+          scrollBtn!.textContent = 'Next';
           this.answerStatuses.push('falsy-answer');
           if (auth.user) {
             await this.createUserWord(wordsArr, 0, 1, 0);
@@ -428,9 +428,9 @@ export class StartPage {
     }
 
     const randomNum = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19].slice(0, array.length);
-    const randomWordsIndex = randomNum.filter(num => num !== wordNumber).sort(function () { return Math.random() - 0.5 }).slice(0, 3);
+    const randomWordsIndex = randomNum.filter(num => num !== wordNumber).sort(function () { return Math.random() - 0.5; }).slice(0, 3);
     randomWordsIndex.push(wordNumber);
-    const mix = randomWordsIndex.sort(function () { return Math.random() - 0.5 });
+    const mix = randomWordsIndex.sort(function () { return Math.random() - 0.5; });
     const audio = new Audio(`https://rs-lang-learnsword.herokuapp.com/${array[wordNumber].audio}`);
     audio.play();
     const variantsBtns: NodeList = document.querySelectorAll('.options-list-item');
@@ -450,7 +450,7 @@ export class StartPage {
       } else if (count === 'all') {
         btn.classList.add(`${style}`);
       }
-    })
+    });
   }
 
   resetStyles(nodeList: NodeList) {
@@ -478,12 +478,12 @@ export class StartPage {
           </div>
         </div>
       <section>
-    `
+    `;
   }
 
   createEndPage(wordsArr: Array<IWord>, isTextbook?: boolean | undefined) {
     const main = document.querySelector('.main-content') as HTMLElement;
-    this.endPageContent = this.getEndPageHtml(this.correctAnswers, this.errors)
+    this.endPageContent = this.getEndPageHtml(this.correctAnswers, this.errors);
     main!.innerHTML = this.endPageContent;
     const statBtn = document.querySelector('.statistics');
     const repeateGameBtn = document.querySelector('.repeate-game-btn');
@@ -513,7 +513,7 @@ export class StartPage {
         this.createEndPage(wordsArr, isTextbook);
       });
 
-    })
+    });
   }
 
   getStatistic(wordsArr: Array<IWord>) {
@@ -526,8 +526,8 @@ export class StartPage {
         <div class='word-transc'>${wordsArr[index].transcription}</div>
         <div class='word-translate'>${wordsArr[index].wordTranslate}</div>
         <div class='answer-status answer-status-${index} ${this.answerStatuses[index]}'></div>
-      </div>`
-    }
+      </div>`;
+    };
 
     for (let i = 0; i < wordsArr.length; i++) {
       creatStatisticItem(i);
@@ -541,7 +541,7 @@ export class StartPage {
       </div>
       </div>
     <section>
-    `
+    `;
   }
 
   async createUserWord(wordsArr: Array<any>, correctCount: number, totalIncorrectCount: number, totalCorrectCount: number): Promise<void> {
@@ -567,10 +567,10 @@ export class StartPage {
   }
 
   async changeStatistics(userId: string, token: string, body: IStatisticsObj) {
-    let statistic = await api.getStatistics(userId, token);
+    const statistic = await api.getStatistics(userId, token);
     if (statistic === null) {
       await api.updateStatistics(userId, token, body);
-      let neWstatistic = await api.getStatistics(userId, token);
+      const neWstatistic = await api.getStatistics(userId, token);
     } else {
       await api.updateStatistics(userId, token, {
         learnedWords: statistic.learnedWords! + this.learnsWord,
@@ -589,7 +589,7 @@ export class StartPage {
           },
         },
       });
-      let neWstatistic = await api.getStatistics(userId, token);
+      const neWstatistic = await api.getStatistics(userId, token);
     }
   }
 

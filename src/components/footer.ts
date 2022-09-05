@@ -9,6 +9,6 @@ export class Footer {
           <a class='creators-item' href='https://github.com/MarcusKordunski'>Marcus</a>
         </div>
         <div class="project">2022</div>
-      </div>`
+      </div>`;
   }
 }

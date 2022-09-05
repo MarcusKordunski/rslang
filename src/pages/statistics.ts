@@ -1,6 +1,6 @@
 import { api } from '../ts/api';
-import { auth } from "../index";
-import { IStatisticsObj } from "../types/types";
+import { auth, textbook } from '../index';
+import { IStatisticsObj } from '../types/types';
 
 export class Statistic {
 
@@ -14,6 +14,7 @@ export class Statistic {
       item.addEventListener('click', async () => {
         if (auth.user) {
           main.innerHTML = await this.getAuthHtml();
+          textbook.main.classList.remove('easy');
           const statistics = await api.getStatistics(auth.user!.userId, auth.token);
           if (statistics === null) {
             main.innerHTML = `
@@ -42,7 +43,7 @@ export class Statistic {
                   },
                 },
               });
-              localStorage.setItem('date', String(Date.now()))
+              localStorage.setItem('date', String(Date.now()));
             }
             await this.getAudiocallData(statistics!);
             await this.getSprintData(statistics!);
@@ -53,10 +54,10 @@ export class Statistic {
         }
         if (burgerMenu.classList.contains('open')) {
           burger.classList.remove('open');
-          burgerMenu.classList.remove('open')
-        };
+          burgerMenu.classList.remove('open');
+        }
       });
-    })
+    });
 
 
   }
@@ -86,7 +87,7 @@ export class Statistic {
        
       </div>
     </div>
-    `
+    `;
   }
 
   async getUnAuth() {
@@ -96,7 +97,7 @@ export class Statistic {
         <h2 class='statistics-message'> Статистика доступна только для авторизованных пользователей</h2>
       </div>
     </div>
-    `
+    `;
   }
 
   async getAudiocallData(statistics: IStatisticsObj) {

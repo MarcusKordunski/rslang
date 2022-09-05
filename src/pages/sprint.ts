@@ -216,7 +216,7 @@ export class Sprint {
     return sprintContainer;
   }
 
-  timerCounter() {
+  timerCounter(): void {
     this.isTimeEnd = false;
     let time = 60;
     this.timerInterval = setInterval(() => {
@@ -245,7 +245,7 @@ export class Sprint {
   }
 
 
-  async createWordsArr(pageParam?: number) {
+  async createWordsArr(pageParam?: number): Promise<IWord | string | void> {
     let page: number;
     if (pageParam === undefined) {
       page = this.randomPage();
@@ -295,7 +295,7 @@ export class Sprint {
     });
   }
 
-  async setNewWord() {
+  async setNewWord(): Promise<void> {
     if (this.index === this.wordsArr.length) {
       this.updateSprintStats();
       this.mainContent.innerHTML = '';
@@ -311,19 +311,19 @@ export class Sprint {
     }
   }
 
-  blockGameButtons() {
+  blockGameButtons(): void {
     this.correctBtn.setAttribute('disabled', 'disabled');
     this.uncorrectBtn.setAttribute('disabled', 'disabled');
     this.arrowBlock = true;
   }
 
-  unlockGameButtons() {
+  unlockGameButtons(): void {
     this.correctBtn.removeAttribute('disabled');
     this.uncorrectBtn.removeAttribute('disabled');
     this.arrowBlock = false;
   }
 
-  async answerHandler(correct: 'correct' | 'uncorrect') {
+  async answerHandler(correct: 'correct' | 'uncorrect'): Promise<void> {
     let id = this.wordsArr[this.index].id;
     if (this.wordsArr[this.index].id === undefined) {
       id = this.wordsArr[this.index]._id as string;
@@ -392,7 +392,7 @@ export class Sprint {
     }
   }
 
-  streakHandler() {
+  streakHandler(): void {
     this.createMaxStreak();
     if (this.correctStreak % 3 === 1) {
       this.streakSignal1.classList.add('active');
@@ -410,13 +410,13 @@ export class Sprint {
     this.scoreAdd = 20 + (20 * Math.round(this.correctStreak / 3));
   }
 
-  createMaxStreak() {
+  createMaxStreak(): void {
     if (this.maxStreak < this.correctStreak) {
       this.maxStreak = this.correctStreak;
     }
   }
 
-  arrowsListener() {
+  arrowsListener(): void {
     document.addEventListener('keydown', async (event) => {
       if (event.code === 'ArrowLeft' && this.view === 'game' && event.repeat === false && this.arrowBlock === false) {
         this.arrowBlock = true;
@@ -437,7 +437,7 @@ export class Sprint {
   }
 
 
-  eventListenerTextbook() {
+  eventListenerTextbook(): void {
     const btn = document.querySelector('.textbook-games__sprint') as HTMLElement;
     btn.addEventListener('click', async () => {
       this.mainContent = document.querySelector('.main-content') as HTMLElement;
@@ -461,7 +461,7 @@ export class Sprint {
     }, { once: true });
   }
 
-  async updateSprintStats() {
+  async updateSprintStats(): Promise<void> {
     if (auth.user?.userId) {
       const currStats = await api.getStatistics(auth.user.userId, auth.token);
       if (currStats === null) {

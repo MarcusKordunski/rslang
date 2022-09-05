@@ -1,4 +1,4 @@
-import create from "../utils/create"
+import create from '../utils/create';
 
 export class Header {
   getHtml(): string {
@@ -31,6 +31,6 @@ export class Header {
       </nav>
       <div class="header__user-name"></div>
       <button class='header__auth-btn'>Войти</button>
-    </div>`
+    </div>`;
   }
 }

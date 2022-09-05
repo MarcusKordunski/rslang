@@ -1,11 +1,13 @@
-import create from "../utils/create";
-import { api } from "../ts/api";
-import { IUserObject, IUserReg } from "../types/types";
-import { view } from "../";
+import create from '../utils/create';
+import { api } from '../ts/api';
+import { IUserObject, IUserReg } from '../types/types';
+import { view } from '../';
 
 export class Auth {
   public user!: IUserObject | null;
+
   public token!: string;
+
   public date!: string | void | null;
 
   constructor() {
@@ -44,7 +46,7 @@ export class Auth {
       const main = document.querySelector('.main-content') as HTMLElement;
       main.innerHTML = '';
       main.append(this.viewRegForm());
-    })
+    });
 
     return loginContainer;
   }
@@ -70,7 +72,7 @@ export class Auth {
 
     regButton.addEventListener('click', async (event) => {
       event.preventDefault();
-      const user: IUserReg = { email: emailInput.value, password: passwordInput.value, name: nameInput.value }
+      const user: IUserReg = { email: emailInput.value, password: passwordInput.value, name: nameInput.value };
       await this.regUser(user);
       emailInput.value, passwordInput.value, nameInput.value = '';
     });
@@ -80,7 +82,7 @@ export class Auth {
       const main = document.querySelector('.main-content') as HTMLElement;
       main.innerHTML = '';
       main.append(this.viewLoginForm());
-    })
+    });
 
     return regContainer;
   }
@@ -92,8 +94,7 @@ export class Auth {
       main.innerHTML = '';
       main.append(this.viewLoginForm());
       this.showStatusMessage('Поздравляем! Вы успешно зарегистрировались.', 'green');
-    }
-    catch {
+    } catch {
       this.showStatusMessage('Пожалуйста, введите корректный e-mail или пароль');
     }
   }
@@ -126,12 +127,12 @@ export class Auth {
     authBtn.textContent = 'Войти';
   }
 
-  showStatusMessage(message: string, background?: string) {
+  showStatusMessage(message: string, background?: string): void {
     const messageContainer = create('div', 'status-message', document.body);
     if (background) messageContainer.style.backgroundColor = background;
     messageContainer.innerHTML = message;
     setTimeout(() => {
-      messageContainer.remove()
+      messageContainer.remove();
     }, 2500);
   }
 }

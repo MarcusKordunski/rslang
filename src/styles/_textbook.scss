@@ -63,6 +63,10 @@
     border-radius: 5px;
     box-shadow: 0 0 5px black;
 
+    &.easy {
+      background: linear-gradient(to bottom, #b4e391 0%, #61c419 50%, #b4e391 100%);
+    }
+
     &.disabled {
       background: rgb(181, 181, 181);
       color: whitesmoke;

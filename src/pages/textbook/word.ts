@@ -1,36 +1,56 @@
-import { IWord, IOptionalWord, IUserWord } from "../../types/types";
-import create from "../../utils/create";
-import { auth, textbook } from "../..";
-import { api } from "../../ts/api";
+import { IWord, IOptionalWord, IUserWord } from '../../types/types';
+import create from '../../utils/create';
+import { auth, textbook } from '../..';
+import { api } from '../../ts/api';
 
 export class Word {
 
   public id: string;
+
   public group: number;
+
   public page: number;
+
   public word: string;
+
   public image: string;
+
   public audio: string;
+
   public audioMeaning: string;
+
   public audioExample: string;
+
   public textMeaning: string;
+
   public textExample: string;
+
   public transcription: string;
+
   public wordTranslate: string;
+
   public textMeaningTranslate: string;
+
   public textExampleTranslate: string;
 
   public wordContainer!: HTMLElement;
+
   public audioTracks!: string[];
+
   public wordAudio!: HTMLElement;
+
   public isPlayed: boolean;
+
   public audioBtnImg!: HTMLImageElement;
 
   public learnedButton!: HTMLButtonElement;
+
   public difficultyButton!: HTMLButtonElement;
+
   public deleteFromHardButton!: HTMLButtonElement;
 
   public wordBody!: HTMLElement;
+
   public userWord!: IUserWord | undefined;
 
   constructor(word: IWord) {
@@ -52,7 +72,7 @@ export class Word {
     this.isPlayed = false;
   }
 
-  init() {
+  init(): void {
     this.getHtml();
     if (auth.user) {
       this.getUserWordsStatistic();
@@ -61,7 +81,7 @@ export class Word {
 
   }
 
-  getHtml() {
+  getHtml(): void {
     this.wordContainer = create('div', 'textbook__word word-card');
 
     const wordImgBox: HTMLElement = create('div', 'word-card__img-box', this.wordContainer);
@@ -98,7 +118,7 @@ export class Word {
     wordExampleTranslate.textContent = `${this.textExampleTranslate}`;
   }
 
-  getUserButtons() {
+  getUserButtons(): void {
     const wordButtons: HTMLElement = create('div', 'word-card__buttons', this.wordBody);
     this.learnedButton = create('button', 'word-card__learned-btn', wordButtons) as HTMLButtonElement;
     this.learnedButton.textContent = 'Изучено';
@@ -119,10 +139,10 @@ export class Word {
     this.deleteFromHardButton.addEventListener('click', async () => {
       await this.toggleHardUserWord();
       this.wordContainer.style.display = 'none';
-    })
+    });
   }
 
-  getUserWordsStatistic() {
+  getUserWordsStatistic(): void {
     const wordTracker: HTMLElement = create('div', 'word-card__tracker', this.wordBody);
     const correctDiv: HTMLElement = create('div', 'word-card__correct-div', wordTracker);
     const incorrectDiv: HTMLElement = create('div', 'word-card__incorrect-div', wordTracker);
@@ -131,9 +151,9 @@ export class Word {
     const incorrectTitle: HTMLElement = create('p', 'word-card__statistic-title', incorrectDiv);
     incorrectTitle.textContent = 'Неправильно отгадано: ';
     const correctCount: HTMLElement = create('p', 'word-card__correct-count', correctDiv);
-    correctCount.textContent = this.userWord ? `${this.userWord.optional.totalCorrectCount}` : `0`;
+    correctCount.textContent = this.userWord ? `${this.userWord.optional.totalCorrectCount}` : '0';
     const incorrectCount: HTMLElement = create('p', 'word-card__incorrect-count', incorrectDiv);
-    incorrectCount.textContent = this.userWord ? `${this.userWord.optional.totalIncorrectCount}` : `0`;
+    incorrectCount.textContent = this.userWord ? `${this.userWord.optional.totalIncorrectCount}` : '0';
   }
 
   createUserWordOptions(
@@ -141,7 +161,7 @@ export class Word {
 
     correctCount: number = this.userWord ? this.userWord!.optional.correctCount : 0,
     totalCorrectCount: number = this.userWord ? this.userWord!.optional.totalCorrectCount : 0,
-    totalIncorrectCount: number = this.userWord ? this.userWord!.optional.totalIncorrectCount : 0
+    totalIncorrectCount: number = this.userWord ? this.userWord!.optional.totalIncorrectCount : 0,
 
   ): IUserWord {
     return {
@@ -149,12 +169,12 @@ export class Word {
       optional: {
         correctCount: correctCount,
         totalCorrectCount: totalCorrectCount,
-        totalIncorrectCount: totalIncorrectCount
-      }
-    }
+        totalIncorrectCount: totalIncorrectCount,
+      },
+    };
   }
 
-  async toggleEasyUserWord() {
+  async toggleEasyUserWord(): Promise<void> {
     if (!this.userWord) {
       await api.createUserWord(auth.user!.userId, this.id, auth.token, this.createUserWordOptions('easy'));
       this.userWord = this.createUserWordOptions('easy');
@@ -176,15 +196,19 @@ export class Word {
       textbook.sprintGame.disabled = true;
       textbook.audioGame.classList.add('diss');
       textbook.sprintGame.classList.add('diss');
+      textbook.main.classList.add('easy');
+      textbook.activePageDiv.classList.add('easy');
     } else {
       textbook.audioGame.disabled = false;
       textbook.sprintGame.disabled = false;
       textbook.audioGame.classList.remove('diss');
       textbook.sprintGame.classList.remove('diss');
+      textbook.main.classList.remove('easy');
+      textbook.activePageDiv.classList.remove('easy');
     }
   }
 
-  async toggleHardUserWord() {
+  async toggleHardUserWord(): Promise<void> {
     if (!this.userWord) {
       await api.createUserWord(auth.user!.userId, this.id, auth.token, this.createUserWordOptions('hard'));
       this.userWord = this.createUserWordOptions('hard');
@@ -206,11 +230,15 @@ export class Word {
       textbook.sprintGame.disabled = true;
       textbook.audioGame.classList.add('diss');
       textbook.sprintGame.classList.add('diss');
+      textbook.main.classList.add('easy');
+      textbook.activePageDiv.classList.add('easy');
     } else {
       textbook.audioGame.disabled = false;
       textbook.sprintGame.disabled = false;
       textbook.audioGame.classList.remove('diss');
       textbook.sprintGame.classList.remove('diss');
+      textbook.main.classList.remove('easy');
+      textbook.activePageDiv.classList.remove('easy');
     }
   }
 }

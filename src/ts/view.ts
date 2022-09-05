@@ -3,24 +3,31 @@ import {
   IMain,
   IFooter,
   IAudiocallPage,
-  INavigation,
-  IStatistics
+  IAuth,
+  IStatistics,
+  ITextbook,
 
-} from "../types/types";
-import { Auth } from "../pages/auth";
-import { Textbook } from "../pages/textbook/textbook";
-import { Sprint } from "../pages/sprint";
-import { AudiocallPage } from "../games/audiocall/create-page";
-import { Statistic } from "../pages/statistics";
+} from '../types/types';
+import { Auth } from '../pages/auth';
+import { Textbook } from '../pages/textbook/textbook';
+import { Sprint } from '../pages/sprint';
+import { AudiocallPage } from '../games/audiocall/create-page';
+import { Statistic } from '../pages/statistics';
 
 export class View {
-  private header: IHeader;
-  private main: IMain;
-  private footer: IFooter;
-  private auth: Auth;
-  private textbook: Textbook;
-  private audiocall: IAudiocallPage;
-  private statistics: IStatistics;
+  public header: IHeader;
+
+  public main: IMain;
+
+  public footer: IFooter;
+
+  public auth: IAuth;
+
+  public textbook: ITextbook;
+
+  public audiocall: IAudiocallPage;
+
+  public statistics: IStatistics;
 
   constructor(
     header: IHeader,
@@ -40,7 +47,7 @@ export class View {
 
 
   public renderContainers(): void {
-    let body = document.body;
+    const body = document.body;
     body.innerHTML = `
     <div class='root'>
       <header class='header'></header>
@@ -48,7 +55,7 @@ export class View {
           <div class='main-container container'></div>
         </main>
       <footer class='footer'></footer>
-    </div>`
+    </div>`;
 
   }
 
@@ -109,11 +116,12 @@ export class View {
         clearInterval(sprint.timerInterval);
         main.innerHTML = '';
         main.appendChild(this.main.init());
+        this.textbook.main.classList.remove('easy');
         if (burgerMenu.classList.contains('open')) {
           burger.classList.remove('open');
-          burgerMenu.classList.remove('open')
-        };
-      })
+          burgerMenu.classList.remove('open');
+        }
+      });
     });
 
     authPageBtn.addEventListener('click', () => {
@@ -134,21 +142,22 @@ export class View {
         sprint.eventListenerTextbook();
         if (burgerMenu.classList.contains('open')) {
           burger.classList.remove('open');
-          burgerMenu.classList.remove('open')
-        };
+          burgerMenu.classList.remove('open');
+        }
       });
-    })
+    });
 
     sprintGameBtn.forEach((item) => {
       item.addEventListener('click', () => {
         clearInterval(sprint.timerInterval);
         main.innerHTML = '';
+        this.textbook.main.classList.remove('easy');
         sprint.mainContent.appendChild(sprint.renderSprintMenu());
         sprint.arrowsListener();
         if (burgerMenu.classList.contains('open')) {
           burger.classList.remove('open');
-          burgerMenu.classList.remove('open')
-        };
+          burgerMenu.classList.remove('open');
+        }
       });
     });
 
