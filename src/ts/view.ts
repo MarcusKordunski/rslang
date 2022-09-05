@@ -106,6 +106,7 @@ export class View {
 
     mainPageBtn.forEach((item) => {
       item.addEventListener('click', () => {
+        clearInterval(sprint.timerInterval);
         main.innerHTML = '';
         main.appendChild(this.main.init());
         if (burgerMenu.classList.contains('open')) {
@@ -117,6 +118,7 @@ export class View {
 
     authPageBtn.addEventListener('click', () => {
       if (!this.auth.user) {
+        clearInterval(sprint.timerInterval);
         main.innerHTML = '';
         main.append(this.auth.viewLoginForm());
       } else {
@@ -126,6 +128,7 @@ export class View {
 
     textbookPageBtn.forEach((item) => {
       item.addEventListener('click', () => {
+        clearInterval(sprint.timerInterval);
         main.innerHTML = '';
         main.appendChild(this.textbook.init());
         sprint.eventListenerTextbook();
@@ -138,10 +141,10 @@ export class View {
 
     sprintGameBtn.forEach((item) => {
       item.addEventListener('click', () => {
+        clearInterval(sprint.timerInterval);
         main.innerHTML = '';
-        const sprintMenu = new Sprint();
-        sprintMenu.mainContent.appendChild(sprintMenu.renderSprintMenu());
-        sprintMenu.arrowsListener();
+        sprint.mainContent.appendChild(sprint.renderSprintMenu());
+        sprint.arrowsListener();
         if (burgerMenu.classList.contains('open')) {
           burger.classList.remove('open');
           burgerMenu.classList.remove('open')
