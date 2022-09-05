@@ -7,6 +7,6 @@ export class Navigation {
       <div class='nav-item'></div>
       <div class='nav-item'></div>
       <div class='nav-item'></div>
-    </container>`
+    </container>`;
   }
 }

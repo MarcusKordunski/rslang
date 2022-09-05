@@ -1,26 +1,38 @@
-import { IWord } from "../../types/types";
-import create from "../../utils/create";
-import { Word } from "./word";
-import { api } from "../../ts/api";
-import { auth } from "../../index";
-import { AudiocallPage } from "../../games/audiocall/create-page";
+import { IWord, IWordClass } from '../../types/types';
+import create from '../../utils/create';
+import { Word } from './word';
+import { api } from '../../ts/api';
+import { auth } from '../../index';
+import { AudiocallPage } from '../../games/audiocall/create-page';
 
 export class Textbook {
 
   public activePage: number;
+
   public activePageDiv!: HTMLElement;
+
   public prevPageBtn!: HTMLButtonElement;
+
   public nextPageBtn!: HTMLButtonElement;
+
   public pageEnterInput!: HTMLInputElement;
 
   public activeGroup: number;
+
   public textbookContainer: HTMLElement;
-  public wordsOnPage!: Word[];
+
+  public wordsOnPage!: IWordClass[];
+
   public textbook!: HTMLElement;
+
   public paginationDiv!: HTMLElement;
+
   public groupsDiv!: HTMLElement;
+
   public audioPlayer!: HTMLAudioElement;
+
   public sprintGame!: HTMLButtonElement;
+
   public audioGame!: HTMLButtonElement;
 
   constructor() {
@@ -30,7 +42,7 @@ export class Textbook {
     this.audioPlayer = new Audio();
   }
 
-  getHtml() {
+  getHtml(): void {
     const games = create('div', 'textbook-games', this.textbookContainer);
     this.sprintGame = create('button', 'textbook-games__sprint', games) as HTMLButtonElement;
     this.sprintGame.textContent = 'Спринт';
@@ -46,7 +58,7 @@ export class Textbook {
     this.groupsDiv = create('div', 'textbook-groups', textbookBody);
   }
 
-  init() {
+  init(): HTMLElement {
     this.textbookContainer.innerHTML = '';
     this.getHtml();
     this.initGroups();
@@ -59,9 +71,9 @@ export class Textbook {
     return this.textbookContainer;
   }
 
-  initGroups() {
+  initGroups(): void {
     const groupTitle = create('h2', 'group-title', this.groupsDiv);
-    groupTitle.textContent = 'Группы'
+    groupTitle.textContent = 'Группы';
     const groupsArray: HTMLElement[] = [];
     for (let i = 0; i < 7; i++) {
       const group = create('div', 'words-group', this.groupsDiv, undefined, ['id', `group-${i}`]);
@@ -85,18 +97,18 @@ export class Textbook {
           await this.initHardWords();
         } else {
           await this.initWords();
-        };
+        }
       });
-    })
+    });
   }
 
-  initPagination() {
+  initPagination(): void {
     this.prevPageBtn = create('button', 'textbook-pagination__btn prev-btn', this.paginationDiv) as HTMLButtonElement;
-    this.prevPageBtn.innerHTML = `<`;
+    this.prevPageBtn.innerHTML = '<';
     this.activePageDiv = create('div', 'textbook-pagination__page', this.paginationDiv);
     this.activePageDiv.textContent = `${this.activePage + 1}`;
     this.nextPageBtn = create('button', 'textbook-pagination__btn next-btn', this.paginationDiv) as HTMLButtonElement;
-    this.nextPageBtn.innerHTML = `>`;
+    this.nextPageBtn.innerHTML = '>';
     this.pageEnterInput = create('input', 'textbook-pagination__enter', this.paginationDiv, undefined, ['type', 'number']) as HTMLInputElement;
     this.pageEnterInput.max = '30';
     this.pageEnterInput.min = '1';
@@ -127,10 +139,10 @@ export class Textbook {
         this.pageEnterInput.value = '';
         this.initWords();
       }
-    })
+    });
   }
 
-  checkPaginationButtons() {
+  checkPaginationButtons(): void {
     if (this.activePage === 0) {
       this.prevPageBtn.disabled = true;
       this.nextPageBtn.disabled = false;
@@ -150,13 +162,13 @@ export class Textbook {
     this.activePageDiv.textContent = `${this.activePage + 1}`;
   }
 
-  initAudio() {
+  initAudio(): void {
     const audioButtons: HTMLElement[] = this.wordsOnPage.map(item => item.wordAudio);
     audioButtons.forEach((btn, index) => {
       btn.addEventListener('click', () => {
         if (!this.wordsOnPage[index].isPlayed) {
-          this.wordsOnPage.forEach(item => item.audioBtnImg.src = `./assets/icons/play.png`);
-          this.wordsOnPage[index].audioBtnImg.src = `./assets/icons/pause.png`;
+          this.wordsOnPage.forEach(item => item.audioBtnImg.src = './assets/icons/play.png');
+          this.wordsOnPage[index].audioBtnImg.src = './assets/icons/pause.png';
           this.wordsOnPage.forEach(item => item.isPlayed = false);
           this.wordsOnPage[index].isPlayed = true;
           let count = 0;
@@ -168,22 +180,22 @@ export class Textbook {
               this.audioPlayer.src = `https://rs-lang-learnsword.herokuapp.com/${this.wordsOnPage[index].audioTracks[count]}`;
               this.audioPlayer.play();
             } else {
-              this.wordsOnPage[index].audioBtnImg.src = `./assets/icons/play.png`;
+              this.wordsOnPage[index].audioBtnImg.src = './assets/icons/play.png';
               this.wordsOnPage[index].isPlayed = false;
             }
           };
         } else {
-          this.wordsOnPage[index].audioBtnImg.src = `./assets/icons/play.png`;
+          this.wordsOnPage[index].audioBtnImg.src = './assets/icons/play.png';
           this.wordsOnPage[index].isPlayed = false;
           this.audioPlayer.pause();
           this.audioPlayer.currentTime = 0;
         }
 
-      })
-    })
+      });
+    });
   }
 
-  async initWords() {
+  async initWords(): Promise<void> {
     this.wordsOnPage = [];
     this.textbook.innerHTML = '';
     this.paginationDiv.style.display = 'flex';
@@ -225,14 +237,14 @@ export class Textbook {
     this.checkPaginationButtons();
   }
 
-  async initHardWords() {
+  async initHardWords(): Promise<void> {
     this.wordsOnPage = [];
     this.textbook.innerHTML = '';
     this.paginationDiv.style.display = 'none';
-    const filter: string = '%7B%22userWord.difficulty%22%3A%22hard%22%7D';
+    const filter = '%7B%22userWord.difficulty%22%3A%22hard%22%7D';
     const words: IWord[] = await api.getAggregatedWords(auth.user!.userId, auth.user!.token, filter, 3600);
     words.forEach((item) => {
-      const word = new Word(item);
+      const word: IWordClass = new Word(item);
       this.wordsOnPage.push(word);
       word.init();
       word.difficultyButton.remove();
@@ -246,8 +258,4 @@ export class Textbook {
     this.sprintGame.classList.remove('diss');
     this.initAudio();
   }
-
-
-
-
 }

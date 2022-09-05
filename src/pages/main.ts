@@ -1,7 +1,7 @@
-import create from "../utils/create";
-import benefits from "../utils/benefits.json";
-import team from "../utils/team.json";
-import { auth, textbook } from "..";
+import create from '../utils/create';
+import benefits from '../utils/benefits.json';
+import team from '../utils/team.json';
+import { auth, textbook } from '..';
 
 export class Main {
   getHtml(): string {
@@ -10,7 +10,7 @@ export class Main {
             </div>`;
   }
 
-  init() {
+  init(): HTMLElement {
     const mainPage = create('div', 'main-page');
     mainPage.appendChild(this.getAbout());
     mainPage.appendChild(this.getBenefits());
@@ -20,7 +20,7 @@ export class Main {
     return mainPage;
   }
 
-  getAbout() {
+  getAbout(): HTMLElement {
     const mainAbout = create('div', 'main-page__about about');
     const aboutTitleBox = create('div', 'about__title-box', mainAbout);
     const aboutTitle = create('h1', 'about__title', aboutTitleBox);
@@ -36,12 +36,12 @@ export class Main {
       const main = document.querySelector('.main-content') as HTMLElement;
       main.innerHTML = '';
       main.appendChild(textbook.init());
-    })
+    });
 
     return mainAbout;
   }
 
-  getBenefits() {
+  getBenefits(): HTMLElement {
     const mainBenefits = create('div', 'main-page__benefits benefits');
     const benefitsTitle = create('h2', 'benefits__title', mainBenefits);
     benefitsTitle.textContent = 'Наши преимущества';
@@ -59,7 +59,7 @@ export class Main {
     return mainBenefits;
   }
 
-  getRegsLink() {
+  getRegsLink(): HTMLElement {
     const mainReglink = create('div', 'main-page__reglink reglink');
     const reglinkImgBox = create('div', 'reglink__img-box', mainReglink);
     const reglinkImg = create('img', 'reglink__image', reglinkImgBox, undefined, ['src', './assets/images/english.png'], ['alt', 'english']);
@@ -79,19 +79,19 @@ export class Main {
       const main = document.querySelector('.main-content') as HTMLElement;
       main.innerHTML = '';
       main.append(auth.viewRegForm());
-    })
+    });
 
     reglinkLogBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       const main = document.querySelector('.main-content') as HTMLElement;
       main.innerHTML = '';
       main.append(auth.viewLoginForm());
-    })
+    });
 
     return mainReglink;
   }
 
-  getTeam() {
+  getTeam(): HTMLElement {
     const mainTeam = create('div', 'main-page__team team');
     const teamTitle = create('h2', 'team__title', mainTeam);
     teamTitle.textContent = 'Наша команда';

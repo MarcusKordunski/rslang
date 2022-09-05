@@ -1,4 +1,4 @@
-import { StartPage } from './start-page'
+import { StartPage } from './start-page';
 
 export class AudiocallPage {
 
