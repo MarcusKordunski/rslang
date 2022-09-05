@@ -1,0 +1,218 @@
+@import './_variables.scss';
+
+.sprint-menu,
+.sprint-game,
+.sprint-result {
+  max-width: 40rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2em;
+  margin: 3em auto 2em auto;
+}
+
+.sprint-menu {
+  border-radius: 10px;
+  box-shadow: 0 0 5px black;
+  padding: 20px;
+
+
+  ul li {
+    list-style-type: circle;
+    list-style-position: inside;
+    font-size: 1.3em;
+  }
+}
+
+.sprint-menu__title {
+  font-family: Amatic, serif;
+  font-size: 3.5rem;
+  color: rgb(53, 62, 163);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  text-align: center;
+  text-shadow: 2px 2px 2px rgb(70, 70, 70);
+}
+
+.sprint-menu__about {
+  font-size: 1.3em;
+  white-space: pre-line;
+}
+
+.sprint-game__score {
+  font-size: 3em;
+}
+
+.sprint-game__timer {
+  font-size: 3em;
+}
+
+.sprint-game {
+  width: 40rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2em;
+  text-align: center;
+  align-items: center;
+}
+
+
+.sprint-menu__buttons,
+.sprint-game__buttons,
+.sprint-result__buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.sprint-menu__difficulty {
+  width: 5em;
+  height: 1.7em;
+  font-size: 1.5em;
+  border: 2px solid #066dab;
+  border-radius: 3px;
+  color: #066dab;
+  box-shadow: 0 0 3px grey;
+  cursor: pointer;
+
+}
+
+.sprint-menu__start,
+.sprint-game__uncorrect-btn,
+.sprint-game__correct-btn {
+  width: 5em;
+  height: 1.7em;
+  margin-left: 0.5em;
+  font-size: 1.5em;
+  border: 2px solid #066dab;
+  border-radius: 3px;
+  color: #066dab;
+  box-shadow: 0 0 3px grey;
+  transition: .2s;
+
+  &:hover {
+    background-color: #066dab;
+    color: $text-color;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.sprint-result__title {
+  font-size: 2em;
+}
+
+.sprint-game__streak {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5em;
+}
+
+.streak__signal1,
+.streak__signal2,
+.streak__signal3 {
+  width: 3em;
+  height: 3em;
+  border: 0.15em solid black;
+  border-radius: 100%;
+}
+
+.streak__signal1.active,
+.streak__signal2.active,
+.streak__signal3.active {
+  background-color: forestgreen;
+}
+
+.sprint-result {
+  width: 40rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2em;
+  text-align: center;
+  align-items: center;
+}
+
+.sprint-result__correct-words {
+  background-color: white;
+  border-radius: 4%;
+  text-align: left;
+  width: 25rem;
+  padding: 1em;
+}
+
+.sprint-result__correct-words span {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.sprint-result__correct-words p {
+  display: inline-block;
+  white-space: pre-line;
+}
+
+.sprint-result__uncorrect-words {
+  background-color: white;
+  border-radius: 4%;
+  text-align: left;
+  width: 25rem;
+  padding: 1em;
+}
+
+.sprint-result__uncorrect-words p {
+  display: inline-block;
+  white-space: pre-line;
+}
+
+.sprint-result__uncorrect-words span {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.sprint-result__correct-title {
+  color: forestgreen;
+}
+
+.sprint-result__uncorrect-title {
+  color: red;
+}
+
+.sprint-result__play-again {
+  width: 8em;
+  height: 3em;
+  font-size: 0.8em;
+  border: 2px solid #066dab;
+  border-radius: 3px;
+  color: #066dab;
+  box-shadow: 0 0 3px grey;
+  transition: .2s;
+
+  &:hover {
+    background-color: #066dab;
+    color: $text-color;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.sprint-result__exit {
+  width: 8em;
+  height: 3em;
+  margin-left: 0.5em;
+  font-size: 0.8em;
+  border: 2px solid #066dab;
+  border-radius: 3px;
+  color: #066dab;
+  box-shadow: 0 0 3px grey;
+  transition: .2s;
+
+  &:hover {
+    background-color: #066dab;
+    color: $text-color;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}

@@ -1,0 +1,64 @@
+@import './_variables.scss';
+
+.login,
+.reg {
+  width: 320px;
+  margin: 0 auto;
+  background: $bg-auth-form;
+  padding: 30px;
+  margin-top: 20px;
+  border-radius: 10px;
+
+  &__title {
+    font-family: RobotoMed, serif;
+    text-align: center;
+    font-size: 20px;
+    color: $text-form-color;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__email,
+  &__password,
+  &__name {
+    height: 24px;
+    padding-left: 10px;
+    border-radius: 5px;
+    background-color: rgb(235, 247, 251);
+    color: $text-form-color;
+  }
+
+  & label {
+    margin: 10px 0px 5px 0px;
+  }
+
+  &__login-button,
+  &__reg-button {
+    margin-top: 20px;
+    height: 24px;
+    border-radius: 5px;
+    background-color: rgb(176, 230, 248);
+    color: $text-form-color;
+  }
+
+  &__link {
+    margin-top: 10px;
+    text-decoration: underline;
+    cursor: pointer;
+    color: whitesmoke;
+  }
+}
+
+.status-message {
+  position: absolute;
+  top: 11px;
+  right: 20px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  animation: bounceInOutRight 3s;
+  background-color: rgb(182, 0, 0);
+  color: $text-color;
+}

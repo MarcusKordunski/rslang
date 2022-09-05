@@ -1,0 +1,36 @@
+@import './styles/_normalize.scss';
+@import './styles/sprint.scss';
+@import './styles/_main.scss';
+@import './styles/_header.scss';
+@import './styles/_footer.scss';
+@import './styles/_auth.scss';
+@import './styles/_fonts.scss';
+@import './styles/_variables.scss';
+@import './styles/_textbook.scss';
+@import './styles/_audiocall.scss';
+@import './styles/_statistics.scss';
+
+
+
+body {
+  font-family: Roboto, sans-serif;
+  font-size: 16px;
+  height: 100%;
+}
+
+.root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  overflow: hidden;
+}
+
+.main {
+  flex: 1 1 auto;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
