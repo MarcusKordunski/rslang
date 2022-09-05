@@ -30,36 +30,46 @@ export class StartPage {
   }
 
   createNavVersion(): void {
-    const audiocallBtns: NodeList | null = document.querySelectorAll('.audio-page');
+    const audiocallBtns = document.querySelectorAll('.audio-page') as NodeList;
     const audiocallBtn = audiocallBtns[1];
     const main = document.querySelector('.main-content') as HTMLElement;
-    audiocallBtn?.addEventListener('click', async () => {
-      main.innerHTML = this.getHtml();
-      const lvlListItems: NodeList = document.querySelectorAll('.levels-list-item');
-      this.lvlListItemslistener(lvlListItems);
-      if (auth.user) {
-        if (Date.now() - Number(localStorage.getItem('date')) > 86400000000) {
-          await api.updateStatistics(auth.user!.userId, auth.token, {
-            learnedWords: 0,
-            optional: {
-              audiocall: {
-                correctWords: 0,
-                incorrectWords: 0,
-                streak: 0,
-                newWords: 0,
+    const burger = document.querySelector('.burger') as HTMLElement;
+    const burgerMenu = document.querySelector('.burger-menu') as HTMLElement;
+    audiocallBtns.forEach((item) => {
+      item.addEventListener('click', async () => {
+        main.innerHTML = this.getHtml();
+        const lvlListItems: NodeList = document.querySelectorAll('.levels-list-item');
+        this.lvlListItemslistener(lvlListItems);
+        if (auth.user) {
+          if (Date.now() - Number(localStorage.getItem('date')) > 86400000000) {
+            await api.updateStatistics(auth.user!.userId, auth.token, {
+              learnedWords: 0,
+              optional: {
+                audiocall: {
+                  correctWords: 0,
+                  incorrectWords: 0,
+                  streak: 0,
+                  newWords: 0,
+                },
+                sprint: {
+                  correctWords: 0,
+                  incorrectWords: 0,
+                  streak: 0,
+                  newWords: 0,
+                },
               },
-              sprint: {
-                correctWords: 0,
-                incorrectWords: 0,
-                streak: 0,
-                newWords: 0,
-              },
-            },
-          });
-          localStorage.setItem('date', String(Date.now()))
+            });
+            localStorage.setItem('date', String(Date.now()))
+          }
         }
-      }
-    });
+        if (burgerMenu.classList.contains('open')) {
+          burger.classList.remove('open');
+          burgerMenu.classList.remove('open')
+        };
+      });
+    })
+
+
   }
 
   async createBookVersion(): Promise<void> {
@@ -207,8 +217,6 @@ export class StartPage {
         this.resetStyles(variantBtns);
         scrollBtn!.textContent = 'Не знаю'
       } else {
-        console.log('Конец игры');
-        console.log(this.getStrick())
         this.createEndPage(wordsArr, isTextbook);
         if (auth.user) {
           await this.changeStatistics(auth.user!.userId, auth.token, {
@@ -248,7 +256,6 @@ export class StartPage {
             this.resetStyles(variantBtns);
             scrollBtn!.textContent = 'Не знаю'
           } else {
-            console.log('Конец игры');
             this.createEndPage(wordsArr, isTextbook);
             if (auth.user) {
               await this.changeStatistics(auth.user!.userId, auth.token, {
@@ -277,7 +284,6 @@ export class StartPage {
             this.resetStyles(variantBtns);
             scrollBtn!.textContent = 'Не знаю';
           } else {
-            console.log('Конец игры');
             this.createEndPage(wordsArr, isTextbook);
             if (auth.user) {
               await this.changeStatistics(auth.user!.userId, auth.token, {
@@ -346,7 +352,6 @@ export class StartPage {
         if (iSgamed === false) {
           if (e.key === String(index + 1)) {
             if (varBtn.textContent === wordsArr[this.wordNumber].wordTranslate) {
-              console.log('Верный ответ');
               const btn = (varientBtn) as HTMLElement;
               btn.classList.add('correct-answer');
               this.changeStyle(variantBtns, wordsArr, this.wordNumber, 'del-points-events', 'all');
@@ -357,7 +362,6 @@ export class StartPage {
                 await this.createUserWord(wordsArr, 1, 0, 1);
               }
             } else if (varBtn.textContent !== wordsArr[this.wordNumber].wordTranslate) {
-              console.log('Неверный ответ');
               const btn = (varientBtn) as HTMLElement;
               btn.classList.add('wrong-answer');
               this.changeStyle(variantBtns, wordsArr, this.wordNumber, 'correct-answer', 'one');
@@ -386,7 +390,6 @@ export class StartPage {
     variantBtns.forEach((varBtn, index) => {
       varBtn.addEventListener('click', async (e: Event) => {
         if (varBtn.textContent === wordsArr[this.wordNumber].wordTranslate) {
-          console.log('Верный ответ');
           const btn = (e.target) as HTMLElement;
           btn.classList.add('correct-answer');
           this.changeStyle(variantBtns, wordsArr, this.wordNumber, 'del-points-events', 'all');
@@ -398,7 +401,6 @@ export class StartPage {
           }
         } else if (varBtn.textContent !== wordsArr[this.wordNumber].wordTranslate) {
           const btn = (e.target) as HTMLElement;
-          console.log('Неверный ответ');
           btn.classList.add('wrong-answer');
           this.changeStyle(variantBtns, wordsArr, this.wordNumber, 'correct-answer', 'one');
           this.changeStyle(variantBtns, wordsArr, this.wordNumber, 'del-points-events', 'all');
@@ -569,7 +571,6 @@ export class StartPage {
     if (statistic === null) {
       await api.updateStatistics(userId, token, body);
       let neWstatistic = await api.getStatistics(userId, token);
-      console.log(neWstatistic);
     } else {
       await api.updateStatistics(userId, token, {
         learnedWords: statistic.learnedWords! + this.learnsWord,
@@ -589,7 +590,6 @@ export class StartPage {
         },
       });
       let neWstatistic = await api.getStatistics(userId, token);
-      console.log(neWstatistic);
     }
   }
 

@@ -8,7 +8,8 @@ import { Textbook } from './pages/textbook/textbook';
 
 export const auth = new Auth();
 export const textbook = new Textbook();
+export const main = new Main()
 
-export const view = new View(new Header(), new Main(), new Footer(), auth, textbook);
+export const view = new View(new Header(), main, new Footer(), auth, textbook);
 view.renderStartPage();
 

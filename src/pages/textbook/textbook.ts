@@ -20,6 +20,8 @@ export class Textbook {
   public paginationDiv!: HTMLElement;
   public groupsDiv!: HTMLElement;
   public audioPlayer!: HTMLAudioElement;
+  public sprintGame!: HTMLButtonElement;
+  public audioGame!: HTMLButtonElement;
 
   constructor() {
     this.textbookContainer = create('div', 'textbook-container');
@@ -30,23 +32,18 @@ export class Textbook {
 
   getHtml() {
     const games = create('div', 'textbook-games', this.textbookContainer);
-    const sprintGame = create('div', 'textbook-games__sprint', games);
-    const sprintImg = create('img', 'textbook-games__img', sprintGame);
-    const sprintTitle = create('p', 'textbook-games__title', sprintGame);
-    sprintTitle.textContent = 'Спринт';
-    const audioGame = create('div', 'textbook-games__audio', games);
-    audioGame.addEventListener('click', () => {
+    this.sprintGame = create('button', 'textbook-games__sprint', games) as HTMLButtonElement;
+    this.sprintGame.textContent = 'Спринт';
+    this.audioGame = create('button', 'textbook-games__audio', games) as HTMLButtonElement;
+    this.audioGame.addEventListener('click', () => {
       const audiocall = new AudiocallPage();
       audiocall.createBookGame();
     });
-    const audioImg = create('img', 'textbook-games__img', audioGame);
-    const audioTitle = create('p', 'textbook-games__title', audioGame);
-    audioTitle.textContent = 'Аудио вызов';
+    this.audioGame.textContent = 'Аудио вызов';
     this.paginationDiv = create('div', 'textbook-pagination', this.textbookContainer);
     const textbookBody = create('div', 'textbook-body', this.textbookContainer);
     this.textbook = create('div', 'textbook', textbookBody);
     this.groupsDiv = create('div', 'textbook-groups', textbookBody);
-    
   }
 
   init() {
@@ -212,6 +209,18 @@ export class Textbook {
         this.wordsOnPage.push(word);
       });
     }
+    if (this.wordsOnPage.every((word) => word.userWord?.difficulty === 'easy' || word.userWord?.difficulty === 'hard')) {
+      this.audioGame.disabled = true;
+      this.sprintGame.disabled = true;
+      this.audioGame.classList.add('diss');
+      this.sprintGame.classList.add('diss');
+    } else {
+      this.audioGame.disabled = false;
+      this.sprintGame.disabled = false;
+      this.audioGame.classList.remove('diss');
+      this.sprintGame.classList.remove('diss');
+    }
+
     this.initAudio();
     this.checkPaginationButtons();
   }
@@ -230,11 +239,15 @@ export class Textbook {
       word.learnedButton.remove();
       this.textbook.appendChild(word.wordContainer);
     });
+
+    this.audioGame.disabled = false;
+    this.sprintGame.disabled = false;
+    this.audioGame.classList.remove('diss');
+    this.sprintGame.classList.remove('diss');
     this.initAudio();
-    console.log(words)
   }
 
- 
+
 
 
 }

@@ -8,17 +8,57 @@ export class Statistic {
     const statisticBtns = document.querySelectorAll('.statistic-page');
     const statisticBtn = statisticBtns[1];
     const main = document.querySelector('.main-content') as HTMLElement;
-    statisticBtn?.addEventListener('click', async () => {
-      if (auth.user) {
-        main.innerHTML = await this.getAuthHtml();
-        const statistics = await api.getStatistics(auth.user!.userId, auth.token);
-        await this.getAudiocallData(statistics!);
-        await this.getSprintData(statistics!);
-        await this.getWordstData(statistics!);
-      } else {
-        main.innerHTML = await this.getUnAuth();
-      }
-    });
+    const burger = document.querySelector('.burger') as HTMLElement;
+    const burgerMenu = document.querySelector('.burger-menu') as HTMLElement;
+    statisticBtns.forEach((item) => {
+      item.addEventListener('click', async () => {
+        if (auth.user) {
+          main.innerHTML = await this.getAuthHtml();
+          const statistics = await api.getStatistics(auth.user!.userId, auth.token);
+          if (statistics === null) {
+            main.innerHTML = `
+            <div class='statistics-content'>
+              <div class='statistics-container'> 
+                <h2 class='statistics-message'> Ваша статистика отсутствует</h2>
+              </div>
+            </div>
+            `;
+          } else {
+            if (Date.now() - Number(localStorage.getItem('date')) > 86400000000) {
+              await api.updateStatistics(auth.user!.userId, auth.token, {
+                learnedWords: 0,
+                optional: {
+                  audiocall: {
+                    correctWords: 0,
+                    incorrectWords: 0,
+                    streak: 0,
+                    newWords: 0,
+                  },
+                  sprint: {
+                    correctWords: 0,
+                    incorrectWords: 0,
+                    streak: 0,
+                    newWords: 0,
+                  },
+                },
+              });
+              localStorage.setItem('date', String(Date.now()))
+            }
+            await this.getAudiocallData(statistics!);
+            await this.getSprintData(statistics!);
+            await this.getWordstData(statistics!);
+          }
+        } else {
+          main.innerHTML = await this.getUnAuth();
+        }
+        if (burgerMenu.classList.contains('open')) {
+          burger.classList.remove('open');
+          burgerMenu.classList.remove('open')
+        };
+      });
+    })
+
+
   }
 
   async getAuthHtml() {
@@ -51,7 +91,11 @@ export class Statistic {
 
   async getUnAuth() {
     return `
-    <div class='statistics-content'>Вы не авторизованны</div>
+    <div class='statistics-content'>
+      <div class='statistics-container'> 
+        <h2 class='statistics-message'> Статистика доступна только для авторизованных пользователей</h2>
+      </div>
+    </div>
     `
   }
 
@@ -61,7 +105,7 @@ export class Statistic {
     const comboAudiocall = document.querySelector('.combo-words-audiocall');
 
     newWordsAudiocall!.textContent = `Новые слова: ${statistics!.optional.audiocall.newWords}`;
-    accurAudiocall!.textContent = `Правильность ответов: ${Math.round((100 / (statistics!.optional.audiocall.correctWords + statistics!.optional.audiocall.incorrectWords)) * statistics!.optional.audiocall.correctWords)}%`;
+    accurAudiocall!.textContent = `Правильность ответов: ${Math.round((100 / (statistics!.optional.audiocall.correctWords + statistics!.optional.audiocall.incorrectWords)) * statistics!.optional.audiocall.correctWords || 0)}%`;
     comboAudiocall!.textContent = `Максимальное комбо: ${statistics!.optional.audiocall.streak}`;
   }
 
@@ -71,7 +115,7 @@ export class Statistic {
     const comboSprint = document.querySelector('.combo-words-sprint');
 
     newWordSprint!.textContent = `Новые слова: ${statistics!.optional.sprint.newWords}`;
-    accurSprint!.textContent = `Правильность ответов: ${Math.round((100 / (statistics!.optional.sprint.correctWords + statistics!.optional.sprint.incorrectWords)) * statistics!.optional.sprint.correctWords)}%`;
+    accurSprint!.textContent = `Правильность ответов: ${Math.round((100 / (statistics!.optional.sprint.correctWords + statistics!.optional.sprint.incorrectWords)) * statistics!.optional.sprint.correctWords || 0)}%`;
     comboSprint!.textContent = `Максимальное комбо: ${statistics!.optional.sprint.streak}`;
   }
 
