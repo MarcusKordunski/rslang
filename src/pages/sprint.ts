@@ -27,7 +27,7 @@ export class Sprint {
 
   private resUncorrectArr: IWord[];
 
-  private timerInterval!: NodeJS.Timer;
+  public timerInterval!: NodeJS.Timer;
 
   private index: number;
 
@@ -255,8 +255,15 @@ export class Sprint {
     while (page === wrongPage) {
       wrongPage = this.randomPage();
     }
+    let prevPage = page;
+    let isFirstPage = true;
+    if (page !== 0) {
+      prevPage = page - 1;
+      isFirstPage = false;
+    }
     const filter = { '$and': [{ '$or': [{ 'userWord.difficulty': 'hard' }, { 'userWord.difficulty': 'normal' }, { 'userWord': null }] }, { '$and': [{ 'group': Number(this.difficulty) - 1 }, { 'page': page }] }] };
     const wrongFilter = { '$and': [{ '$or': [{ 'userWord.difficulty': 'hard' }, { 'userWord.difficulty': 'normal' }, { 'userWord': null }] }, { '$and': [{ 'group': Number(this.difficulty) - 1 }, { 'page': wrongPage }] }] };
+    const prevPageFilter = { '$and': [{ '$or': [{ 'userWord.difficulty': 'hard' }, { 'userWord.difficulty': 'normal' }, { 'userWord': null }] }, { '$and': [{ 'group': Number(this.difficulty) - 1 }, { 'page': prevPage }] }] };
     if ((pageParam === undefined || !auth.user?.userId) && Number(this.difficulty) < 7) {
       this.wordsArr = await api.getWordsSprint(this.difficulty, page);
       this.wordsWrongArr = await api.getWordsSprint(this.difficulty, wrongPage);
@@ -266,8 +273,18 @@ export class Sprint {
     } else if (auth.user?.userId) {
       this.wordsArr = await api.getAggregatedWords(auth.user?.userId, auth.token, JSON.stringify(filter));
       this.wordsWrongArr = await api.getAggregatedWords(auth.user?.userId, auth.token, JSON.stringify(wrongFilter));
+      if (!isFirstPage) {
+        if (this.wordsArr.length < 20) {
+          const prevPageWords = await api.getAggregatedWords(auth.user?.userId, auth.token, JSON.stringify(prevPageFilter));
+          for (let i = 0; i < 21 - this.wordsArr.length; i++) {
+            this.wordsArr.push(prevPageWords[i]);
+            if (!prevPageWords[i + 1]) {
+              i += 100;
+            }
+          }
+        }
+      }
     }
-
     this.wordsArr.forEach((item) => {
       if (this.coinThrow()) {
         return item;
@@ -319,7 +336,6 @@ export class Sprint {
         this.correctWordsStat++;
         this.blockGameButtons();
         const body = await api.getUserWord(auth.user?.userId, auth.token, id);
-        console.log(body);
         if (body.difficulty === 'normal' && body.difficulty === 'normal' && body.optional.correctCount === 0 && body.optional.totalIncorrectCount === 0 && body.optional.totalCorrectCount === 0) {
           await api.createUserWord(auth.user?.userId, id, auth.token, { difficulty: 'normal', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
           this.newWordsStat++;
