@@ -116,6 +116,7 @@ export class View {
         clearInterval(sprint.timerInterval);
         main.innerHTML = '';
         main.appendChild(this.main.init());
+        this.textbook.main.classList.remove('easy');
         if (burgerMenu.classList.contains('open')) {
           burger.classList.remove('open');
           burgerMenu.classList.remove('open');
@@ -150,6 +151,7 @@ export class View {
       item.addEventListener('click', () => {
         clearInterval(sprint.timerInterval);
         main.innerHTML = '';
+        this.textbook.main.classList.remove('easy');
         sprint.mainContent.appendChild(sprint.renderSprintMenu());
         sprint.arrowsListener();
         if (burgerMenu.classList.contains('open')) {

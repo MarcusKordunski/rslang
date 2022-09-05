@@ -35,6 +35,9 @@ export class Textbook {
 
   public audioGame!: HTMLButtonElement;
 
+  public main!: HTMLElement;
+
+
   constructor() {
     this.textbookContainer = create('div', 'textbook-container');
     this.activePage = Number(localStorage.getItem('rs-lang-active-page')) || 0;
@@ -190,7 +193,6 @@ export class Textbook {
           this.audioPlayer.pause();
           this.audioPlayer.currentTime = 0;
         }
-
       });
     });
   }
@@ -199,6 +201,7 @@ export class Textbook {
     this.wordsOnPage = [];
     this.textbook.innerHTML = '';
     this.paginationDiv.style.display = 'flex';
+    this.main = document.querySelector('.main') as HTMLElement;
 
     if (auth.user) {
       const filter = `%7B%22$and%22%3A%5B%7B%22group%22%3A${this.activeGroup}%7D%2C%7B%22page%22%3A${this.activePage}%7D%5D%7D`;
@@ -226,11 +229,15 @@ export class Textbook {
       this.sprintGame.disabled = true;
       this.audioGame.classList.add('diss');
       this.sprintGame.classList.add('diss');
+      this.main.classList.add('easy');
+      this.activePageDiv.classList.add('easy');
     } else {
       this.audioGame.disabled = false;
       this.sprintGame.disabled = false;
       this.audioGame.classList.remove('diss');
       this.sprintGame.classList.remove('diss');
+      this.main.classList.remove('easy');
+      this.activePageDiv.classList.remove('easy');
     }
 
     this.initAudio();

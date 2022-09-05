@@ -1,6 +1,6 @@
 import { api } from '../../ts/api';
 import { IWord, IStatisticsObj } from '../../types/types';
-import { auth } from '../..';
+import { auth, textbook } from '../..';
 
 export class StartPage {
 
@@ -38,6 +38,7 @@ export class StartPage {
     audiocallBtns.forEach((item) => {
       item.addEventListener('click', async () => {
         main.innerHTML = this.getHtml();
+        textbook.main.classList.remove('easy');
         const lvlListItems: NodeList = document.querySelectorAll('.levels-list-item');
         this.lvlListItemslistener(lvlListItems);
         if (auth.user) {

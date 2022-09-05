@@ -196,11 +196,15 @@ export class Word {
       textbook.sprintGame.disabled = true;
       textbook.audioGame.classList.add('diss');
       textbook.sprintGame.classList.add('diss');
+      textbook.main.classList.add('easy');
+      textbook.activePageDiv.classList.add('easy');
     } else {
       textbook.audioGame.disabled = false;
       textbook.sprintGame.disabled = false;
       textbook.audioGame.classList.remove('diss');
       textbook.sprintGame.classList.remove('diss');
+      textbook.main.classList.remove('easy');
+      textbook.activePageDiv.classList.remove('easy');
     }
   }
 
@@ -226,11 +230,15 @@ export class Word {
       textbook.sprintGame.disabled = true;
       textbook.audioGame.classList.add('diss');
       textbook.sprintGame.classList.add('diss');
+      textbook.main.classList.add('easy');
+      textbook.activePageDiv.classList.add('easy');
     } else {
       textbook.audioGame.disabled = false;
       textbook.sprintGame.disabled = false;
       textbook.audioGame.classList.remove('diss');
       textbook.sprintGame.classList.remove('diss');
+      textbook.main.classList.remove('easy');
+      textbook.activePageDiv.classList.remove('easy');
     }
   }
 }

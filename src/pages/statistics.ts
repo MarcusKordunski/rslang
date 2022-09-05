@@ -1,5 +1,5 @@
 import { api } from '../ts/api';
-import { auth } from '../index';
+import { auth, textbook } from '../index';
 import { IStatisticsObj } from '../types/types';
 
 export class Statistic {
@@ -14,6 +14,7 @@ export class Statistic {
       item.addEventListener('click', async () => {
         if (auth.user) {
           main.innerHTML = await this.getAuthHtml();
+          textbook.main.classList.remove('easy');
           const statistics = await api.getStatistics(auth.user!.userId, auth.token);
           if (statistics === null) {
             main.innerHTML = `

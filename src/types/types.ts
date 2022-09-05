@@ -47,6 +47,7 @@ export interface ITextbook {
   audioPlayer: HTMLAudioElement;
   sprintGame: HTMLButtonElement;
   audioGame: HTMLButtonElement;
+  main: HTMLElement;
 
   getHtml: () => void;
   init: () => HTMLElement;
