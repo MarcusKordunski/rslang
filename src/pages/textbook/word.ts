@@ -1,6 +1,6 @@
 import { IWord, IOptionalWord, IUserWord } from "../../types/types";
 import create from "../../utils/create";
-import { auth } from "../..";
+import { auth, textbook } from "../..";
 import { api } from "../../ts/api";
 
 export class Word {
@@ -108,8 +108,14 @@ export class Word {
     this.deleteFromHardButton.textContent = 'Удалить';
 
 
-    this.learnedButton.addEventListener('click', () => { this.toggleEasyUserWord() });
-    this.difficultyButton.addEventListener('click', () => { this.toggleHardUserWord() });
+    this.learnedButton.addEventListener('click', () => {
+      this.toggleEasyUserWord();
+
+    });
+    this.difficultyButton.addEventListener('click', () => {
+      this.toggleHardUserWord();
+
+    });
     this.deleteFromHardButton.addEventListener('click', async () => {
       await this.toggleHardUserWord();
       this.wordContainer.style.display = 'none';
@@ -165,6 +171,17 @@ export class Word {
         this.wordContainer.classList.add('easy');
       }
     }
+    if (textbook.wordsOnPage.every((word) => word.userWord?.difficulty === 'easy' || word.userWord?.difficulty === 'hard')) {
+      textbook.audioGame.disabled = true;
+      textbook.sprintGame.disabled = true;
+      textbook.audioGame.classList.add('diss');
+      textbook.sprintGame.classList.add('diss');
+    } else {
+      textbook.audioGame.disabled = false;
+      textbook.sprintGame.disabled = false;
+      textbook.audioGame.classList.remove('diss');
+      textbook.sprintGame.classList.remove('diss');
+    }
   }
 
   async toggleHardUserWord() {
@@ -183,6 +200,17 @@ export class Word {
         this.wordContainer.classList.remove('easy');
         this.wordContainer.classList.add('hard');
       }
+    }
+    if (textbook.wordsOnPage.every((word) => word.userWord?.difficulty === 'easy' || word.userWord?.difficulty === 'hard')) {
+      textbook.audioGame.disabled = true;
+      textbook.sprintGame.disabled = true;
+      textbook.audioGame.classList.add('diss');
+      textbook.sprintGame.classList.add('diss');
+    } else {
+      textbook.audioGame.disabled = false;
+      textbook.sprintGame.disabled = false;
+      textbook.audioGame.classList.remove('diss');
+      textbook.sprintGame.classList.remove('diss');
     }
   }
 }

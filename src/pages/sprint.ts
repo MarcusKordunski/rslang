@@ -1,7 +1,7 @@
 import create from '../utils/create';
 import { api } from '../ts/api';
 import { IWord } from '../types/types';
-import { auth } from '../index';
+import { auth, main } from '../index';
 
 export class Sprint {
 
@@ -211,6 +211,7 @@ export class Sprint {
     exit.addEventListener('click', async (event) => {
       event.preventDefault();
       this.mainContent.innerHTML = '';
+      this.mainContent.appendChild(main.init());
     });
     return sprintContainer;
   }
@@ -319,7 +320,6 @@ export class Sprint {
         this.correctWordsStat++;
         this.blockGameButtons();
         const body = await api.getUserWord(auth.user?.userId, auth.token, id);
-        console.log(body);
         if (body.difficulty === 'normal' && body.difficulty === 'normal' && body.optional.correctCount === 0 && body.optional.totalIncorrectCount === 0 && body.optional.totalCorrectCount === 0) {
           await api.createUserWord(auth.user?.userId, id, auth.token, { difficulty: 'normal', optional: { correctCount: body.optional.correctCount + 1, totalCorrectCount: body.optional.totalCorrectCount + 1, totalIncorrectCount: body.optional.totalIncorrectCount } });
           this.newWordsStat++;
